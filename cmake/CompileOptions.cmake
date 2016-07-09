@@ -25,6 +25,7 @@ set(DEFAULT_PROJECT_OPTIONS
     CXX_VISIBILITY_PRESET     "hidden"
 )
 
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Xml REQUIRED)
 
@@ -39,7 +40,7 @@ set(DEFAULT_INCLUDE_DIRECTORIES)
 # Libraries
 # 
 
-set(DEFAULT_LIBRARIES Qt5::Core Qt5::Xml)
+set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} Qt5::Core Qt5::Xml)
 
 
 # 

@@ -7,6 +7,8 @@
  Pkg_AnnotatorLib package header
  ************************************************************/
 
+#include <AnnotatorLib/annotatorlib_api.h>
+
 #include <string>
 
 /* Package dependency header include                        */
@@ -40,9 +42,9 @@ enum class AttributeType {
   UNKNOWN,
 };
 
-std::string AttributeTypeToString(AttributeType type);
+std::string ANNOTATORLIB_API AttributeTypeToString(AttributeType type);
 
-AttributeType AttributeTypeFromString(std::string str);
+AttributeType ANNOTATORLIB_API AttributeTypeFromString(std::string str);
 
 /**
  *
@@ -68,10 +70,6 @@ enum class StorageType {
   JSON,
 };
 
-std::string StorageTypeToString(StorageType type);
-
-StorageType StorageTypeFromString(std::string str);
-
 /**
  *
  */
@@ -84,13 +82,24 @@ enum class ImageSetType {
 };
 
 /**
+ * @brief The AnnotationType enum
+ */
+enum class AnnotationType { ELLIPSE, RECTANGLE };
+
+std::string ANNOTATORLIB_API StorageTypeToString(StorageType type);
+
+StorageType ANNOTATORLIB_API StorageTypeFromString(std::string str);
+
+
+
+/**
   Converts a String to an ImageSetType
 
  * @brief typeFromString
  * @param str
  * @return
  */
-ImageSetType ImageSetTypeFromString(std::string str);
+ImageSetType ANNOTATORLIB_API ImageSetTypeFromString(std::string str);
 
 /**
   Converts ImageSetType to a String
@@ -99,21 +108,18 @@ ImageSetType ImageSetTypeFromString(std::string str);
  * @param type
  * @return
  */
-std::string ImageSetTypeToString(ImageSetType type);
+std::string ANNOTATORLIB_API ImageSetTypeToString(ImageSetType type);
 
-/**
- * @brief The AnnotationType enum
- */
-enum class AnnotationType { ELLIPSE, RECTANGLE };
+
 
 /**
  * @brief AnnotationTypeFromString
  * @param str
  * @return
  */
-AnnotationType AnnotationTypeFromString(std::string str);
+AnnotationType ANNOTATORLIB_API AnnotationTypeFromString(std::string str);
 
-std::string AnnotationTypeToString(AnnotationType type);
+std::string ANNOTATORLIB_API AnnotationTypeToString(AnnotationType type);
 
 }  // of namespace AnnotatorLib
 

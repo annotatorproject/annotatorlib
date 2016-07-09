@@ -30,6 +30,9 @@ set(export_macro "${target_upper}_API")
 set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/AnnotatorLib")
 set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
+
+configure_file(${include_path}/AnnotatorLib.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/AnnotatorLib/AnnotatorLib.h)
+
 file(GLOB_RECURSE headers
     ${include_path}/*.h
 )

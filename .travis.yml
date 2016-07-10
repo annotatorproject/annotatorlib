@@ -1,20 +1,71 @@
-language: cpp
+language:
+ - cpp
 
-sudo: required
+os:
+ - linux
 dist: trusty
-
+sudo: required
 compiler:
-  - gcc
-  - clang
+     - gcc
+     - clang
 
-before_install:
-  - sudo apt-get install -qq cmake qt5-default
+addons:
+ apt:
+  packages:
+   - build-essential
+   - cmake
+   - git
+   - libgtk2.0-dev
+   - pkg-config
+   - libavcodec-dev
+   - libavformat-dev
+   - libswscale-dev
+   - python-dev
+   - python-numpy
+   - libtbb2
+   - libtbb-dev
+   - libjpeg-dev
+   - libpng-dev
+   - libtiff-dev
+   - libjasper-dev
+   - libdc1394-22-dev
+
+install:
+ - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+         sudo apt-get update -qq
+      && sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev qttools5-dev libqt5webkit5-dev
+      ;
+   else
+         brew tap homebrew/science
+      && brew update
+      && brew install cmake
+      && brew install qt5
+      && brew install opencv3 --with-contrib
+      ;
+   fi
 
 before_script:
-  - mkdir build
-  - cd build
-  - cmake -DOPTION_BUILD_EXAMPLES=On ..
+ - curl -sL https://github.com/Itseez/opencv/archive/3.1.0.zip > opencv.zip
+ - unzip opencv.zip
+ - cd opencv-3.1.0
 
+ - mkdir build install
+ - cd build
+ - cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_FFMPEG=OFF -DWITH_IPP=OFF ..
+ - make -j8
+ - sudo make install
+ - cd ../../
+
+ - mkdir build
+ - cd build
+ - cmake ..
 script:
-  - make -j8
-  - make test
+ - make -j4
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/29df591dfb81dbb446fa
+    on_success: change
+    on_failure: always
+    on_start: never

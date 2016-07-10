@@ -29,6 +29,7 @@ addons:
    - libtiff-dev
    - libjasper-dev
    - libdc1394-22-dev
+   - libboost-all-dev
 
 install:
  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then

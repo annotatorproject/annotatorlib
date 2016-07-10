@@ -12,8 +12,9 @@
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
-#include <algorithm>
 
+#include <assert.h>
+#include <algorithm>
 // Derived includes directives
 
 namespace AnnotatorLib {
@@ -38,8 +39,8 @@ Annotation::Annotation(const Annotation &obj) {
 
   this->x = obj.x;
   this->y = obj.y;
-  this->hradius = obj.hradius;
-  this->vradius = obj.vradius;
+  this->width = obj.width;
+  this->height = obj.height;
 }
 
 Annotation::Annotation(AnnotationType type) {
@@ -49,8 +50,7 @@ Annotation::Annotation(AnnotationType type) {
 
 Annotation::Annotation(unsigned long id) {
   this->id = id;
-  if (lastId < id)
-    lastId = id;
+  if (lastId < id) lastId = id;
 }
 
 unsigned long Annotation::genId() {
@@ -97,8 +97,7 @@ Object *Annotation::getObject() { return object; }
 void Annotation::setObject(Object *object) {
   if (this->object != object) {
     this->object = object;
-    if (object != nullptr)
-      object->addAnnotation(this);
+    if (object != nullptr) object->addAnnotation(this);
   }
 }
 
@@ -106,15 +105,12 @@ AnnotationType Annotation::getType() { return this->type; }
 
 void Annotation::setType(AnnotationType type) { this->type = type; }
 
-void Annotation::setPosition(float x, float y, float hradius, float vradius) {
-  this->x = x;
-  this->y = y;
-  this->hradius = hradius;
-  this->vradius = vradius;
-}
-
-void Annotation::setPositionWH(float x, float y, int width, int height) {
-  setPosition(x, y, width / 2, height / 2);
+void Annotation::setCenterPosition(float x, float y, float hradius,
+                                   float vradius) {
+  setX(x);
+  setY(y);
+  setHRadius(hradius);
+  setVRadius(vradius);
 }
 
 int Annotation::getX() { return x; }
@@ -125,13 +121,35 @@ int Annotation::getY() { return y; }
 
 void Annotation::setY(float y) { this->y = y; }
 
-float Annotation::getHRadius() { return hradius; }
+float Annotation::getWidth() { return width; }
 
-void Annotation::setHRadius(float hradius) { this->hradius = hradius; }
+void Annotation::setWidth(float width) {
+  assert(width > 0);
+  this->width = width;
+}
 
-float Annotation::getVRadius() { return vradius; }
+float Annotation::getHeight() { return height; }
 
-void Annotation::setVRadius(float vradius) { this->vradius = vradius; }
+void Annotation::setHeight(float height) {
+  assert(height > 0);
+  this->height = height;
+}
+
+float Annotation::getHRadius() { return width / 2; }
+
+void Annotation::setHRadius(float hradius) {
+  assert(hradius > 0);
+  if (hradius < 0) hradius *= -1;
+  this->width = hradius * 2;
+}
+
+float Annotation::getVRadius() { return height / 2; }
+
+void Annotation::setVRadius(float vradius) {
+  assert(vradius > 0);
+  if (vradius < 0) vradius *= -1;
+  this->height = vradius * 2;
+}
 
 void Annotation::setNext(Annotation *next) {
   if (this->next != next) {
@@ -162,14 +180,12 @@ void Annotation::setPrevious(Annotation *previous) {
 Annotation *Annotation::getPrevious() { return previous; }
 
 Annotation *Annotation::getFirst() {
-  if (this->previous == nullptr)
-    return this;
+  if (this->previous == nullptr) return this;
   return previous->getFirst();
 }
 
 Annotation *Annotation::getLast() {
-  if (this->isLast())
-    return this;
+  if (this->isLast()) return this;
   return next->getLast();
 }
 
@@ -200,7 +216,14 @@ void Annotation::setPosition(float x, float y) {
   this->y = y;
 }
 
-} // of namespace AnnotatorLib
+void Annotation::setPosition(float x, float y, float width, float height) {
+  setX(x);
+  setY(y);
+  setWidth(width);
+  setHeight(height);
+}
+
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class body

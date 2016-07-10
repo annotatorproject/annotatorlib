@@ -13,7 +13,7 @@ namespace Commands {
 class ANNOTATORLIB_API UpdateAnnotation: public Command
 {
 public:
-    UpdateAnnotation(Annotation * annotation, float x, float y, float hradius, float vradius);
+    UpdateAnnotation(Annotation * annotation, float x, float y, float width, float height);
 
     bool execute();
 
@@ -25,13 +25,13 @@ protected:
     Annotation *annotation = nullptr;
     float x;
     float y;
-    float hradius;
-    float vradius;
+    float width;
+    float height;
 
     float old_x;
     float old_y;
-    float old_hradius;
-    float old_vradius;
+    float old_width;
+    float old_height;
 };
 
 }

@@ -115,7 +115,7 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
 
   annotation->setFinished(true);
   annotation->setFrame(frame);
-  annotation->setPositionWH(x, y, width, height);
+  annotation->setPosition(x, y, width, height);
   frame->addAnnotation(annotation);
   object->addAnnotation(annotation);
   annotation->setObject(object);

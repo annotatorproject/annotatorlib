@@ -16,11 +16,11 @@ namespace Commands {
 class ANNOTATORLIB_API NewAnnotation: public Command
 {
 public:
-    NewAnnotation(std::string newObjectName, Frame *frame, float x, float y, float hradius, float vradius, Session *session, bool isFinished);
+    NewAnnotation(std::string newObjectName, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
 
-    NewAnnotation(Object *object, Frame *frame, float x, float y, float hradius, float vradius, Session *session, bool isFinished);
+    NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
 
-    NewAnnotation(Object *object, Frame *frame, float x, float y, float hradius, float vradius, Annotation *next,
+    NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Annotation *next,
                   Annotation *previous, Session *session, bool isFinished);
 
     bool execute();
@@ -41,8 +41,8 @@ protected:
     Session *session;
     float x;
     float y;
-    float hradius;
-    float vradius;
+    float width;
+    float height;
 };
 
 }

@@ -97,15 +97,15 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
 
         float x = annotation["x"].toString().toFloat();
         float y = annotation["y"].toString().toFloat();
-        float hradius = annotation["hradius"].toString().toFloat();
-        float vradius = annotation["vradius"].toString().toFloat();
+        float width = annotation["width"].toString().toFloat();
+        float height = annotation["height"].toString().toFloat();
         AnnotatorLib::AnnotationType type =
                 AnnotatorLib::AnnotationTypeFromString(annotation["type"].toString().toStdString());
 
         AnnotatorLib::Annotation * a = new AnnotatorLib::Annotation(id);
         a->setType(type);
 
-        a->setPosition(x, y, hradius, vradius);
+        a->setPosition(x, y, width, height);
 
         QJsonArray attributes = annotation.value("attributes").toArray();
         for(QJsonValue attribute: attributes){

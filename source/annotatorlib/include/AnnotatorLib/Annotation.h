@@ -21,119 +21,118 @@ class Object;
 
 /************************************************************/
 /**
- * 
+ *
  */
 class ANNOTATORLIB_API Annotation {
-public:
+ public:
+  Annotation();
+  Annotation(const Annotation &obj);
+  Annotation(AnnotationType type);
+  Annotation(unsigned long id);
 
-    Annotation();
-    Annotation(const Annotation& obj);
-    Annotation(AnnotationType type);
-    Annotation(unsigned long id);
+  /**
+   *
+   * @return id
+   */
+  static unsigned long genId();
 
-	/**
-	 * 
-	 * @return id 
-	 */
-    static unsigned long genId();
+  unsigned long getId();
 
-    unsigned long getId();
+  std::vector<Attribute *> getAttributes();
+  bool addAttribute(Attribute *attribute);
+  bool removeAttribute(Attribute *attribute);
 
-    std::vector<Attribute *> getAttributes();
-    bool addAttribute(Attribute* attribute);
-    bool removeAttribute(Attribute* attribute);
+  Frame *getFrame();
+  void setFrame(Frame *frame);
 
-    Frame *getFrame();
-    void setFrame(Frame* frame);
+  Object *getObject();
+  void setObject(Object *object);
 
-    Object *getObject();
-    void setObject(Object* object);
+  AnnotationType getType();
+  void setType(AnnotationType type);
 
-    AnnotationType getType();
-    void setType(AnnotationType type);
+  /**
+   * @brief setPosition
+   * @param x
+   * @param y
+   */
+  void setPosition(float x, float y);
 
-    /**
-     * @brief setPosition
-     * @param x
-     * @param y
-     */
-    void setPosition(float x, float y);
-    /**
-     * @brief setPosition
-     * @param x
-     * @param y
-     * @param hradius the radius horizontally
-     * @param vradius the radius vertically
-     */
-    void setPosition(float x, float y, float hradius, float vradius);
-    /**
-     * @brief setPositionWH
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    void setPositionWH(float x, float y, int width, int height);
-    int getX();
-    void setX(float x);
-    int getY();
-    void setY(float y);
-    float getHRadius();
-    void setHRadius(float hradius);
-    float getVRadius();
-    void setVRadius(float vradius);
+  void setPosition(float x, float y, float width, float height);
+  /**
+   * @brief setPosition
+   * @param x
+   * @param y
+   * @param hradius the radius horizontally
+   * @param vradius the radius vertically
+   */
+  void setCenterPosition(float x, float y, float hradius, float vradius);
 
+  int getX();
+  void setX(float x);
+  int getY();
+  void setY(float y);
 
-    void setNext(Annotation * next);
-    Annotation *getNext();
-    void setPrevious(Annotation * previous);
-    Annotation *getPrevious();
+  float getWidth();
+  void setWidth(float width);
+  float getHeight();
+  void setHeight(float height);
 
-    Annotation *getFirst();
-    Annotation *getLast();
-    bool isLast();
-    bool isFirst();
+  float getHRadius();
+  void setHRadius(float hradius);
+  float getVRadius();
+  void setVRadius(float vradius);
 
-    void setFinished(bool ended);
-    bool isFinished();
+  void setNext(Annotation *next);
+  Annotation *getNext();
+  void setPrevious(Annotation *previous);
+  Annotation *getPrevious();
 
-    void setInterpolated(bool interpolated);
-    bool isInterpolated();
+  Annotation *getFirst();
+  Annotation *getLast();
+  bool isLast();
+  bool isFirst();
 
-protected:
-    /**
-     *
-     */
-    unsigned long id = 0;
-	/**
-	 * 
-	 */
-    std::vector<Attribute*> attributes;
-	/**
-	 * 
-	 */
-    Object *object;
+  void setFinished(bool ended);
+  bool isFinished();
 
-	/**
-	 * 
-	 */
-    Frame *frame;
+  void setInterpolated(bool interpolated);
+  bool isInterpolated();
 
-    AnnotationType type = AnnotationType::RECTANGLE;
+ protected:
+  /**
+   *
+   */
+  unsigned long id = 0;
+  /**
+   *
+   */
+  std::vector<Attribute *> attributes;
+  /**
+   *
+   */
+  Object *object;
 
-    Annotation * next = nullptr;
-    Annotation * previous = nullptr;
+  /**
+   *
+   */
+  Frame *frame;
 
-    ///////////////////////////////
+  AnnotationType type = AnnotationType::RECTANGLE;
 
-    float x = 0;
-    float y = 0;
+  Annotation *next = nullptr;
+  Annotation *previous = nullptr;
 
-    float hradius = 0;
-    float vradius = 0;
+  ///////////////////////////////
 
-    bool interpolated = false;
+  // top, left corner, width, height
+  float x = 0;
+  float y = 0;
 
+  float width = 0;
+  float height = 0;
+
+  bool interpolated = false;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -141,7 +140,7 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class header

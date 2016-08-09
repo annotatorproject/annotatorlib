@@ -35,6 +35,7 @@ protected:
 
     void loadAttributes(QJsonObject& json, AnnotatorLib::Session *session);
     void loadAnnotations(QJsonObject& json, AnnotatorLib::Session *session);
+    void loadClasses(QJsonObject& json, AnnotatorLib::Session *session);
     void loadObjects(QJsonObject& json, AnnotatorLib::Session *session);
     void loadFrames(QJsonObject& json, AnnotatorLib::Session *session);
 

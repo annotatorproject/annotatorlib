@@ -39,6 +39,7 @@ protected:
     QJsonObject annotationToJson(AnnotatorLib::Annotation * annotation);
     QJsonObject frameToJson(AnnotatorLib::Frame * frame);
     QJsonObject objectToJson(AnnotatorLib::Object * object);
+    QJsonObject classToJson(AnnotatorLib::Class * c);
 
     QJsonObject session;
     void save();

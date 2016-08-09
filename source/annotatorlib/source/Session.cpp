@@ -84,6 +84,40 @@ Annotation *Session::getAnnotation(unsigned long id)
     return nullptr;
 }
 
+std::vector<Class *> Session::getClasses()
+{
+    return classes;
+}
+
+bool Session::addClass(Class *c)
+{
+    if (std::find(classes.begin(), classes.end(), c) == classes.end()) {
+        classes.push_back(c);
+        return true;
+    }
+    return false;
+}
+
+bool Session::removeClass(Class *c)
+{
+    std::vector<Class *>::const_iterator position = std::find(classes.begin(), classes.end(), c);
+    if (position != classes.end()){
+        classes.erase(position);
+        return true;
+    }
+    return false;
+}
+
+Class *Session::getClass(unsigned long id)
+{
+    for(Class * c: classes)
+    {
+        if(c->getId() == id)
+            return c;
+    }
+    return nullptr;
+}
+
 std::vector<Frame *> Session::getFrames()
 {
     return frames;

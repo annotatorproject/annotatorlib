@@ -18,6 +18,7 @@ namespace AnnotatorLib {
 class Attribute;
 class Frame;
 class Object;
+class Class;
 
 /************************************************************/
 /**

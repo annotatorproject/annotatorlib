@@ -126,6 +126,19 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
     }
 }
 
+void JSONLoader::loadClasses(QJsonObject &json, Session *session)
+{
+    QJsonArray classes = json.value("classes").toArray();
+    for(QJsonValue value: classes){
+        QJsonObject object = value.toObject();
+        unsigned long id = object["id"].toString().toLong();
+        QString name = object["name"].toString();
+        AnnotatorLib::Class * c = new AnnotatorLib::Class(id, name.toStdString());
+
+        session->addClass(c);
+    }
+}
+
 void JSONLoader::loadObjects(QJsonObject &json, Session *session)
 {
     QJsonArray objects = json.value("objects").toArray();

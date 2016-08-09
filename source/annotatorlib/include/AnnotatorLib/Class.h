@@ -28,6 +28,14 @@ public:
      */
     Class(unsigned long id, std::string name);
 
+    /**
+     * @brief Class
+     * @param name A for humans readable name for the class.
+     *
+     * The id will be generated automatically.
+     */
+    Class(std::string name);
+
 	/**
 	 * 
 	 * @return id 

@@ -42,6 +42,7 @@ void JSONLoader::loadSession(Session *session)
 
         QJsonObject json = document.object();
         loadAttributes(json, session);
+        loadClasses(json, session);
         loadObjects(json, session);
         loadFrames(json, session);
         loadAnnotations(json, session);

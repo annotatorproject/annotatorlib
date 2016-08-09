@@ -181,6 +181,7 @@ QJsonObject JSONSaver::classToJson(Class *c)
     QJsonObject json;
     json["id"] = QString::number(c->getId());
     json["name"] = QString::fromStdString(c->getName());
+    return json;
 }
 
 void JSONSaver::save() {

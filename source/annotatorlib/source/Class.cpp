@@ -11,7 +11,7 @@
 namespace AnnotatorLib {
 
 // static attributes
-static long lastId = 110000;
+static unsigned long lastId = 110000;
 
 /**
  * @brief Attribute::Attribute
@@ -19,13 +19,19 @@ static long lastId = 110000;
  * @param type
  * @param name
  */
-Class::Class(unsigned long id)
-{
-    this->id = id;
+Class::Class(unsigned long id) {
+  this->id = id;
+  lastId = std::max(lastId, id);
 }
 
 Class::Class(unsigned long id, std::string name) {
   this->id = id;
+  this->name = name;
+  lastId = std::max(lastId, id);
+}
+
+Class::Class(std::string name) {
+  this->id = genId();
   this->name = name;
 }
 

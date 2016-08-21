@@ -28,6 +28,7 @@ set(DEFAULT_PROJECT_OPTIONS
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Xml REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 
 # 
 # Include directories
@@ -40,7 +41,7 @@ set(DEFAULT_INCLUDE_DIRECTORIES)
 # Libraries
 # 
 
-set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} Qt5::Core Qt5::Xml)
+set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} ${OpenCV_LIBS} Qt5::Core Qt5::Xml)
 
 
 # 

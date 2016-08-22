@@ -2,6 +2,8 @@ find_package(Threads REQUIRED)
 
 include(ExternalProject)
 
+if( OPTION_BUILD_TESTS )
+
 ExternalProject_Add(
     gtest
     URL https://github.com/google/googletest/archive/master.zip
@@ -29,3 +31,5 @@ set_target_properties(libgmock PROPERTIES
 
 include_directories("${source_dir}/googletest/include"
                     "${source_dir}/googlemock/include")
+
+endif( OPTION_BUILD_TESTS )

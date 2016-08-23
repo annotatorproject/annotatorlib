@@ -22,9 +22,11 @@
 
 namespace AnnotatorLib {
 
+    class Class;
+
 /************************************************************/
 /**
- * 
+ * @brief The Object class that represents an object of a specific class.
  */
 class ANNOTATORLIB_API Object {
 public:
@@ -43,9 +45,16 @@ public:
     std::string getName();
     void setName(std::string name);
 
+    Class *getClass();
+    void setClass(Class *c);
+
     std::vector<Attribute*> getAttributes();
     bool addAttribute(Attribute* attribute);
     bool removeAttribute(Attribute* attribute);
+
+    std::vector<Class*> getClasses();
+    bool addClass(Class* c);
+    bool removeClass(Class* c);
 
     Annotation *getFirstAnnotation();
     Annotation *getFirstAnnotation(AnnotatorLib::Frame *frame);
@@ -69,6 +78,8 @@ protected:
 	 * 
 	 */
     std::string name = "unnamed";
+
+    Class *objectClass = nullptr;
 	/**
 	 * 
 	 */

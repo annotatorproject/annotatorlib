@@ -16,7 +16,7 @@
 #include <QJsonObject>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
-#include "AnnotatorLib/Loader/JSONLoader.h"
+#include <AnnotatorLib/Loader/JSONLoader.h>
 
 // Derived includes directives
 
@@ -149,6 +149,9 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session)
         QString name = object["name"].toString();
         AnnotatorLib::Object * o = new AnnotatorLib::Object(id);
         o->setName(name.toStdString());
+
+        if(object.contains("class"))
+            o->setClass(session->getClass(object["class"].toString().toLong()));
 
         QJsonArray frames = object.value("frames").toArray();
         for(QJsonValue frame: frames){

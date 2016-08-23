@@ -10,16 +10,18 @@
  ************************************************************/
 #include <QJsonObject>
 #include <AnnotatorLib/annotatorlib_api.h>
-#include "AnnotatorLib/Saver/Pkg_Saver.h"
+#include <AnnotatorLib/Saver/Pkg_Saver.h>
 
-#include "AnnotatorLib/Saver/AbstractSaver.h"
+#include <AnnotatorLib/Saver/AbstractSaver.h>
+#include <AnnotatorLib/Class.h>
 
 namespace AnnotatorLib {
 namespace Saver {
 
 /************************************************************/
 /**
- * 
+ * @brief The JSONSaver class
+ * writes session to json file.
  */
 class ANNOTATORLIB_API JSONSaver: public AbstractSaver {
 

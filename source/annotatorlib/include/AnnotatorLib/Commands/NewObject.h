@@ -16,6 +16,7 @@ class ANNOTATORLIB_API NewObject: public Command
 public:
     NewObject(Session * session);
     NewObject(Session * session, unsigned long id);
+    NewObject(Session * session, unsigned long id, unsigned long classID);
 
     bool execute();
 
@@ -25,6 +26,7 @@ public:
 
 protected:
     Object * object = nullptr;
+    unsigned long classID = 0;
     Session * session;
 };
 

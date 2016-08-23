@@ -10,16 +10,17 @@
  ************************************************************/
 #include <QJsonObject>
 #include <AnnotatorLib/annotatorlib_api.h>
-#include "AnnotatorLib/Loader/Pkg_Loader.h"
+#include <AnnotatorLib/Loader/Pkg_Loader.h>
 
-#include "AnnotatorLib/Loader/AbstractLoader.h"
+#include <AnnotatorLib/Loader/AbstractLoader.h>
 
 namespace AnnotatorLib {
 namespace Loader {
 
 /************************************************************/
 /**
- * 
+ * @brief The JSONLoader class
+ * loads session from json file format.
  */
 class ANNOTATORLIB_API JSONLoader: public AbstractLoader {
 

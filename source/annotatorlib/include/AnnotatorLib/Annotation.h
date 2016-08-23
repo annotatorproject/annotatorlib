@@ -18,11 +18,11 @@ namespace AnnotatorLib {
 class Attribute;
 class Frame;
 class Object;
-class Class;
 
 /************************************************************/
 /**
- *
+ * @brief The Annotation class
+ * Represents a label for an object on a specific frame.
  */
 class ANNOTATORLIB_API Annotation {
  public:
@@ -115,7 +115,7 @@ class ANNOTATORLIB_API Annotation {
   Object *object;
 
   /**
-   *
+   * @brief frame where the annotation is.
    */
   Frame *frame;
 

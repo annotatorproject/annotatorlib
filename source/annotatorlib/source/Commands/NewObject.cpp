@@ -2,16 +2,21 @@
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
 
-AnnotatorLib::Commands::NewObject::NewObject(std::string name, Session *session)
+AnnotatorLib::Commands::NewObject::NewObject(Session *session)
 {
-    this->name = name;
     this->session = session;
+    this->object = new AnnotatorLib::Object();
+}
+
+AnnotatorLib::Commands::NewObject::NewObject(Session *session, unsigned long id)
+{
+    this->session = session;
+    this->object = new AnnotatorLib::Object(id);
 }
 
 bool AnnotatorLib::Commands::NewObject::execute()
 {
-    this->object = new AnnotatorLib::Object();
-    object->setName(this->name);
+
     session->addObject(object);
     return true;
 }

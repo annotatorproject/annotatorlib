@@ -12,7 +12,7 @@ class commands_test : public testing::Test {
 TEST_F(commands_test, newObject) {
   AnnotatorLib::Session session;
   ASSERT_EQ(session.getObjects().size(), 0);
-  AnnotatorLib::Commands::NewObject nO("test", &session);
+  AnnotatorLib::Commands::NewObject nO(&session);
   session.execute(&nO);
   ASSERT_EQ(session.getObjects().size(), 1);
   session.undo();
@@ -25,7 +25,7 @@ TEST_F(commands_test, newAnnotation) {
   AnnotatorLib::Session session;
   ASSERT_EQ(session.getAnnotations().size(), 0);
 
-  AnnotatorLib::Commands::NewObject nO("test", &session);
+  AnnotatorLib::Commands::NewObject nO(&session);
   session.execute(&nO);
 
   AnnotatorLib::Frame frame(1);

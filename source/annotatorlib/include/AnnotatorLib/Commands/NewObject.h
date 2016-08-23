@@ -14,7 +14,8 @@ namespace Commands {
 class ANNOTATORLIB_API NewObject: public Command
 {
 public:
-    NewObject(std::string name, Session * session);
+    NewObject(Session * session);
+    NewObject(Session * session, unsigned long id);
 
     bool execute();
 
@@ -23,7 +24,6 @@ public:
     Object *getObject();
 
 protected:
-    std::string name = "";
     Object * object = nullptr;
     Session * session;
 };

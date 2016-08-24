@@ -118,6 +118,16 @@ Class *Session::getClass(unsigned long id)
     return nullptr;
 }
 
+Class *Session::getClass(std::string name)
+{
+    for(Class * c: classes)
+    {
+        if(c->getName() == name)
+            return c;
+    }
+    return nullptr;
+}
+
 std::vector<Frame *> Session::getFrames()
 {
     return frames;

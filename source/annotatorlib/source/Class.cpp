@@ -13,38 +13,19 @@ namespace AnnotatorLib {
 // static attributes
 static unsigned long lastId = 110000;
 
-/**
- * @brief Attribute::Attribute
- * @param id
- * @param type
- * @param name
- */
-Class::Class(unsigned long id) {
-  this->id = id;
-  lastId = std::max(lastId, id);
-}
+Class::Class() : id(genId()), name("unnamed_class" + std::to_string(id)) { }
 
-Class::Class(unsigned long id, std::string name) {
-  this->id = id;
-  this->name = name;
-  lastId = std::max(lastId, id);
-}
+Class::Class(std::string name) : id(genId()), name(name) { }
 
-Class::Class(std::string name) {
-  this->id = genId();
-  this->name = name;
-}
+Class::Class(unsigned long id, std::string name) : id(id), name(name) { }
 
 unsigned long Class::genId() {
-  lastId += 7;
-  return lastId;
+  return lastId += 7;
 }
 
-unsigned long Class::getId() { return id; }
+unsigned long Class::getId() const { return id; }
 
-void Class::setName(std::string name) { this->name = name; }
-
-std::string Class::getName() { return name; }
+std::string Class::getName() const { return name; }
 
 bool Class::equals(Class *other) {
   if (this == other)

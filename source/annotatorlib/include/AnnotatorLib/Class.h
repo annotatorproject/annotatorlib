@@ -15,18 +15,10 @@ namespace AnnotatorLib {
 class ANNOTATORLIB_API Class {
 public:
 
-    /**
-     * @brief Class
-     * @param id The internally used for classes used unique id.
-     */
-    Class(unsigned long id);
+    const unsigned long id;
+    const std::string name;
 
-    /**
-     * @brief Class
-     * @param id The internally used for classes used unique id.
-     * @param name A for humans readable name for the class.
-     */
-    Class(unsigned long id, std::string name);
+    Class();
 
     /**
      * @brief Class
@@ -36,26 +28,18 @@ public:
      */
     Class(std::string name);
 
-	/**
-	 * 
-	 * @return id 
-	 */
+    Class(unsigned long id, std::string name);
+
+    /**
+     *
+     * @return id
+     */
     static unsigned long genId();
 
-    unsigned long getId();
-
-    void setName(std::string name);
-    std::string getName();
+    unsigned long getId() const;
+    std::string getName() const;
 
     bool equals(Class *other);
-
-protected:
-	/**
-	 * 
-	 */
-    unsigned long id;
-
-    std::string name;
 
 };
 

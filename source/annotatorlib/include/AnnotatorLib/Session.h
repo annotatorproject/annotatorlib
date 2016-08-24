@@ -52,6 +52,7 @@ public:
     virtual bool addClass(Class *c);
     virtual bool removeClass(Class * c);
     virtual Class *getClass(unsigned long id);
+    virtual Class *getClass(std::string name);
 
     // Frames
     virtual std::vector<Frame *> getFrames();

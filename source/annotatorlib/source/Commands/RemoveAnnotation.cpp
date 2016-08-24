@@ -12,8 +12,6 @@ AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
 
 bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
   bool success = session->removeAnnotation(annotation);
-  //TODO: request reload of player
-
   return success;
 }
 

@@ -64,9 +64,9 @@ bool Session::addAnnotation(Annotation *annotation)
     return false;
 }
 
-bool Session::removeAnnotation(Annotation *annotation)
+bool Session::removeAnnotation(const Annotation *annotation)
 {
-    std::vector<Annotation *>::const_iterator position = std::find(annotations.begin(), annotations.end(), annotation);
+    std::vector<Annotation *>::const_iterator position = std::find(annotations.cbegin(), annotations.cend(), annotation);
     if (position != annotations.end()){
         annotations.erase(position);
         return true;

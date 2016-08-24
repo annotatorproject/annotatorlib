@@ -13,7 +13,7 @@ namespace Commands {
 class ANNOTATORLIB_API RemoveAnnotation: public Command
 {
 public:
-    RemoveAnnotation(Annotation *);
+    RemoveAnnotation(Session *, Annotation *);
     ~RemoveAnnotation() { delete annotation; }
 
     bool execute();
@@ -24,7 +24,7 @@ public:
 
 protected:
     Annotation *annotation = nullptr;
-    Session *session;
+    Session *session = nullptr;
 };
 
 }

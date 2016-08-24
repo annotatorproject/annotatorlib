@@ -44,7 +44,7 @@ public:
     // Annotations
     virtual std::vector<Annotation *> getAnnotations();
     virtual bool addAnnotation(Annotation* annotation);
-    virtual bool removeAnnotation(Annotation* annotation);
+    virtual bool removeAnnotation(const Annotation* annotation);
     virtual Annotation *getAnnotation(unsigned long id);
 
     // Classes

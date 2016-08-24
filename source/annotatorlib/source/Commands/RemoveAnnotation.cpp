@@ -4,15 +4,17 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
+    AnnotatorLib::Session *session,
     AnnotatorLib::Annotation *annotation) {
   this->annotation = annotation;
+  this->session = session;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
-  this->session->removeAnnotation(this->annotation);
+  bool success = session->removeAnnotation(annotation);
   //TODO: request reload of player
 
-  return true;
+  return success;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::undo() {

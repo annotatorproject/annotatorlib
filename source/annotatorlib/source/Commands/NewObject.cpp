@@ -15,10 +15,8 @@ AnnotatorLib::Commands::NewObject::NewObject(Session *session, unsigned long id)
 }
 
 bool AnnotatorLib::Commands::NewObject::execute()
-{
-
-    session->addObject(object);
-    return true;
+{    
+    return session->addObject(object);
 }
 
 bool AnnotatorLib::Commands::NewObject::undo()

@@ -43,6 +43,11 @@ AnnotatorLib::Session initSession() {
 
   object->addFrame(frame);
 
+  AnnotatorLib::Class *c = new AnnotatorLib::Class("testclass");
+  object->setClass(c);
+  object2->setClass(c);
+  session.addClass(c);
+
   AnnotatorLib::Annotation *annotation =
       new AnnotatorLib::Annotation(AnnotatorLib::Annotation::genId());
   annotation->setPosition(100, 100, 100, 100);

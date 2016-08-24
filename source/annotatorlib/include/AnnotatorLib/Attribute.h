@@ -14,10 +14,10 @@
 namespace AnnotatorLib {
 
 /************************************************************/
-/**
- * 
- */
 
+/**
+ * @brief The AttributeValue class
+ */
 class ANNOTATORLIB_API AttributeValue{
 
 public:
@@ -52,6 +52,9 @@ protected:
 
 };
 
+/**
+ * @brief The Attribute class
+ */
 class ANNOTATORLIB_API Attribute {
 public:
 

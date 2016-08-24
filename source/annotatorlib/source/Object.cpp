@@ -56,6 +56,16 @@ void Object::setName(std::string name)
     this->name = name;
 }
 
+Class *Object::getClass()
+{
+    return objectClass;
+}
+
+void Object::setClass(Class *c)
+{
+    this->objectClass = c;
+}
+
 std::vector<Attribute *> Object::getAttributes()
 {
     return attributes;

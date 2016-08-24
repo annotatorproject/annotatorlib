@@ -151,6 +151,7 @@ QJsonObject JSONSaver::objectToJson(Object *object) {
   QJsonObject json;
   json["id"] = QString::number(object->getId());
   json["name"] = QString::fromStdString(object->getName());
+  json["class"] = QString::number(object->getClass()->getId());
 
   // insert list of attributes
   QJsonArray attributes;

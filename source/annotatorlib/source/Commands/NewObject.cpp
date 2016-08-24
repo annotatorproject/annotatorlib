@@ -14,8 +14,16 @@ AnnotatorLib::Commands::NewObject::NewObject(Session *session, unsigned long id)
     this->object = new AnnotatorLib::Object(id);
 }
 
+AnnotatorLib::Commands::NewObject::NewObject(AnnotatorLib::Session *session, unsigned long id, unsigned long classID)
+{
+    this->session = session;
+    this->classID = classID;
+    this->object = new AnnotatorLib::Object(id);
+}
+
 bool AnnotatorLib::Commands::NewObject::execute()
-{    
+{
+    object->setClass(session->getClass(classID));
     return session->addObject(object);
 }
 

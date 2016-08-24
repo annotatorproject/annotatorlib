@@ -21,8 +21,10 @@ class Annotation;
 class Attribute;
 
 /************************************************************/
+
 /**
- * 
+ * @brief The Frame class
+ * Representing a frame in a movie or an image.
  */
 class ANNOTATORLIB_API Frame {
 

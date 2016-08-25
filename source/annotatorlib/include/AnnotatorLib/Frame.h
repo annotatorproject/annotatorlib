@@ -30,26 +30,28 @@ class ANNOTATORLIB_API Frame {
 
 public:
 
-    Frame(unsigned long number);
+    Frame() = delete;
+    Frame(unsigned long frame_nmb);
+    ~Frame();
 
-    std::vector<Annotation*> getAnnotations();
+    std::vector<Annotation*> getAnnotations() const;
+    bool hasAnnotations() const;
     bool addAnnotation(Annotation* annotation);
     bool removeAnnotation(Annotation* annotation);
 
-    std::vector<Attribute*> getAttributes();
+    std::vector<Attribute*> getAttributes() const;
 
-    unsigned long getNumber();
+    unsigned long getFrameNumber() const;
 
-    bool equals(Frame *other);
+    bool equals(Frame *other) const;
 
 protected:
     /**
      *
      */
-    unsigned long number = 0;
-	/**
-	 * 
-	 */
+    const unsigned long frame_number = 0;
+
+private:
     std::vector<Annotation*> annotations;
 
 

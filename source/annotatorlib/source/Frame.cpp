@@ -16,14 +16,21 @@
 
 namespace AnnotatorLib {
 
-Frame::Frame(unsigned long number)
+Frame::Frame(unsigned long frame_number) : frame_number(frame_number) { }
+
+Frame::~Frame()
 {
-    this->number = number;
+    annotations.clear();
 }
 
-std::vector<Annotation *> Frame::getAnnotations()
+std::vector<Annotation *> Frame::getAnnotations() const
 {
     return annotations;
+}
+
+bool Frame::hasAnnotations() const
+{
+    return !annotations.empty();
 }
 
 bool Frame::addAnnotation(Annotation *annotation)
@@ -46,7 +53,7 @@ bool Frame::removeAnnotation(Annotation *annotation)
     return false;
 }
 
-std::vector<Attribute *> Frame::getAttributes()
+std::vector<Attribute *> Frame::getAttributes() const
 {
     std::vector<Attribute *> attributes;
 
@@ -66,16 +73,16 @@ std::vector<Attribute *> Frame::getAttributes()
     return attributes;
 }
 
-unsigned long Frame::getNumber()
+unsigned long Frame::getFrameNumber() const
 {
-    return number;
+    return frame_number;
 }
 
-bool Frame::equals(Frame *other)
+bool Frame::equals(Frame *other) const
 {
     if(this == other)
         return true;
-    if(this->number != other->number)
+    if(this->frame_number != other->frame_number)
         return false;
     if(this->annotations.size() != other->annotations.size())
         return false;

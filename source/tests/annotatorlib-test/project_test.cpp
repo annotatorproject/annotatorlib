@@ -31,7 +31,7 @@ TEST_F(project_test, saveProject) {
             annotation.addAttribute(&attribute);
             annotation.setPosition(10,10,3,3);
 
-            session->addAnnotation(&annotation, frame);
+            session->addAnnotation(&annotation);
 
             AnnotatorLib::Project::save(project, path);
             delete project;

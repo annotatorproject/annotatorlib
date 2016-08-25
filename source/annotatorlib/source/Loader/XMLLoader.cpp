@@ -113,12 +113,11 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
         previous->setNext(annotation);
         annotation->setPrevious(previous);
       }
-
       annotation->setFinished(true);
       annotation->setPosition(x, y, width, height);
       frame->addAnnotation(annotation);
       object->addAnnotation(annotation);
-      session->addAnnotation(annotation, frame);
+      session->addAnnotation(annotation);
       session->addObject(object);
       session->addFrame(frame);
   }

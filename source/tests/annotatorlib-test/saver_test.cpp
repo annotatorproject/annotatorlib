@@ -84,10 +84,10 @@ AnnotatorLib::Session initSession() {
   session.addObject(object);
   session.addObject(object2);
 
-  session.addAnnotation(annotation, frame);
-  session.addAnnotation(annotation2, frame2);
-  session.addAnnotation(annotation3, frame3);
-  session.addAnnotation(annotation4, frame4);
+  session.addAnnotation(annotation);
+  session.addAnnotation(annotation2);
+  session.addAnnotation(annotation3);
+  session.addAnnotation(annotation4);
   session.addAttribute(attribute);
   return session;
 }

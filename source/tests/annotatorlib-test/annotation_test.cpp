@@ -33,17 +33,15 @@ TEST_F(annotation_test, previousAndNext) {
 }
 
 TEST_F(annotation_test, interpolation) {
-  AnnotatorLib::Annotation annotation5(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Frame frame5(5);
+  AnnotatorLib::Annotation annotation5(&frame5, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation5.setPosition(100, 200, 20, 40);
-  AnnotatorLib::Annotation annotation15(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
+
+  AnnotatorLib::Frame frame15(15);
+  AnnotatorLib::Annotation annotation15(&frame15, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation15.setPosition(200, 140, 40, 30);
 
-  AnnotatorLib::Frame frame5(5);
-  frame5.addAnnotation(&annotation5);
   AnnotatorLib::Frame frame10(10);
-  AnnotatorLib::Frame frame15(15);
-  frame15.addAnnotation(&annotation15);
-
   AnnotatorLib::Annotation* annotation10 =
       AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(
           &frame10, &annotation5, &annotation15);

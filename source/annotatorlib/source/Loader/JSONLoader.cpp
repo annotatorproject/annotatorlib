@@ -117,7 +117,7 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
                 if(at != nullptr)
                     a->addAttribute(at);
             }
-            session->addAnnotation(a, f);
+            session->addAnnotation(a);
         }
     }
 }

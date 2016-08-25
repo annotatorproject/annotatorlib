@@ -96,13 +96,13 @@ Annotation *Object::getFirstAnnotation(Frame *frame) const
     Annotation *annotation = this->getFirstAnnotation();
     while(annotation != nullptr && !annotation->isLast()){
 
-        if(annotation->getFrame()->getNumber() < frame->getNumber()){
+        if(annotation->getFrame()->getFrameNumber() < frame->getFrameNumber()){
             annotation = annotation->getNext();
 
-        } else if (annotation->getFrame()->getNumber() == frame->getNumber()){
+        } else if (annotation->getFrame()->getFrameNumber() == frame->getFrameNumber()){
             return annotation;
 
-        } else if (annotation->getFrame()->getNumber() > frame->getNumber()){
+        } else if (annotation->getFrame()->getFrameNumber() > frame->getFrameNumber()){
             if(annotation->isFirst())
                 return nullptr;
             else
@@ -131,6 +131,11 @@ bool Object::removeAnnotation(Annotation *annotation)
 {
     std::vector<Annotation *>::const_iterator position = std::find(annotations.begin(), annotations.end(), annotation);
     if (position != annotations.end()){
+        Frame* frame = annotation->getFrame();
+        if (frame) {
+            frame->removeAnnotation(annotation);
+            if (!frame->hasAnnotations()) this->removeFrame(frame);
+        }
         annotations.erase(position);
         return true;
     }
@@ -170,10 +175,10 @@ bool Object::appearsInFrame(Frame *frame) const
         assert(first);
         Annotation *last = annotation->getLast();
         assert(last);
-        if(first->getFrame()->getNumber() <= frame->getNumber()
-                && last->getFrame()->getNumber() >= frame->getNumber())
+        if(first->getFrame()->getFrameNumber() <= frame->getFrameNumber()
+                && last->getFrame()->getFrameNumber() >= frame->getFrameNumber())
             return true;
-        if(first->getFrame()->getNumber() <= frame->getNumber()
+        if(first->getFrame()->getFrameNumber() <= frame->getFrameNumber()
                 && !last->isFinished())
             return true;
     }

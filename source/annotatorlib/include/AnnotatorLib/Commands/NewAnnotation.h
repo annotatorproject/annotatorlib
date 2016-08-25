@@ -7,6 +7,7 @@
 namespace AnnotatorLib {
 
 class Object;
+class Class;
 class Session;
 class Annotation;
 class Frame;
@@ -16,12 +17,16 @@ namespace Commands {
 class ANNOTATORLIB_API NewAnnotation: public Command
 {
 public:
-    NewAnnotation(std::string newObjectName, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
+    NewAnnotation() = delete;
+
+    NewAnnotation(unsigned long newObjectId, Class* newObjectClass, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
 
     NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
 
     NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Annotation *next,
                   Annotation *previous, Session *session, bool isFinished);
+
+    NewAnnotation(const NewAnnotation& other);
 
     bool execute();
 
@@ -34,7 +39,8 @@ protected:
     Annotation *next = nullptr;
     Annotation *previous = nullptr;
     bool createNewObject = false;
-    std::string newObjectName = "";
+    unsigned long newObjectId = 0;
+    Class* newObjectClass;
     bool isFinished = false;
     Object *object;
     Frame *frame;

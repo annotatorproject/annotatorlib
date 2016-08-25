@@ -20,7 +20,7 @@ bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
 
 bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
   annotation->setVisible(true);
-  this->session->addAnnotation(this->annotation, this->frame);
+  this->session->addAnnotation(this->annotation);
   return true;
 }
 

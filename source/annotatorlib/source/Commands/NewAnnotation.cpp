@@ -4,11 +4,12 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    std::string newObjectName, AnnotatorLib::Frame *frame, float x, float y,
+    unsigned long newObjectId, Class* newObjectClass, AnnotatorLib::Frame *frame, float x, float y,
     float width, float height, AnnotatorLib::Session *session,
     bool isLast = false) {
   this->createNewObject = true;
-  this->newObjectName = newObjectName;
+  this->newObjectId = newObjectId;
+  this->newObjectClass = newObjectClass;
   this->frame = frame;
   this->x = x;
   this->y = y;
@@ -16,8 +17,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->height = height;
   this->session = session;
   this->isFinished = isLast;
-  this->object = new AnnotatorLib::Object();
-  this->object->setName(newObjectName);
+  this->object = new AnnotatorLib::Object(newObjectClass, newObjectId);
   this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
 }
 
@@ -56,13 +56,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
   annotation->setPosition(x, y, height, height);
   annotation->setVisible(true);
-  object->addAnnotation(annotation);
-  //frame->addAnnotation(annotation);
-  object->addFrame(frame);
-  session->addAnnotation(annotation, frame);
-  if (createNewObject) {
-    session->addObject(object);
-  }
+  session->addAnnotation(annotation); //adds annotation plus object and frame if they do not exist
 
   if (next != nullptr) {
     annotation->setNext(next);
@@ -80,9 +74,7 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
-  object->removeAnnotation(annotation);
-  session->removeAnnotation(annotation);
-  frame->removeAnnotation(annotation);
+  session->removeAnnotation(annotation); //remove annotation from session, frame and object
   annotation->setVisible(false);
 
   if (createNewObject) session->removeObject(object);

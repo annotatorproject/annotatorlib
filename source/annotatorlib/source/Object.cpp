@@ -26,22 +26,16 @@ static long lastId = 10000;
  *
  * @return id
  */
-Object::Object()
-{
-    this->id = genId();
-}
+Object::Object() : id(genId()) { }
 
-Object::Object(unsigned long id)
-{
-    this->id = id;
-}
+Object::Object(unsigned long id) : id(id) { }
 
 unsigned long Object::genId() {
     lastId += 3;
     return lastId;
 }
 
-unsigned long Object::getId()
+unsigned long Object::getId() const
 {
     return id;
 }
@@ -56,7 +50,7 @@ void Object::setName(std::string name)
     this->name = name;
 }
 
-Class *Object::getClass()
+Class *Object::getClass() const
 {
     return objectClass;
 }
@@ -66,7 +60,7 @@ void Object::setClass(Class *c)
     this->objectClass = c;
 }
 
-std::vector<Attribute *> Object::getAttributes()
+std::vector<Attribute *> Object::getAttributes() const
 {
     return attributes;
 }
@@ -90,14 +84,14 @@ bool Object::removeAttribute(Attribute *attribute)
     return false;
 }
 
-Annotation *Object::getFirstAnnotation()
+Annotation *Object::getFirstAnnotation() const
 {
     if(annotations.size() == 0)
         return nullptr;
     return annotations[0]->getFirst();
 }
 
-Annotation *Object::getFirstAnnotation(Frame *frame)
+Annotation *Object::getFirstAnnotation(Frame *frame) const
 {
     Annotation *annotation = this->getFirstAnnotation();
     while(annotation != nullptr && !annotation->isLast()){
@@ -118,7 +112,7 @@ Annotation *Object::getFirstAnnotation(Frame *frame)
     return nullptr;
 }
 
-std::vector<Annotation *> Object::getAnnotations()
+std::vector<Annotation *> Object::getAnnotations() const
 {
     return annotations;
 }
@@ -143,7 +137,7 @@ bool Object::removeAnnotation(Annotation *annotation)
     return false;
 }
 
-std::vector<Frame *> Object::getFrames()
+std::vector<Frame *> Object::getFrames() const
 {
     return frames;
 }
@@ -167,7 +161,7 @@ bool Object::removeFrame(Frame *frame)
     return false;
 }
 
-bool Object::appearsInFrame(Frame *frame)
+bool Object::appearsInFrame(Frame *frame) const
 {
     if(annotations.size() > 0)
     {

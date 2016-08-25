@@ -31,6 +31,8 @@ namespace AnnotatorLib {
 class ANNOTATORLIB_API Object {
 public:
 
+    const unsigned long id = 0;
+
     Object();
     Object(unsigned long id);
 
@@ -40,40 +42,36 @@ public:
 	 */
     static unsigned long genId();
 
-    unsigned long getId();
+    unsigned long getId() const;
 
     std::string getName();
     void setName(std::string name);
 
-    Class *getClass();
+    Class *getClass() const;
     void setClass(Class *c);
 
-    std::vector<Attribute*> getAttributes();
+    std::vector<Attribute*> getAttributes() const;
     bool addAttribute(Attribute* attribute);
     bool removeAttribute(Attribute* attribute);
 
-    std::vector<Class*> getClasses();
-    bool addClass(Class* c);
-    bool removeClass(Class* c);
+//    std::vector<Class*> getClasses() const;
+//    bool addClass(Class* c);
+//    bool removeClass(Class* c);
 
-    Annotation *getFirstAnnotation();
-    Annotation *getFirstAnnotation(AnnotatorLib::Frame *frame);
-    std::vector<Annotation*> getAnnotations();
+    Annotation *getFirstAnnotation() const;
+    Annotation *getFirstAnnotation(AnnotatorLib::Frame *frame) const;
+    std::vector<Annotation*> getAnnotations() const;
     bool addAnnotation(Annotation* annotation);
     bool removeAnnotation(Annotation* annotation);
 
-    std::vector<Frame*> getFrames();
+    std::vector<Frame*> getFrames() const;
     bool addFrame(Frame* frame);
     bool removeFrame(Frame* frame);
 
-    bool appearsInFrame(Frame *frame);
+    bool appearsInFrame(Frame *frame) const;
 
 protected:
 
-	/**
-	 * 
-	 */
-    unsigned long id = 0;
 	/**
 	 * 
 	 */

@@ -55,6 +55,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
   annotation->setPosition(x, y, height, height);
+  annotation->setVisible(true);
   object->addAnnotation(annotation);
   //frame->addAnnotation(annotation);
   object->addFrame(frame);

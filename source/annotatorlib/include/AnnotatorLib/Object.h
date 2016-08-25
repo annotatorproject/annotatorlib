@@ -70,12 +70,12 @@ public:
 
     bool appearsInFrame(Frame *frame) const;
 
-protected:
+    bool isVisible() const { return visible; }
+    void setVisible( bool v);
 
-	/**
-	 * 
-	 */
+private:
     std::string name = "unnamed";
+    bool visible = true;
 
     Class *objectClass = nullptr;
 	/**

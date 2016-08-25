@@ -25,6 +25,7 @@ public:
 protected:
     Annotation *annotation = nullptr;
     Session *session = nullptr;
+    Frame *frame = nullptr;
 };
 
 }

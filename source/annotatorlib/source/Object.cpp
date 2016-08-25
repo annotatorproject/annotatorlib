@@ -128,7 +128,7 @@ bool Object::addAnnotation(Annotation *annotation)
 
 bool Object::removeAnnotation(Annotation *annotation)
 {
-    std::vector<Annotation *>::const_iterator position = std::find(annotations.begin(), annotations.end(), annotation);
+    std::vector<Annotation *>::const_iterator position = std::find(annotations.cbegin(), annotations.cend(), annotation);
     if (position != annotations.end()){
         Frame* frame = annotation->getFrame();
         if (frame) {
@@ -139,6 +139,14 @@ bool Object::removeAnnotation(Annotation *annotation)
         return true;
     }
     return false;
+}
+
+void Object::setVisible( bool v)
+{
+  visible = v;
+  for (std::vector<Annotation *>::iterator pos = annotations.begin(); pos != annotations.end(); ++pos) {
+    (*pos)->setVisible(v);
+  }
 }
 
 std::vector<Frame *> Object::getFrames() const

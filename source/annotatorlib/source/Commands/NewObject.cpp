@@ -24,6 +24,7 @@ AnnotatorLib::Commands::NewObject::NewObject(AnnotatorLib::Session *session, uns
 bool AnnotatorLib::Commands::NewObject::execute()
 {
     object->setClass(session->getClass(classID));
+    object->setVisible(true);
     object->setName((object->getClass()->getName() + std::to_string(object->getClass()->getId())));
     return session->addObject(object);
 }
@@ -31,6 +32,7 @@ bool AnnotatorLib::Commands::NewObject::execute()
 bool AnnotatorLib::Commands::NewObject::undo()
 {
     session->removeObject(object);
+    object->setVisible(false);
     return true;
 }
 

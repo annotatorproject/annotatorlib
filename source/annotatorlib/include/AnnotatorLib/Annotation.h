@@ -26,6 +26,9 @@ class Object;
  */
 class ANNOTATORLIB_API Annotation {
  public:
+
+  const unsigned long id = 0;
+
   Annotation();
   Annotation(const Annotation &obj);
   Annotation(AnnotationType type);
@@ -37,19 +40,19 @@ class ANNOTATORLIB_API Annotation {
    */
   static unsigned long genId();
 
-  unsigned long getId();
+  unsigned long getId() const;
 
-  std::vector<Attribute *> getAttributes();
+  std::vector<Attribute *> getAttributes() const;
   bool addAttribute(Attribute *attribute);
   bool removeAttribute(Attribute *attribute);
 
-  Frame *getFrame();
+  Frame *getFrame() const;
   void setFrame(Frame *frame);
 
-  Object *getObject();
+  Object *getObject() const;
   void setObject(Object *object);
 
-  AnnotationType getType();
+  AnnotationType getType() const;
   void setType(AnnotationType type);
 
   /**
@@ -69,42 +72,39 @@ class ANNOTATORLIB_API Annotation {
    */
   void setCenterPosition(float x, float y, float hradius, float vradius);
 
-  int getX();
+  int getX() const;
   void setX(float x);
-  int getY();
+  int getY() const;
   void setY(float y);
 
-  float getWidth();
+  float getWidth() const;
   void setWidth(float width);
-  float getHeight();
+  float getHeight() const;
   void setHeight(float height);
 
-  float getHRadius();
+  float getHRadius() const;
   void setHRadius(float hradius);
-  float getVRadius();
+  float getVRadius() const;
   void setVRadius(float vradius);
 
   void setNext(Annotation *next);
-  Annotation *getNext();
+  Annotation *getNext() const;
   void setPrevious(Annotation *previous);
-  Annotation *getPrevious();
+  Annotation *getPrevious() const;
 
   Annotation *getFirst();
   Annotation *getLast();
-  bool isLast();
-  bool isFirst();
+  bool isLast() const;
+  bool isFirst() const;
 
   void setFinished(bool ended);
   bool isFinished();
 
   void setInterpolated(bool interpolated);
-  bool isInterpolated();
+  bool isInterpolated() const;
 
  protected:
-  /**
-   *
-   */
-  unsigned long id = 0;
+
   /**
    *
    */

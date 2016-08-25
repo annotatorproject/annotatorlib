@@ -20,15 +20,14 @@
 namespace AnnotatorLib {
 
 // static attributes (if any)
-static long lastId = 100000;
+static unsigned long lastId = 100000;
 /**
  *
  * @return id
  */
-Annotation::Annotation() { this->id = genId(); }
+Annotation::Annotation() : id(genId()) { }
 
-Annotation::Annotation(const Annotation &obj) {
-  this->id = genId();
+Annotation::Annotation(const Annotation &obj) : Annotation() {
   this->attributes = obj.attributes;
   this->next = obj.next;
   this->previous = obj.previous;
@@ -43,13 +42,11 @@ Annotation::Annotation(const Annotation &obj) {
   this->height = obj.height;
 }
 
-Annotation::Annotation(AnnotationType type) {
-  this->id = genId();
+Annotation::Annotation(AnnotationType type) : Annotation() {
   this->type = type;
 }
 
-Annotation::Annotation(unsigned long id) {
-  this->id = id;
+Annotation::Annotation(unsigned long id) : id(id) {
   if (lastId < id) lastId = id;
 }
 
@@ -58,9 +55,9 @@ unsigned long Annotation::genId() {
   return lastId;
 }
 
-unsigned long Annotation::getId() { return id; }
+unsigned long Annotation::getId() const { return id; }
 
-std::vector<Attribute *> Annotation::getAttributes() { return attributes; }
+std::vector<Attribute *> Annotation::getAttributes() const { return attributes; }
 
 bool Annotation::addAttribute(Attribute *attribute) {
   if (attribute != nullptr &&
@@ -82,7 +79,7 @@ bool Annotation::removeAttribute(Attribute *attribute) {
   return false;
 }
 
-Frame *Annotation::getFrame() { return frame; }
+Frame *Annotation::getFrame() const { return frame; }
 
 void Annotation::setFrame(Frame *frame) {
   if (this->frame != frame) {
@@ -92,7 +89,7 @@ void Annotation::setFrame(Frame *frame) {
   }
 }
 
-Object *Annotation::getObject() { return object; }
+Object *Annotation::getObject() const { return object; }
 
 void Annotation::setObject(Object *object) {
   if (this->object != object) {
@@ -101,7 +98,7 @@ void Annotation::setObject(Object *object) {
   }
 }
 
-AnnotationType Annotation::getType() { return this->type; }
+AnnotationType Annotation::getType() const { return this->type; }
 
 void Annotation::setType(AnnotationType type) { this->type = type; }
 
@@ -113,29 +110,29 @@ void Annotation::setCenterPosition(float x, float y, float hradius,
   setVRadius(vradius);
 }
 
-int Annotation::getX() { return x; }
+int Annotation::getX() const { return x; }
 
 void Annotation::setX(float x) { this->x = x; }
 
-int Annotation::getY() { return y; }
+int Annotation::getY() const { return y; }
 
 void Annotation::setY(float y) { this->y = y; }
 
-float Annotation::getWidth() { return width; }
+float Annotation::getWidth() const { return width; }
 
 void Annotation::setWidth(float width) {
   assert(width > 0);
   this->width = width;
 }
 
-float Annotation::getHeight() { return height; }
+float Annotation::getHeight() const { return height; }
 
 void Annotation::setHeight(float height) {
   assert(height > 0);
   this->height = height;
 }
 
-float Annotation::getHRadius() { return width / 2; }
+float Annotation::getHRadius() const { return width / 2; }
 
 void Annotation::setHRadius(float hradius) {
   assert(hradius > 0);
@@ -143,7 +140,7 @@ void Annotation::setHRadius(float hradius) {
   this->width = hradius * 2;
 }
 
-float Annotation::getVRadius() { return height / 2; }
+float Annotation::getVRadius() const { return height / 2; }
 
 void Annotation::setVRadius(float vradius) {
   assert(vradius > 0);
@@ -163,7 +160,7 @@ void Annotation::setNext(Annotation *next) {
   }
 }
 
-Annotation *Annotation::getNext() { return next; }
+Annotation *Annotation::getNext() const { return next; }
 
 void Annotation::setPrevious(Annotation *previous) {
   if (this->previous != previous) {
@@ -177,7 +174,7 @@ void Annotation::setPrevious(Annotation *previous) {
   }
 }
 
-Annotation *Annotation::getPrevious() { return previous; }
+Annotation *Annotation::getPrevious() const { return previous; }
 
 Annotation *Annotation::getFirst() {
   if (this->previous == nullptr) return this;
@@ -189,11 +186,11 @@ Annotation *Annotation::getLast() {
   return next->getLast();
 }
 
-bool Annotation::isLast() {
+bool Annotation::isLast() const {
   return this->next == nullptr || this->next == this;
 }
 
-bool Annotation::isFirst() { return this->previous == nullptr; }
+bool Annotation::isFirst() const { return this->previous == nullptr; }
 
 void Annotation::setFinished(bool ended) {
   if (ended) {
@@ -209,7 +206,7 @@ void Annotation::setInterpolated(bool interpolated) {
   this->interpolated = interpolated;
 }
 
-bool Annotation::isInterpolated() { return interpolated; }
+bool Annotation::isInterpolated() const { return interpolated; }
 
 void Annotation::setPosition(float x, float y) {
   this->x = x;

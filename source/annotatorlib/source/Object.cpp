@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <assert.h>
 #include "AnnotatorLib/Object.h"
+#include "AnnotatorLib/Class.h"
 #include "AnnotatorLib/Annotation.h"
 
 // Derived includes directives
@@ -21,14 +22,15 @@ namespace AnnotatorLib {
 // static attributes (if any)
 
 static long lastId = 10000;
+static long lastNamePostfix = 1;
 
-/**
- *
- * @return id
- */
-Object::Object() : id(genId()) { }
+Object::Object( ) : id(genId()) { genName(); }
 
-Object::Object(unsigned long id) : id(id) { }
+Object::Object(unsigned long id) : id(id) { genName(); }
+
+Object::Object(Class* c) : objectClass(c), id(genId()) { genName(); }
+
+Object::Object(Class* c, unsigned long id) : objectClass(c), id(id) { genName(); }
 
 unsigned long Object::genId() {
     lastId += 3;
@@ -48,6 +50,15 @@ std::string Object::getName()
 void Object::setName(std::string name)
 {
     this->name = name;
+}
+
+std::string Object::genName()
+{
+    std::string prefix = "unnamed_obj_";
+    Class* c = getClass();
+    if (c != nullptr)
+        prefix = c->getName() + "_";
+    return prefix + std::to_string(lastNamePostfix++);
 }
 
 Class *Object::getClass() const

@@ -36,36 +36,65 @@ public:
     virtual ~Session();
 
     // Attributes
-    virtual std::vector<Attribute *> getAttributes();
+    virtual std::vector<Attribute *> getAttributes() const;
+    /**
+     * @brief Add an attribute to the session.
+     * @param c
+     * @return
+     */
     virtual bool addAttribute(Attribute* attribute);
     virtual bool removeAttribute(Attribute* attribute);
     virtual Attribute *getAttribute(unsigned long id) const;
 
     // Annotations
     virtual std::vector<Annotation *> getAnnotations() const;
-    virtual bool addAnnotation(Annotation* annotation, Frame * frame);
+    /**
+     * @brief Will add the given annotation, the associated object
+     * and frame to this session. Checks for duplicates.
+     * @param annotation
+     * @return
+     */
+    virtual bool addAnnotation(Annotation* annotation);
     virtual bool removeAnnotation(Annotation* annotation);
     virtual Annotation *getAnnotation(unsigned long id) const;
 
     // Classes
-    virtual std::vector<Class *> getClasses();
+    virtual std::vector<Class *> getClasses() const;
+    /**
+     * @brief Add a class to the session.
+     * @param c
+     * @return
+     */
     virtual bool addClass(Class *c);
     virtual bool removeClass(Class * c);
     virtual Class *getClass(unsigned long id) const;
     virtual Class *getClass(std::string name) const;
 
     // Frames
-    virtual std::vector<Frame *> getFrames();
+    virtual std::vector<Frame *> getFrames() const;
+    /**
+     * @brief Will add the given frame and all annotations, objects
+     * within this frame to this session. Checks for duplicates.
+     * @param frame
+     * @return
+     */
     virtual bool addFrame(Frame* frame);
     virtual bool removeFrame(Frame* frame);
     /**
-     * @brief getFrame
+     * @brief getFrame by given number.
+     * If it does not exist we create it.
      * @param number
      * @return The Frame by given Frame Number
      */
     virtual Frame *getFrame(unsigned long number);
 
-    virtual std::vector<Object *> getObjects();
+    virtual std::vector<Object *> getObjects() const;
+    /**
+     * @brief Will add the given object and all associated annotations, plus frames
+     * to this session. Checks for duplicates.
+     * @param object
+     * @return
+     */
     virtual bool addObject(Object* object);
     virtual bool removeObject(Object* object);
     /**
@@ -73,15 +102,15 @@ public:
      * @param name
      * @return Object with given name
      */
-    virtual Object * getFirstObjectByName(std::string name);
-    virtual Object *getObject(unsigned long id);
+    virtual Object * getFirstObjectByName(std::string name) const;
+    virtual Object *getObject(unsigned long id) const;
 
     virtual bool execute(AnnotatorLib::Commands::Command *command);
     virtual bool redo();
     virtual bool undo();
 
 
-protected:
+private:
 
 	/**
 	 * 

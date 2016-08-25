@@ -10,12 +10,17 @@ class session_test : public testing::Test {
 
 TEST_F(session_test, getObject) {
   AnnotatorLib::Session session;
-  AnnotatorLib::Object *o =
-      new AnnotatorLib::Object(AnnotatorLib::Object::genId());
+  AnnotatorLib::Object *o = new AnnotatorLib::Object();
+  AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(nullptr, o, AnnotatorLib::AnnotationType::RECTANGLE);
+  o->addAnnotation(a);
   o->setName("testname");
-  session.addObject(o);
+  bool success = session.addObject(o);
 
   AnnotatorLib::Object *o2 = session.getFirstObjectByName("testname");
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testname");
+  ASSERT_TRUE(success);
+
+  delete o;
+  delete a;
 }

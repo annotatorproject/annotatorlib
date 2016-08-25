@@ -18,16 +18,26 @@ public:
     const unsigned long id;
     const std::string name;
 
+    /**
+     * @brief Class constructor
+     *
+     * The id and the name will be generated automatically.
+     */
     Class();
 
     /**
-     * @brief Class
+     * @brief Class constructor
      * @param name A for humans readable name for the class.
      *
      * The id will be generated automatically.
      */
     Class(std::string name);
 
+    /**
+     * @brief Class
+     * @param id
+     * @param name
+     */
     Class(unsigned long id, std::string name);
 
     /**
@@ -41,6 +51,8 @@ public:
 
     bool equals(Class *other);
 
+private:
+    static std::string genName();
 };
 
 } // of namespace AnnotatorLib

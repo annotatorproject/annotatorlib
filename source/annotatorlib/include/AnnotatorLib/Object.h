@@ -22,7 +22,7 @@
 
 namespace AnnotatorLib {
 
-    class Class;
+class Class;
 
 /************************************************************/
 /**
@@ -34,7 +34,9 @@ public:
     const unsigned long id = 0;
 
     Object();
+    Object(Class* c);
     Object(unsigned long id);
+    Object(Class* c, unsigned long id);
 
 	/**
 	 * 
@@ -54,15 +56,12 @@ public:
     bool addAttribute(Attribute* attribute);
     bool removeAttribute(Attribute* attribute);
 
-//    std::vector<Class*> getClasses() const;
-//    bool addClass(Class* c);
-//    bool removeClass(Class* c);
-
     Annotation *getFirstAnnotation() const;
     Annotation *getFirstAnnotation(AnnotatorLib::Frame *frame) const;
     std::vector<Annotation*> getAnnotations() const;
     bool addAnnotation(Annotation* annotation);
     bool removeAnnotation(Annotation* annotation);
+    bool hasAnnotations() const { return !annotations.empty(); }
 
     std::vector<Frame*> getFrames() const;
     bool addFrame(Frame* frame);
@@ -74,10 +73,13 @@ public:
     void setVisible( bool v);
 
 private:
-    std::string name = "unnamed";
+
+    std::string genName();
+
+    std::string name;
     bool visible = true;
 
-    Class *objectClass = nullptr;
+    Class *objectClass;
 	/**
 	 * 
 	 */

@@ -26,6 +26,10 @@ Annotation::Annotation(Frame* frame, Object* obj, unsigned long id, AnnotationTy
 {
   if (lastId < id) lastId = id;
   visible = true;
+  if (object)
+    object->addAnnotation(this);
+  if (frame)
+    frame->addAnnotation(this);
 }
 
 Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(frame, obj, genId(), type) { }

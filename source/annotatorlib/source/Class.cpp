@@ -12,8 +12,9 @@ namespace AnnotatorLib {
 
 // static attributes
 static unsigned long lastId = 110000;
+static unsigned long lastNamePostfix = 0;
 
-Class::Class() : id(genId()), name("unnamed_class" + std::to_string(id)) { }
+Class::Class() : id(genId()), name(genName()) { }
 
 Class::Class(std::string name) : id(genId()), name(name) { }
 
@@ -21,6 +22,10 @@ Class::Class(unsigned long id, std::string name) : id(id), name(name) { }
 
 unsigned long Class::genId() {
   return lastId += 7;
+}
+
+std::string Class::genName() {
+  return "unnamed_class_" + std::to_string(lastNamePostfix++);
 }
 
 unsigned long Class::getId() const { return id; }

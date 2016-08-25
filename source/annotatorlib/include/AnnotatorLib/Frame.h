@@ -49,7 +49,7 @@ protected:
     /**
      *
      */
-    const unsigned long frame_number = 0;
+    const unsigned long frame_number;
 
 private:
     std::vector<Annotation*> annotations;

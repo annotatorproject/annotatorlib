@@ -39,20 +39,20 @@ public:
     virtual std::vector<Attribute *> getAttributes();
     virtual bool addAttribute(Attribute* attribute);
     virtual bool removeAttribute(Attribute* attribute);
-    virtual Attribute *getAttribute(unsigned long id);
+    virtual Attribute *getAttribute(unsigned long id) const;
 
     // Annotations
-    virtual std::vector<Annotation *> getAnnotations();
-    virtual bool addAnnotation(Annotation* annotation);
-    virtual bool removeAnnotation(const Annotation* annotation);
-    virtual Annotation *getAnnotation(unsigned long id);
+    virtual std::vector<Annotation *> getAnnotations() const;
+    virtual bool addAnnotation(Annotation* annotation, Frame * frame);
+    virtual bool removeAnnotation(Annotation* annotation);
+    virtual Annotation *getAnnotation(unsigned long id) const;
 
     // Classes
     virtual std::vector<Class *> getClasses();
     virtual bool addClass(Class *c);
     virtual bool removeClass(Class * c);
-    virtual Class *getClass(unsigned long id);
-    virtual Class *getClass(std::string name);
+    virtual Class *getClass(unsigned long id) const;
+    virtual Class *getClass(std::string name) const;
 
     // Frames
     virtual std::vector<Frame *> getFrames();

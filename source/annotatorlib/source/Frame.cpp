@@ -35,9 +35,8 @@ bool Frame::hasAnnotations() const
 
 bool Frame::addAnnotation(Annotation *annotation)
 {
-    if (annotation != nullptr && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
+    if (annotation != nullptr && annotation->getFrame() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
         annotations.push_back(annotation);
-        annotation->setFrame(this);
         return true;
     }
     return false;

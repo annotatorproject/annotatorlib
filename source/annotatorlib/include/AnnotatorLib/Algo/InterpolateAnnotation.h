@@ -30,9 +30,9 @@ public:
 
     static Annotation *getInterpolation(Frame *frame, Object *object, bool interpolationsOnly = false);
 
-    static std::vector<Annotation *> getInterpolations(Frame *frame, Session *session, bool interpolationsOnly = false);
+    static std::vector<Annotation *> getInterpolations(Frame *frame, const Session *session, bool interpolationsOnly = false);
 
-    static std::vector<Annotation *> getInterpolations(Frame *frame, std::vector<Annotation*> annotations, bool interpolationsOnly = false);
+    static std::vector<Annotation *> getInterpolations(Frame *frame, const std::vector<Annotation*> annotations, bool interpolationsOnly = false);
 
 };
 

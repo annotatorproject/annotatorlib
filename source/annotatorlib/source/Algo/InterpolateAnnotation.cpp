@@ -24,15 +24,14 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Annotation *end) {
   if (start == nullptr) return nullptr;
 
-  Annotation *annotation = new Annotation(*start);
+  Annotation *annotation = new Annotation(frame, start->getObject(), start->getType());
   annotation->setPrevious(start);
-  annotation->setFrame(frame);
 
   if (end == nullptr) return annotation;
 
-  unsigned long startFrame = start->getFrame()->getNumber();
-  unsigned long endFrame = end->getFrame()->getNumber();
-  unsigned long curFrame = frame->getNumber();
+  unsigned long startFrame = start->getFrame()->getFrameNumber();
+  unsigned long endFrame = end->getFrame()->getFrameNumber();
+  unsigned long curFrame = frame->getFrameNumber();
 
   assert(startFrame < endFrame);
   assert(startFrame < curFrame);
@@ -68,38 +67,37 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
 }
 
 std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, Session *session, bool interpolationsOnly) {
+    Frame *frame, const Session *session, bool interpolationsOnly) {
   return getInterpolations(frame, session->getAnnotations(),
                            interpolationsOnly);
 }
 
 std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, std::vector<Annotation *> annotations,
+    Frame *frame, const std::vector<Annotation *> annotations,
     bool interpolationsOnly) {
   std::vector<Annotation *> return_annotations;
 
   for (Annotation *a : annotations) {
     // Is Annotation before actual frame?
-    if (a->getFrame()->getNumber() < frame->getNumber()) {
+    if (a->getFrame()->getFrameNumber() < frame->getFrameNumber()) {
       Annotation *annotation = nullptr;
       if (!a->isFinished() && a->isLast()) {
-        annotation = new Annotation(*a);
+        annotation = new Annotation(frame, a->getObject(), a->getType());
         annotation->setPrevious(a);
 
         // Is next Annotation after actual frame? Then return interpolated
         // Annotation.
-      } else if (a->getNext()->getFrame()->getNumber() > frame->getNumber()) {
+      } else if (a->getNext()->getFrame()->getFrameNumber() > frame->getFrameNumber()) {
         annotation = getInterpolation(frame, a, a->getNext());
       }
 
       if (annotation != nullptr) {
         annotation->setInterpolated(true);
-        annotation->setFrame(frame);
         return_annotations.push_back(annotation);
       }
       // Is Annotation on actual frame?
     } else if (!interpolationsOnly &&
-               a->getFrame()->getNumber() == frame->getNumber()) {
+               a->getFrame()->getFrameNumber() == frame->getFrameNumber()) {
       return_annotations.push_back(a);
     } else {
     }

@@ -16,14 +16,9 @@
 namespace AnnotatorLib {
 namespace Loader {
 
-Annotation SQLLoader::getAnnotations()
-{
-    return Annotation();
-}
-
 void SQLLoader::setPath(std::string path)
 {
-
+  //TODO:
 }
 
 StorageType SQLLoader::getType()
@@ -33,7 +28,7 @@ StorageType SQLLoader::getType()
 
 void SQLLoader::loadSession(Session *session)
 {
-
+  //TODO:
 }
 
 // static attributes (if any)

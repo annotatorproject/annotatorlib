@@ -103,25 +103,26 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
   AnnotatorLib::Annotation *previous = object->getFirstAnnotation();
   if (previous) previous = previous->getLast();
 
-  if (previous && previous->getFrame()->getNumber() == start) {
+  if (previous && previous->getFrame()->getFrameNumber() == start) {
     return;
   }
 
-  AnnotatorLib::Annotation *annotation = new Annotation();
-  if (previous) {
-    previous->setNext(annotation);
-    annotation->setPrevious(previous);
+  if (frame != nullptr && object != nullptr) {
+      AnnotatorLib::Annotation *annotation = new Annotation(frame, object, AnnotationType::RECTANGLE);  //TODO: read type from file!
+      if (previous) {
+        previous->setNext(annotation);
+        annotation->setPrevious(previous);
+      }
+
+      annotation->setFinished(true);
+      annotation->setPosition(x, y, width, height);
+      frame->addAnnotation(annotation);
+      object->addAnnotation(annotation);
+      session->addAnnotation(annotation, frame);
+      session->addObject(object);
+      session->addFrame(frame);
   }
 
-  annotation->setFinished(true);
-  annotation->setFrame(frame);
-  annotation->setPosition(x, y, width, height);
-  frame->addAnnotation(annotation);
-  object->addAnnotation(annotation);
-  annotation->setObject(object);
-  session->addAnnotation(annotation);
-  session->addObject(object);
-  session->addFrame(frame);
 }
 
 /**

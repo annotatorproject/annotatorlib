@@ -119,9 +119,8 @@ std::vector<Annotation *> Object::getAnnotations() const
 
 bool Object::addAnnotation(Annotation *annotation)
 {
-    if (annotation != nullptr && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
-        annotations.push_back(annotation);
-        annotation->setObject(this);
+    if (annotation != nullptr && annotation->getObject() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
+        annotations.push_back(annotation);        
         return true;
     }
     return false;

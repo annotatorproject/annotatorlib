@@ -98,7 +98,7 @@ QJsonObject JSONSaver::annotationToJson(Annotation *annotation) {
   QJsonObject json;
   json["id"] = QString::number(annotation->getId());
   json["object"] = QString::number(annotation->getObject()->getId());
-  json["frame"] = QString::number(annotation->getFrame()->getNumber());
+  json["frame"] = QString::number(annotation->getFrame()->getFrameNumber());
 
   json["x"] = QString::number(annotation->getX());
   json["y"] = QString::number(annotation->getY());
@@ -128,7 +128,7 @@ QJsonObject JSONSaver::annotationToJson(Annotation *annotation) {
 QJsonObject JSONSaver::frameToJson(Frame *frame) {
   QJsonObject json;
 
-  json["number"] = QString::number(frame->getNumber());
+  json["number"] = QString::number(frame->getFrameNumber());
 
   // insert list of attributes
   QJsonArray attributes;
@@ -170,7 +170,7 @@ QJsonObject JSONSaver::objectToJson(Object *object) {
   // insert list of frames
   QJsonArray frames;
   for (Frame *frame : object->getFrames()) {
-    frames.append(QString::number(frame->getNumber()));
+    frames.append(QString::number(frame->getFrameNumber()));
   }
   json["frames"] = frames;
 

@@ -103,27 +103,22 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
         AnnotatorLib::AnnotationType type =
                 AnnotatorLib::AnnotationTypeFromString(annotation["type"].toString().toStdString());
 
-        AnnotatorLib::Annotation * a = new AnnotatorLib::Annotation(id);
-        a->setType(type);
-
-        a->setPosition(x, y, width, height);
-
-        QJsonArray attributes = annotation.value("attributes").toArray();
-        for(QJsonValue attribute: attributes){
-            unsigned long atid = attribute.toString().toLong();
-            AnnotatorLib::Attribute * at = session->getAttribute(atid);
-            if(at != nullptr)
-                a->addAttribute(at);
-        }
-
         AnnotatorLib::Object * o = session->getObject(object);
-        if(o != nullptr)
-            a->setObject(o);
         AnnotatorLib::Frame * f = session->getFrame(frame);
-        if(f != nullptr)
-            a->setFrame(f);
 
-        session->addAnnotation(a);
+        if(o != nullptr && f != nullptr) {
+            AnnotatorLib::Annotation * a = new AnnotatorLib::Annotation(f, o, id, type);
+            a->setPosition(x, y, width, height);
+            //add attributes
+            QJsonArray attributes = annotation.value("attributes").toArray();
+            for(QJsonValue attribute: attributes){
+                unsigned long atid = attribute.toString().toLong();
+                AnnotatorLib::Attribute * at = session->getAttribute(atid);
+                if(at != nullptr)
+                    a->addAttribute(at);
+            }
+            session->addAnnotation(a, f);
+        }
     }
 }
 

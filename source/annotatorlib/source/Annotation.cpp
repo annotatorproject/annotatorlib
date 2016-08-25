@@ -21,33 +21,24 @@ namespace AnnotatorLib {
 
 // static attributes (if any)
 static unsigned long lastId = 100000;
-/**
- *
- * @return id
- */
-Annotation::Annotation() : id(genId()) { }
 
-Annotation::Annotation(const Annotation &obj) : Annotation() {
-  this->attributes = obj.attributes;
-  this->next = obj.next;
-  this->previous = obj.previous;
-
-  this->type = obj.type;
-  this->frame = obj.frame;
-  this->object = obj.object;
-
-  this->x = obj.x;
-  this->y = obj.y;
-  this->width = obj.width;
-  this->height = obj.height;
-}
-
-Annotation::Annotation(AnnotationType type) : Annotation() {
-  this->type = type;
-}
-
-Annotation::Annotation(unsigned long id) : id(id) {
+Annotation::Annotation(Frame* frame, Object* obj, unsigned long id, AnnotationType type) : id(id), frame(frame), object(obj), type(type)
+{
   if (lastId < id) lastId = id;
+  visible = true;
+}
+
+Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(frame, obj, genId(), type) { }
+
+Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), other.getObject(), other.getType()) {
+  this->attributes = other.attributes;
+  this->next = other.next;
+  this->previous = other.previous;
+  this->x = other.x;
+  this->y = other.y;
+  this->width = other.width;
+  this->height = other.height;
+  this->visible = other.isVisible();
 }
 
 unsigned long Annotation::genId() {
@@ -81,26 +72,26 @@ bool Annotation::removeAttribute(Attribute *attribute) {
 
 Frame *Annotation::getFrame() const { return frame; }
 
-void Annotation::setFrame(Frame *frame) {
-  if (this->frame != frame) {
-    this->frame = frame;
-    // if(frame != nullptr)
-    //    frame->addAnnotation(this);
-  }
-}
+//void Annotation::setFrame(Frame *frame) {
+//  if (this->frame != frame) {
+//    this->frame = frame;
+//    // if(frame != nullptr)
+//    //    frame->addAnnotation(this);
+//  }
+//}
 
 Object *Annotation::getObject() const { return object; }
 
-void Annotation::setObject(Object *object) {
-  if (this->object != object) {
-    this->object = object;
-    if (object != nullptr) object->addAnnotation(this);
-  }
-}
+//void Annotation::setObject(Object *object) {
+//  if (this->object != object) {
+//    this->object = object;
+//    if (object != nullptr) object->addAnnotation(this);
+//  }
+//}
 
 AnnotationType Annotation::getType() const { return this->type; }
 
-void Annotation::setType(AnnotationType type) { this->type = type; }
+//void Annotation::setType(AnnotationType type) { this->type = type; }
 
 void Annotation::setCenterPosition(float x, float y, float hradius,
                                    float vradius) {
@@ -109,6 +100,9 @@ void Annotation::setCenterPosition(float x, float y, float hradius,
   setHRadius(hradius);
   setVRadius(vradius);
 }
+
+void Annotation::setVisible(bool vis) { visible = vis; }
+bool Annotation::isVisible() const { return visible; }
 
 int Annotation::getX() const { return x; }
 

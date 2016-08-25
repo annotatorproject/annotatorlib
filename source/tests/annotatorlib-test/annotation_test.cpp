@@ -11,8 +11,8 @@ class annotation_test : public testing::Test {
 };
 
 TEST_F(annotation_test, genId) {
-  AnnotatorLib::Annotation annotation1(AnnotatorLib::Annotation::genId());
-  AnnotatorLib::Annotation annotation2(AnnotatorLib::Annotation::genId());
+  AnnotatorLib::Annotation annotation1(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation annotation2(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   std::cout << "Annotation 1 id:" << annotation1.getId() << std::endl;
   std::cout << "Annotation 2 id:" << annotation2.getId() << std::endl;
 
@@ -20,9 +20,8 @@ TEST_F(annotation_test, genId) {
 }
 
 TEST_F(annotation_test, previousAndNext) {
-  AnnotatorLib::Annotation annotation1(AnnotatorLib::Annotation::genId());
-  AnnotatorLib::Annotation annotation2(AnnotatorLib::Annotation::genId());
-
+  AnnotatorLib::Annotation annotation1(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation annotation2(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation1.setNext(&annotation2);
   annotation2.setPrevious(&annotation1);
 
@@ -34,9 +33,9 @@ TEST_F(annotation_test, previousAndNext) {
 }
 
 TEST_F(annotation_test, interpolation) {
-  AnnotatorLib::Annotation annotation5(AnnotatorLib::Annotation::genId());
+  AnnotatorLib::Annotation annotation5(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation5.setPosition(100, 200, 20, 40);
-  AnnotatorLib::Annotation annotation15(AnnotatorLib::Annotation::genId());
+  AnnotatorLib::Annotation annotation15(nullptr, nullptr, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation15.setPosition(200, 140, 40, 30);
 
   AnnotatorLib::Frame frame5(5);

@@ -40,7 +40,7 @@ bool Session::removeAttribute(Attribute *attribute)
     return false;
 }
 
-Attribute *Session::getAttribute(unsigned long id)
+Attribute *Session::getAttribute(unsigned long id) const
 {
     for(Attribute * attribute: attributes)
     {
@@ -50,31 +50,39 @@ Attribute *Session::getAttribute(unsigned long id)
     return nullptr;
 }
 
-std::vector<Annotation *> Session::getAnnotations()
+std::vector<Annotation *> Session::getAnnotations() const
 {
     return annotations;
 }
 
-bool Session::addAnnotation(Annotation *annotation)
+bool Session::addAnnotation(Annotation *annotation, Frame *frame)
 {
     if (std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
-        annotations.push_back(annotation);
-        return true;
+        //TODO:
+        //if( frame->addAnnotation(annotation)){
+            frame->addAnnotation(annotation);
+            annotations.push_back(annotation);
+            return true;
+        //}
     }
     return false;
 }
 
-bool Session::removeAnnotation(const Annotation *annotation)
+bool Session::removeAnnotation(Annotation *annotation)
 {
-    std::vector<Annotation *>::const_iterator position = std::find(annotations.cbegin(), annotations.cend(), annotation);
+    std::vector<Annotation *>::iterator position = std::find(annotations.begin(), annotations.end(), annotation);
     if (position != annotations.end()){
-        annotations.erase(position);
+        Frame *frame = annotation->getFrame();
+        if (frame)
+            frame->removeAnnotation(annotation);
+        annotation->setVisible(false);
+        annotations.erase(position);        
         return true;
     }
     return false;
 }
 
-Annotation *Session::getAnnotation(unsigned long id)
+Annotation *Session::getAnnotation(unsigned long id) const
 {
     for(Annotation * annotation: annotations)
     {
@@ -108,7 +116,7 @@ bool Session::removeClass(Class *c)
     return false;
 }
 
-Class *Session::getClass(unsigned long id)
+Class *Session::getClass(unsigned long id) const
 {
     for(Class * c: classes)
     {
@@ -118,7 +126,7 @@ Class *Session::getClass(unsigned long id)
     return nullptr;
 }
 
-Class *Session::getClass(std::string name)
+Class *Session::getClass(std::string name) const
 {
     for(Class * c: classes)
     {
@@ -156,7 +164,7 @@ Frame *Session::getFrame(unsigned long number)
 {
     for(Frame * frame: frames)
     {
-        if(frame->getNumber() == number)
+        if(frame->getFrameNumber() == number)
             return frame;
     }
     Frame * frame = new Frame(number);

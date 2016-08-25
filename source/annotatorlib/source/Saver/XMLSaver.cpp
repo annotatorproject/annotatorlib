@@ -27,7 +27,7 @@ namespace Saver {
 void XMLSaver::saveFrame(AnnotatorLib::Frame *frame, Session *session)
 {
     QString filename = QString::fromStdString(path) +
-            QString("%1").arg(frame->getNumber(), 8, 10, QChar('0')) +".xml";
+            QString("%1").arg(frame->getFrameNumber(), 8, 10, QChar('0')) +".xml";
 
     QFile file(filename);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -80,7 +80,7 @@ QDomElement XMLSaver::meta(Frame *frame)
 {
     QDomElement element = document.createElement("META");
     QDomElement filename = document.createElement("FILENAME");
-    QDomText filenameText = document.createTextNode(QString::number(frame->getNumber()));
+    QDomText filenameText = document.createTextNode(QString::number(frame->getFrameNumber()));
     filename.appendChild(filenameText);
     element.appendChild(filename);
     return element;
@@ -105,8 +105,8 @@ QDomElement XMLSaver::fromObject(AnnotatorLib::Object *object, Frame *frame)
 
     AnnotatorLib::Annotation * annotation = AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(frame, object);
 
-    element.setAttribute("StartFr", QString::number(annotation->getFirst()->getFrame()->getNumber()));
-    element.setAttribute("EndFr", QString::number(annotation->getLast()->getFrame()->getNumber()));
+    element.setAttribute("StartFr", QString::number(annotation->getFirst()->getFrame()->getFrameNumber()));
+    element.setAttribute("EndFr", QString::number(annotation->getLast()->getFrame()->getFrameNumber()));
 
     // START
     QDomElement start = document.createElement("START");
@@ -114,11 +114,11 @@ QDomElement XMLSaver::fromObject(AnnotatorLib::Object *object, Frame *frame)
     QDomElement end = document.createElement("END");
 
     if(annotation->isInterpolated()){
-        start.appendChild(document.createTextNode(QString::number(annotation->getPrevious()->getFrame()->getNumber())));
+        start.appendChild(document.createTextNode(QString::number(annotation->getPrevious()->getFrame()->getFrameNumber())));
     }else{
-        start.appendChild(document.createTextNode(QString::number(annotation->getFrame()->getNumber())));
+        start.appendChild(document.createTextNode(QString::number(annotation->getFrame()->getFrameNumber())));
         end.appendChild(document.createTextNode(annotation->getNext() ?
-                                                    QString::number(annotation->getNext()->getFrame()->getNumber()):"-1"));
+                                                    QString::number(annotation->getNext()->getFrame()->getFrameNumber()):"-1"));
     }
 
     element.appendChild(start);

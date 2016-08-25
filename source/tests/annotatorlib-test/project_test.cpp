@@ -15,29 +15,28 @@ TEST_F(project_test, saveProject) {
             project->setPath(path);
             project->load();
             AnnotatorLib::Session * session = project->getSession();
-            AnnotatorLib::Object object(AnnotatorLib::Object::genId());
-            object.setName("testobject");
-            session->addObject(&object);
+            AnnotatorLib::Object * object = new AnnotatorLib::Object();
+            object->setName("testobject");
+            session->addObject(object);
 
-            AnnotatorLib::Frame frame(1);
-            session->addFrame(&frame);
+            AnnotatorLib::Frame* frame = new AnnotatorLib::Frame(1);
+            session->addFrame(frame);
 
             AnnotatorLib::Attribute attribute(AnnotatorLib::Attribute::genId(), AnnotatorLib::AttributeType::BOOLEAN, "light");
             AnnotatorLib::AttributeValue defaultValue(false);
             attribute.setDefaultValue(&defaultValue);
             session->addAttribute(&attribute);
 
-            AnnotatorLib::Annotation annotation(AnnotatorLib::Annotation::genId());
+            AnnotatorLib::Annotation annotation(frame, object, AnnotatorLib::AnnotationType::RECTANGLE);
             annotation.addAttribute(&attribute);
-            annotation.setFrame(&frame);
-            annotation.setObject(&object);
             annotation.setPosition(10,10,3,3);
 
-            session->addAnnotation(&annotation);
-
+            session->addAnnotation(&annotation, frame);
 
             AnnotatorLib::Project::save(project, path);
             delete project;
+            delete frame;
+            delete object;
         }catch(std::exception &e){
             e.what();
         }

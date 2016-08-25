@@ -28,11 +28,12 @@ class ANNOTATORLIB_API Annotation {
  public:
 
   const unsigned long id = 0;
+  const AnnotationType type;
 
-  Annotation();
+  Annotation() = delete;
+  Annotation(Frame* frame, Object* obj, unsigned long id, AnnotationType type = AnnotationType::RECTANGLE);
+  Annotation(Frame* frame, Object* obj, AnnotationType type);
   Annotation(const Annotation &obj);
-  Annotation(AnnotationType type);
-  Annotation(unsigned long id);
 
   /**
    *
@@ -45,15 +46,11 @@ class ANNOTATORLIB_API Annotation {
   std::vector<Attribute *> getAttributes() const;
   bool addAttribute(Attribute *attribute);
   bool removeAttribute(Attribute *attribute);
-
   Frame *getFrame() const;
-  void setFrame(Frame *frame);
-
   Object *getObject() const;
-  void setObject(Object *object);
-
   AnnotationType getType() const;
-  void setType(AnnotationType type);
+  void setVisible(bool vis);
+  bool isVisible() const;
 
   /**
    * @brief setPosition
@@ -119,8 +116,6 @@ class ANNOTATORLIB_API Annotation {
    */
   Frame *frame;
 
-  AnnotationType type = AnnotationType::RECTANGLE;
-
   Annotation *next = nullptr;
   Annotation *previous = nullptr;
 
@@ -134,6 +129,8 @@ class ANNOTATORLIB_API Annotation {
   float height = 0;
 
   bool interpolated = false;
+
+  bool visible;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

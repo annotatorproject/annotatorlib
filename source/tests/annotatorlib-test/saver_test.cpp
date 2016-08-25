@@ -25,6 +25,9 @@ AnnotatorLib::Session initSession() {
   AnnotatorLib::Frame *frame3 = new AnnotatorLib::Frame(15);
   session.addFrame(frame3);
 
+  AnnotatorLib::Frame *frame4 = new AnnotatorLib::Frame(20);
+  session.addFrame(frame4);
+
   AnnotatorLib::Attribute *attribute = new AnnotatorLib::Attribute(
       AnnotatorLib::Attribute::genId(), AnnotatorLib::AttributeType::BOOLEAN,
       "light");
@@ -49,33 +52,24 @@ AnnotatorLib::Session initSession() {
   session.addClass(c);
 
   AnnotatorLib::Annotation *annotation =
-      new AnnotatorLib::Annotation(AnnotatorLib::Annotation::genId());
+      new AnnotatorLib::Annotation(frame, object, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation->setPosition(100, 100, 100, 100);
   annotation->addAttribute(attribute);
-  annotation->setFrame(frame);
-  annotation->setObject(object);
 
   AnnotatorLib::Annotation *annotation2 =
-      new AnnotatorLib::Annotation(AnnotatorLib::Annotation::genId());
+      new AnnotatorLib::Annotation(frame1, object2, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation2->setPosition(200, 200, 200, 200);
   annotation2->addAttribute(attribute);
-  annotation2->setFrame(frame1);
-  annotation2->setObject(object2);
 
   AnnotatorLib::Annotation *annotation3 =
-      new AnnotatorLib::Annotation(AnnotatorLib::Annotation::genId());
+      new AnnotatorLib::Annotation(frame2, object2, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation3->setPosition(300, 300, 300, 300);
   annotation3->addAttribute(attribute);
-  annotation3->setFrame(frame2);
-  annotation3->setObject(object2);
 
   AnnotatorLib::Annotation *annotation4 =
-      new AnnotatorLib::Annotation(AnnotatorLib::Annotation::genId());
-  annotation4->setType(AnnotatorLib::AnnotationType::ELLIPSE);
+      new AnnotatorLib::Annotation(frame3, object2, AnnotatorLib::AnnotationType::ELLIPSE);
   annotation4->setPosition(400, 400, 400, 400);
   annotation4->addAttribute(attribute);
-  annotation4->setFrame(frame3);
-  annotation4->setObject(object2);
 
   annotation2->setNext(annotation3);
   annotation3->setPrevious(annotation2);
@@ -90,10 +84,10 @@ AnnotatorLib::Session initSession() {
   session.addObject(object);
   session.addObject(object2);
 
-  session.addAnnotation(annotation);
-  session.addAnnotation(annotation2);
-  session.addAnnotation(annotation3);
-  session.addAnnotation(annotation4);
+  session.addAnnotation(annotation, frame);
+  session.addAnnotation(annotation2, frame2);
+  session.addAnnotation(annotation3, frame3);
+  session.addAnnotation(annotation4, frame4);
   session.addAttribute(attribute);
   return session;
 }

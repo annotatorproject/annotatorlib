@@ -17,7 +17,8 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->session = session;
   this->isFinished = isLast;
   this->object = new AnnotatorLib::Object();
-  annotation = new AnnotatorLib::Annotation();
+  this->object->setName(newObjectName);
+  this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
@@ -31,7 +32,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->height = height;
   this->session = session;
   this->isFinished = isFinished;
-  annotation = new AnnotatorLib::Annotation();
+  this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
@@ -49,19 +50,16 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->previous = previous;
   this->session = session;
   this->isFinished = isFinished;
-  annotation = new AnnotatorLib::Annotation();
+  this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
   annotation->setPosition(x, y, height, height);
-  annotation->setObject(object);
-  annotation->setFrame(frame);
   object->addAnnotation(annotation);
-  frame->addAnnotation(annotation);
+  //frame->addAnnotation(annotation);
   object->addFrame(frame);
-  session->addAnnotation(annotation);
+  session->addAnnotation(annotation, frame);
   if (createNewObject) {
-    object->setName(newObjectName);
     session->addObject(object);
   }
 
@@ -84,6 +82,7 @@ bool AnnotatorLib::Commands::NewAnnotation::undo() {
   object->removeAnnotation(annotation);
   session->removeAnnotation(annotation);
   frame->removeAnnotation(annotation);
+  annotation->setVisible(false);
 
   if (createNewObject) session->removeObject(object);
 

@@ -19,20 +19,25 @@
 
 namespace AnnotatorLib {
 
-// static attributes (if any)
+////////////////// statics /////////////////////
+
 static unsigned long lastId = 100000;
 
-Annotation::Annotation(Frame* frame, Object* obj, unsigned long id, AnnotationType type) : id(id), frame(frame), object(obj), type(type)
-{
-  if (lastId < id) lastId = id;
-  visible = true;
-  if (object)
-    object->addAnnotation(this);
-  if (frame)
-    frame->addAnnotation(this);
+unsigned long Annotation::genId() {
+  lastId += 5;
+  return lastId;
 }
 
-Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(frame, obj, genId(), type) { }
+//////////////// constructors ///////////////////
+
+Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type) : id(id), frame(frame), object(obj), type(type)
+{
+  if (lastId < id) lastId = id;
+  setVisible(true);
+
+}
+
+Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(genId(), frame, obj, type) { }
 
 Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), other.getObject(), other.getType()) {
   this->attributes = other.attributes;
@@ -42,13 +47,10 @@ Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), o
   this->y = other.y;
   this->width = other.width;
   this->height = other.height;
-  this->visible = other.isVisible();
+  setVisible(other.isVisible());
 }
 
-unsigned long Annotation::genId() {
-  lastId += 5;
-  return lastId;
-}
+//////////////// public methods ///////////////////
 
 unsigned long Annotation::getId() const { return id; }
 
@@ -76,6 +78,7 @@ bool Annotation::removeAttribute(Attribute *attribute) {
 
 Frame *Annotation::getFrame() const { return frame; }
 
+// removed this setter function, since we don't want that the user can change this afterwards
 //void Annotation::setFrame(Frame *frame) {
 //  if (this->frame != frame) {
 //    this->frame = frame;
@@ -86,6 +89,7 @@ Frame *Annotation::getFrame() const { return frame; }
 
 Object *Annotation::getObject() const { return object; }
 
+// removed this setter function, since we don't want that the user can change this afterwards
 //void Annotation::setObject(Object *object) {
 //  if (this->object != object) {
 //    this->object = object;
@@ -105,7 +109,14 @@ void Annotation::setCenterPosition(float x, float y, float hradius,
   setVRadius(vradius);
 }
 
-void Annotation::setVisible(bool vis) { visible = vis; }
+void Annotation::setVisible(bool vis) {
+  visible = vis;
+  if (vis) {
+    registerAnnotation();
+  } else {
+    unregisterAnnotation();
+  }
+}
 bool Annotation::isVisible() const { return visible; }
 
 int Annotation::getX() const { return x; }
@@ -216,6 +227,24 @@ void Annotation::setPosition(float x, float y, float width, float height) {
   setY(y);
   setWidth(width);
   setHeight(height);
+}
+
+//////////////// private methods ///////////////////
+
+void Annotation::registerAnnotation() {
+  if (object)
+    object->addAnnotation(this);
+  if (frame)
+    frame->addAnnotation(this);
+  if(object && frame) is_registered = true;
+}
+
+void Annotation::unregisterAnnotation() {
+  if (object)
+    object->removeAnnotation(this);
+  if (frame)
+    frame->removeAnnotation(this);
+  is_registered = false;
 }
 
 }  // of namespace AnnotatorLib

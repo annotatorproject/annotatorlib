@@ -27,13 +27,19 @@ class Object;
 class ANNOTATORLIB_API Annotation {
  public:
 
+  /////////CONSTANTS/////////////
+
   const unsigned long id = 0;
   const AnnotationType type;
 
+  ////////CONSTRUCTORS//////////
+
   Annotation() = delete;
-  Annotation(Frame* frame, Object* obj, unsigned long id, AnnotationType type = AnnotationType::RECTANGLE);
+  Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE);
   Annotation(Frame* frame, Object* obj, AnnotationType type);
   Annotation(const Annotation &obj);
+
+  ////////METHODS//////////
 
   /**
    *
@@ -49,8 +55,19 @@ class ANNOTATORLIB_API Annotation {
   Frame *getFrame() const;
   Object *getObject() const;
   AnnotationType getType() const;
+  /**
+   * @brief Set this annotation to visible and
+   * register to its associated object and frame.
+   * @param vis
+   */
   void setVisible(bool vis);
+  /**
+   * @brief Retrun if the annotation is visible and
+   * registered to its object and frame.
+   * @return
+   */
   bool isVisible() const;
+
 
   /**
    * @brief setPosition
@@ -95,6 +112,12 @@ class ANNOTATORLIB_API Annotation {
   bool isFirst() const;
 
   void setFinished(bool ended);
+
+  /**
+   * @brief isFinished
+   * Returns if annotation is last annotation of track.
+   * @return
+   */
   bool isFinished();
 
   void setInterpolated(bool interpolated);
@@ -102,24 +125,10 @@ class ANNOTATORLIB_API Annotation {
 
  protected:
 
-  /**
-   *
-   */
   std::vector<Attribute *> attributes;
-  /**
-   *
-   */
-  Object *object;
-
-  /**
-   * @brief frame where the annotation is.
-   */
-  Frame *frame;
 
   Annotation *next = nullptr;
   Annotation *previous = nullptr;
-
-  ///////////////////////////////
 
   // top, left corner, width, height
   float x = 0;
@@ -129,8 +138,23 @@ class ANNOTATORLIB_API Annotation {
   float height = 0;
 
   bool interpolated = false;
-
   bool visible;
+
+private:
+  /**
+   * @brief Register annotation to its object and frame.
+   * @param vis
+   */
+  void registerAnnotation();
+  void unregisterAnnotation();
+
+  ///////////////////////////////
+
+  Frame *frame = nullptr;
+  Object *object = nullptr;
+
+  bool is_registered;
+
 };
 /************************************************************/
 /* External declarations (package visibility)               */

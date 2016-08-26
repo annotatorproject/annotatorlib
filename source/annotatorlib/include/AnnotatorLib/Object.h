@@ -36,7 +36,7 @@ public:
     Object();
     Object(Class* c);
     Object(unsigned long id);
-    Object(Class* c, unsigned long id);
+    Object(unsigned long id, Class* c);
 
 	/**
 	 * 
@@ -79,7 +79,7 @@ private:
     std::string name;
     bool visible = true;
 
-    Class *objectClass;
+    Class *objectClass = nullptr;
 	/**
 	 * 
 	 */

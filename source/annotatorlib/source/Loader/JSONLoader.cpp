@@ -107,7 +107,7 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
         AnnotatorLib::Frame * f = session->getFrame(frame);
 
         if(o != nullptr && f != nullptr) {
-            AnnotatorLib::Annotation * a = new AnnotatorLib::Annotation(f, o, id, type);
+            AnnotatorLib::Annotation * a = new AnnotatorLib::Annotation(id, f, o, type);
             a->setPosition(x, y, width, height);
             //add attributes
             QJsonArray attributes = annotation.value("attributes").toArray();

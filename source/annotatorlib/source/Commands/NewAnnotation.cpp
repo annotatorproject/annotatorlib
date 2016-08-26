@@ -17,7 +17,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->height = height;
   this->session = session;
   this->isFinished = isLast;
-  this->object = new AnnotatorLib::Object(newObjectClass, newObjectId);
+  this->object = new AnnotatorLib::Object(newObjectId, newObjectClass);
   this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
 }
 

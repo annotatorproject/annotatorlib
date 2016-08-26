@@ -28,9 +28,9 @@ Object::Object( ) : id(genId()) { genName(); }
 
 Object::Object(unsigned long id) : id(id) { genName(); }
 
-Object::Object(Class* c) : objectClass(c), id(genId()) { genName(); }
+Object::Object(Class* c) : id(genId()), objectClass(c) { genName(); }
 
-Object::Object(Class* c, unsigned long id) : objectClass(c), id(id) { genName(); }
+Object::Object(unsigned long id, Class* c) : id(id), objectClass(c) { genName(); }
 
 unsigned long Object::genId() {
     lastId += 3;
@@ -55,8 +55,8 @@ void Object::setName(std::string name)
 std::string Object::genName()
 {
     std::string prefix = "unnamed_obj_";
-    Class* c = getClass();
-    if (c != nullptr)
+    const Class* c = getClass();
+    if (c)
         prefix = c->getName() + "_";
     return prefix + std::to_string(lastNamePostfix++);
 }

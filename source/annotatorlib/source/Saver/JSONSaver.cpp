@@ -47,7 +47,7 @@ QJsonObject JSONSaver::sessionToJson(Session *session) {
   // insert list of objects
   QJsonArray objects;
   for (Object *object : session->getObjects()) {
-      if (object->isVisible())
+      if (object->isVisible() && object->hasAnnotations())
         objects.append(objectToJson(object));
   }
   json["objects"] = objects;
@@ -77,7 +77,8 @@ QJsonObject JSONSaver::sessionToJson(Session *session) {
   // insert list of frames
   QJsonArray frames;
   for (Frame *frame : session->getFrames()) {
-    frames.append(frameToJson(frame));
+      if (frame->hasAnnotations())
+        frames.append(frameToJson(frame));
   }
   json["frames"] = frames;
 

@@ -10,6 +10,7 @@
 
 // include associated header file
 #include <algorithm>
+#include <assert.h>
 #include "AnnotatorLib/Frame.h"
 
 // Derived includes directives
@@ -21,6 +22,36 @@ Frame::Frame(unsigned long frame_number) : frame_number(frame_number) { }
 Frame::~Frame()
 {
     annotations.clear();
+}
+
+bool Frame::operator> (const Frame & right)
+{
+  return frame_number > right.frame_number;
+}
+
+bool Frame::operator< (const Frame & right)
+{
+  return frame_number < right.frame_number;
+}
+
+bool Frame::operator<= ( const Frame & right)
+{
+  return frame_number <= right.frame_number;
+}
+
+bool Frame::operator>= (const Frame & right)
+{
+  return frame_number >= right.frame_number;
+}
+
+bool Frame::operator== (const Frame & right)
+{
+  return frame_number == right.frame_number;
+}
+
+bool Frame::operator!= (const Frame & right)
+{
+  return frame_number != right.frame_number;
 }
 
 std::vector<Annotation *> Frame::getAnnotations() const
@@ -35,6 +66,8 @@ bool Frame::hasAnnotations() const
 
 bool Frame::addAnnotation(Annotation *annotation)
 {
+    assert(!containsObject(annotation->getObject()));
+
     if (annotation != nullptr && annotation->getFrame() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
         annotations.push_back(annotation);
         return true;
@@ -50,6 +83,17 @@ bool Frame::removeAnnotation(Annotation *annotation)
         return true;
     }
     return false;
+}
+
+bool Frame::containsObject(const Object* obj) const
+{
+  std::vector<Annotation *>::const_iterator position = std::find_if(annotations.begin(),
+                                                                    annotations.end(),
+                                                                    [obj] (const Annotation* a) { return a->getObject() == obj; } );
+  if (position != annotations.end()){
+      return true;
+  }
+  return false;
 }
 
 std::vector<Attribute *> Frame::getAttributes() const

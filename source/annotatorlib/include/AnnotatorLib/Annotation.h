@@ -25,7 +25,10 @@ class Object;
  * Represents a label for an object on a specific frame.
  */
 class ANNOTATORLIB_API Annotation {
- public:
+
+  friend class Object;
+
+public:
 
   /////////CONSTANTS/////////////
 
@@ -38,6 +41,22 @@ class ANNOTATORLIB_API Annotation {
   Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE);
   Annotation(Frame* frame, Object* obj, AnnotationType type);
   Annotation(const Annotation &obj);
+
+  /////////////////////////
+
+  /**
+   * @brief operator >: comparing is based on frame-number
+   * @param left
+   * @param right
+   * @return
+   */
+  bool operator> (const Annotation & right);
+  bool operator>= (const Annotation & right);
+  bool operator< (const Annotation & right);
+  bool operator<= (const Annotation & right);
+  bool operator== (const Annotation & right);
+  bool operator!= (const Annotation & right);
+
 
   ////////METHODS//////////
 
@@ -57,8 +76,9 @@ class ANNOTATORLIB_API Annotation {
   AnnotationType getType() const;
   /**
    * @brief Set this annotation to visible and
-   * register to its associated object and frame.
+   * register/unregister to its associated object and frame.
    * @param vis
+   * @param autoreg [default = false]
    */
   void setVisible(bool vis);
   /**
@@ -101,10 +121,10 @@ class ANNOTATORLIB_API Annotation {
   float getVRadius() const;
   void setVRadius(float vradius);
 
-  void setNext(Annotation *next);
   Annotation *getNext() const;
-  void setPrevious(Annotation *previous);
   Annotation *getPrevious() const;
+  void setPrevious(Annotation *previous);
+  void setNext(Annotation *next);
 
   Annotation *getFirst();
   Annotation *getLast();
@@ -123,7 +143,7 @@ class ANNOTATORLIB_API Annotation {
   void setInterpolated(bool interpolated);
   bool isInterpolated() const;
 
- protected:
+protected:
 
   std::vector<Attribute *> attributes;
 

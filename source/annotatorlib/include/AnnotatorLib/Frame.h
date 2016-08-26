@@ -34,10 +34,23 @@ public:
     Frame(unsigned long frame_nmb);
     ~Frame();
 
+    bool operator> (const Frame & right);
+    bool operator>= (const Frame & right);
+    bool operator< (const Frame & right);
+    bool operator<= (const Frame & right);
+    bool operator== (const Frame & right);
+    bool operator!= (const Frame & right);
+
     std::vector<Annotation*> getAnnotations() const;
     bool hasAnnotations() const;
     bool addAnnotation(Annotation* annotation);
     bool removeAnnotation(Annotation* annotation);
+    /**
+     * @brief Checks if there is an annotation,
+     * which belongs to the given object.
+     * @param annotation
+     */
+    bool containsObject(const Object* obj) const;
 
     std::vector<Attribute*> getAttributes() const;
 

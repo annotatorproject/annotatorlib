@@ -32,6 +32,9 @@ unsigned long Annotation::genId() {
 
 Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type) : id(id), frame(frame), object(obj), type(type)
 {
+  assert(frame != nullptr);
+  assert(obj != nullptr);
+
   if (lastId < id) lastId = id;
   setVisible(true);
 
@@ -51,6 +54,36 @@ Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), o
 }
 
 //////////////// public methods ///////////////////
+
+bool Annotation::operator> (const Annotation & right)
+{
+  return this->frame > right.frame;
+}
+
+bool Annotation::operator< (const Annotation & right)
+{
+  return this->frame < right.frame;
+}
+
+bool Annotation::operator<= (const Annotation & right)
+{
+  return this->frame <= right.frame;
+}
+
+bool Annotation::operator>= (const Annotation & right)
+{
+  return this->frame >= right.frame;
+}
+
+bool Annotation::operator== (const Annotation & right)
+{
+  return this->frame == right.frame;
+}
+
+bool Annotation::operator!= (const Annotation & right)
+{
+  return this->frame != right.frame;
+}
 
 unsigned long Annotation::getId() const { return id; }
 
@@ -158,29 +191,15 @@ void Annotation::setVRadius(float vradius) {
 }
 
 void Annotation::setNext(Annotation *next) {
-  if (this->next != next) {
-    if (next == nullptr) {
-      // this->next->setPrevious(nullptr);
-      this->next = next;
-    } else {
-      this->next = next;
-      // next->setPrevious(this);
-    }
-  }
+  assert(next == nullptr || this->frame <= next->frame);
+  this->next = next;
 }
 
 Annotation *Annotation::getNext() const { return next; }
 
 void Annotation::setPrevious(Annotation *previous) {
-  if (this->previous != previous) {
-    if (previous == nullptr) {
-      // this->previous->setNext(nullptr);
-      this->previous = previous;
-    } else {
-      this->previous = previous;
-      // previous->setNext(this);
-    }
-  }
+  assert(previous == nullptr || this->frame > next->frame);
+  this->previous = previous;
 }
 
 Annotation *Annotation::getPrevious() const { return previous; }

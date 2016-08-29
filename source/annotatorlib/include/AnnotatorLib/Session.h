@@ -79,7 +79,7 @@ public:
      * @return
      */
     virtual bool addFrame(Frame* frame);
-    virtual bool removeFrame(Frame* frame);
+    virtual bool removeFrame(Frame* frame, bool remove_annotations = true);
     /**
      * @brief getFrame by given number.
      * If it does not exist we create it.
@@ -96,7 +96,7 @@ public:
      * @return
      */
     virtual bool addObject(Object* object);
-    virtual bool removeObject(Object* object);
+    virtual bool removeObject(Object* object, bool remove_annotations = true);
     /**
      * @brief getFirstObjectByName
      * @param name

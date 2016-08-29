@@ -87,6 +87,8 @@ void JSONLoader::loadAttributes(QJsonObject &json, Session *session)
     }
 }
 
+
+
 void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
 {
     QJsonArray annotations = json.value("annotations").toArray();

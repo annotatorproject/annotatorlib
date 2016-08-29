@@ -11,7 +11,8 @@ class session_test : public testing::Test {
 TEST_F(session_test, getObject) {
   AnnotatorLib::Session session;
   AnnotatorLib::Object *o = new AnnotatorLib::Object();
-  AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(nullptr, o, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Frame *f = new AnnotatorLib::Frame(1);
+  AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(f, o, AnnotatorLib::AnnotationType::RECTANGLE);
   o->addAnnotation(a);
   o->setName("testname");
   bool success = session.addObject(o);
@@ -23,4 +24,5 @@ TEST_F(session_test, getObject) {
 
   delete o;
   delete a;
+  delete f;
 }

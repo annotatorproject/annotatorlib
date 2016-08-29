@@ -20,39 +20,46 @@ namespace AnnotatorLib {
 namespace Algo {
 
 Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
-                                                    Annotation *start,
-                                                    Annotation *end) {
-  if (start == nullptr) return nullptr;
+                                                    Annotation *prev,
+                                                    Annotation *next) {
+  assert(prev->getNext() == next);
+  assert(next->getPrevious() == prev);
 
-  Annotation *annotation = new Annotation(frame, start->getObject(), start->getType());
-  annotation->setPrevious(start);
+  if (prev == nullptr) return nullptr;
 
-  if (end == nullptr) return annotation;
+  assert(!frame->containsObject(prev->getObject()));
 
-  unsigned long startFrame = start->getFrame()->getFrameNumber();
-  unsigned long endFrame = end->getFrame()->getFrameNumber();
+  Annotation *annotation = new Annotation(frame, prev->getObject(), prev->getType());
+  //annotation->setPrevious(prev); //NOTE: is now managed by Object
+
+  if (next == nullptr) return annotation;
+
+  unsigned long startFrame = prev->getFrame()->getFrameNumber();
+  unsigned long endFrame = next->getFrame()->getFrameNumber();
   unsigned long curFrame = frame->getFrameNumber();
 
+  assert(prev->getObject() == next->getObject());
   assert(startFrame < endFrame);
   assert(startFrame < curFrame);
+  assert(endFrame > curFrame);
 
   float multiplier = 1.0f * (curFrame - startFrame) / (endFrame - startFrame);
 
-  float curX = start->getX() + (end->getX() - start->getX()) * multiplier;
-  float curY = start->getY() + (end->getY() - start->getY()) * multiplier;
+  float curX = prev->getX() + (next->getX() - prev->getX()) * multiplier;
+  float curY = prev->getY() + (next->getY() - prev->getY()) * multiplier;
 
   annotation->setX(curX);
   annotation->setY(curY);
 
   float curWidth =
-      start->getWidth() + (end->getWidth() - start->getWidth()) * multiplier;
+      prev->getWidth() + (next->getWidth() - prev->getWidth()) * multiplier;
   float curHeight =
-      start->getHeight() + (end->getHeight() - start->getHeight()) * multiplier;
+      prev->getHeight() + (next->getHeight() - prev->getHeight()) * multiplier;
 
   annotation->setWidth(curWidth);
   annotation->setHeight(curHeight);
 
-  annotation->setNext(end);
+  annotation->setNext(next);
 
   return annotation;
 }
@@ -62,32 +69,36 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     bool interpolationsOnly) {
   std::vector<Annotation *> annotations =
       getInterpolations(frame, object->getAnnotations(), interpolationsOnly);
-  if (annotations.size() > 0) return annotations[0];
-  return nullptr;
+  //if (annotations.size() > 0) return annotations[0];
+
+  assert(annotations.size() == 1);
+  return annotations[0];
+  //return nullptr;
 }
 
 std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, const Session *session, bool interpolationsOnly) {
+  Frame *frame, const Session *session, bool interpolationsOnly) {
   return getInterpolations(frame, session->getAnnotations(),
-                           interpolationsOnly);
+                         interpolationsOnly);
 }
 
 std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
     Frame *frame, const std::vector<Annotation *> annotations,
     bool interpolationsOnly) {
+
   std::vector<Annotation *> return_annotations;
 
   for (Annotation *a : annotations) {
     // Is Annotation before actual frame?
-    if (a->getFrame()->getFrameNumber() < frame->getFrameNumber()) {
+    if ( *a->getFrame() < *frame ) {
       Annotation *annotation = nullptr;
       if (!a->isFinished() && a->isLast()) {
         annotation = new Annotation(frame, a->getObject(), a->getType());
-        annotation->setPrevious(a);
+        //annotation->setPrevious(a); //NOTE: is now managed by Object
 
         // Is next Annotation after actual frame? Then return interpolated
         // Annotation.
-      } else if (a->getNext()->getFrame()->getFrameNumber() > frame->getFrameNumber()) {
+      } else if (*a->getNext()->getFrame() > *frame) {
         annotation = getInterpolation(frame, a, a->getNext());
       }
 

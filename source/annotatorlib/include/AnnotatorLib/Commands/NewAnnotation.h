@@ -23,9 +23,6 @@ public:
 
     NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Session *session, bool isFinished);
 
-    NewAnnotation(Object *object, Frame *frame, float x, float y, float width, float height, Annotation *next,
-                  Annotation *previous, Session *session, bool isFinished);
-
     NewAnnotation(const NewAnnotation& other);
 
     bool execute();

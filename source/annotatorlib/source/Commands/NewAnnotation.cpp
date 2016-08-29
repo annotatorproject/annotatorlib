@@ -24,30 +24,13 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     Object *object, Frame *frame, float x, float y, float width, float height,
     Session *session, bool isFinished = false) {
+  this->createNewObject = false;
   this->object = object;
   this->frame = frame;
   this->x = x;
   this->y = y;
   this->width = width;
   this->height = height;
-  this->session = session;
-  this->isFinished = isFinished;
-  this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
-}
-
-AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    AnnotatorLib::Object *object, AnnotatorLib::Frame *frame, float x, float y,
-    float width, float height, AnnotatorLib::Annotation *next,
-    AnnotatorLib::Annotation *previous, AnnotatorLib::Session *session,
-    bool isFinished = false) {
-  this->object = object;
-  this->frame = frame;
-  this->x = x;
-  this->y = y;
-  this->width = width;
-  this->height = height;
-  this->next = next;
-  this->previous = previous;
   this->session = session;
   this->isFinished = isFinished;
   this->annotation = new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
@@ -55,27 +38,14 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
   annotation->setPosition(x, y, height, height);
-  annotation->setVisible(true);
-  session->addAnnotation(annotation); //adds annotation plus object and frame if they do not exist
-
-  if (next != nullptr) {
-    annotation->setNext(next);
-    next->setPrevious(annotation);
-  } else {
-    if (isFinished) annotation->setFinished(true);
-  }
-
-  if (previous != nullptr) {
-    annotation->setPrevious(previous);
-    previous->setNext(annotation);
-  }
-
+  session->addAnnotation(annotation); //adds annotation
+  session->addObject(object);         //adds object if it do not exist
+  session->addFrame(frame);           //adds frame if it do not exist
   return true;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
-  session->removeAnnotation(annotation); //remove annotation from session, frame and object
-  annotation->setVisible(false);
+  session->removeAnnotation(annotation); //remove annotation from session, (plus frame and object if empty)
 
   if (createNewObject) session->removeObject(object);
 

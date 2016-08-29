@@ -25,7 +25,6 @@ class ANNOTATORLIB_API SQLLoader: public AbstractLoader {
 
     // AbstractLoader interface
 public:
-    Annotation getAnnotations();
     void setPath(std::string path);
     StorageType getType();
     void loadSession(AnnotatorLib::Session * session);

@@ -47,7 +47,7 @@ public:
      *
      * @param image
      */
-    virtual void setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
+    virtual bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
 
     /**
      *

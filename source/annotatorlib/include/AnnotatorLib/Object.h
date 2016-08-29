@@ -69,15 +69,12 @@ public:
 
     bool appearsInFrame(Frame *frame) const;
 
-    bool isVisible() const { return visible; }
-    void setVisible( bool v);
-
 private:
 
     std::string genName();
+    void addAnnotationToSortedList(Annotation* a);
 
     std::string name;
-    bool visible = true;
 
     Class *objectClass = nullptr;
 	/**

@@ -97,6 +97,8 @@ bool Object::removeAttribute(Attribute *attribute)
 
 Annotation *Object::getFirstAnnotation() const
 {
+    //TODO: anntations are sorted by frame-number, thus we directly return the first
+
     if(annotations.size() == 0)
         return nullptr;
     return annotations[0]->getFirst();
@@ -104,6 +106,8 @@ Annotation *Object::getFirstAnnotation() const
 
 Annotation *Object::getFirstAnnotation(Frame *frame) const
 {
+    //TODO: a frame should not contain more than one annotation of the same object -> remove this method?
+
     Annotation *annotation = this->getFirstAnnotation();
     while(annotation != nullptr && !annotation->isLast()){
 
@@ -131,33 +135,43 @@ std::vector<Annotation *> Object::getAnnotations() const
 bool Object::addAnnotation(Annotation *annotation)
 {
     if (annotation != nullptr && annotation->getObject() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
-        annotations.push_back(annotation);        
+        addAnnotationToSortedList(annotation);
+        //annotations.push_back(annotation);
+        addFrame(annotation->getFrame());
         return true;
     }
     return false;
 }
+
+static struct _CompareAnnotationPointer
+{
+   bool operator() ( Annotation * left, Annotation * right) {
+      return *left < *right;
+   }
+} _CompareAnnotationPointer;
 
 bool Object::removeAnnotation(Annotation *annotation)
 {
-    std::vector<Annotation *>::const_iterator position = std::find(annotations.cbegin(), annotations.cend(), annotation);
-    if (position != annotations.end()){
-        Frame* frame = annotation->getFrame();
-        if (frame) {
-            frame->removeAnnotation(annotation);
-            if (!frame->hasAnnotations()) this->removeFrame(frame);
-        }
-        annotations.erase(position);
-        return true;
+    //binary search for anntation
+    if(annotation) {
+      std::vector<Annotation *>::iterator  it = std::lower_bound(annotations.begin(), annotations.end(), annotation, _CompareAnnotationPointer);
+      if (**it == *annotation) {
+          Frame* frame = annotation->getFrame();
+          if (frame) {
+              frame->removeAnnotation(annotation);
+                if (!frame->hasAnnotations()) this->removeFrame(frame);
+          }
+          if (annotation->getPrevious())
+            annotation->getPrevious()->setNext(annotation->getNext());
+            annotation->setPrevious(nullptr);
+          if (annotation->getNext())
+            annotation->getNext()->setPrevious(annotation->getPrevious());
+            annotation->setNext(nullptr);
+          annotations.erase(it);
+          return true;
+      }
     }
     return false;
-}
-
-void Object::setVisible( bool v)
-{
-  visible = v;
-  for (std::vector<Annotation *>::iterator pos = annotations.begin(); pos != annotations.end(); ++pos) {
-    (*pos)->setVisible(v);
-  }
 }
 
 std::vector<Frame *> Object::getFrames() const
@@ -179,6 +193,7 @@ bool Object::removeFrame(Frame *frame)
     std::vector<Frame *>::const_iterator position = std::find(frames.begin(), frames.end(), frame);
     if (position != frames.end()){
         frames.erase(position);
+        //TODO: remove all annotations of this frame
         return true;
     }
     return false;
@@ -201,6 +216,37 @@ bool Object::appearsInFrame(Frame *frame) const
             return true;
     }
     return false;
+}
+
+void Object::addAnnotationToSortedList(Annotation* a) {
+
+  if (annotations.empty()) {
+    annotations.push_back(a);
+    return;
+  }
+
+  // find the position for the lower_bound  element
+  std::vector<Annotation*>::iterator pos = std::lower_bound( annotations.begin(), annotations.end(), a, _CompareAnnotationPointer);
+
+  assert(pos == annotations.end() || **pos > *a);
+
+  // insert it before pos
+  std::vector<Annotation*>::iterator new_pos = annotations.insert(pos, a);
+
+  if ( new_pos != annotations.begin()) {
+    Annotation* prev = *std::prev(new_pos);
+    prev->setNext(a);
+    a->setPrevious(prev);
+  }
+
+  if ( std::next(new_pos) != annotations.end()) {
+    Annotation* next = *std::next(new_pos);
+    next->setPrevious(a);
+    a->setNext(next);
+  }
+
+
+
 }
 
 } // of namespace AnnotatorLib

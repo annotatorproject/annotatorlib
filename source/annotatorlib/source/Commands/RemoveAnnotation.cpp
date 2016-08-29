@@ -14,12 +14,10 @@ AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
 
 bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
   bool success = session->removeAnnotation(annotation);
-  if(success) annotation->setVisible(false);
   return success;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
-  annotation->setVisible(true);
   this->session->addAnnotation(this->annotation);
   return true;
 }

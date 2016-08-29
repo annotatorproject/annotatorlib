@@ -15,6 +15,9 @@
 #include <AnnotatorLib/Loader/AbstractLoader.h>
 
 namespace AnnotatorLib {
+
+class Session;
+
 namespace Loader {
 
 /************************************************************/
@@ -22,7 +25,7 @@ namespace Loader {
  * @brief The JSONLoader class
  * loads session from json file format.
  */
-class ANNOTATORLIB_API JSONLoader: public AbstractLoader {
+class ANNOTATORLIB_API JSONLoader : public AbstractLoader {
 
 
     // AbstractLoader interface

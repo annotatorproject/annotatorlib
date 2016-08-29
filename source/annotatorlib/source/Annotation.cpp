@@ -36,7 +36,7 @@ Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationTy
   assert(obj != nullptr);
 
   if (lastId < id) lastId = id;
-  setVisible(true);
+  registerAnnotation();
 
 }
 
@@ -50,39 +50,38 @@ Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), o
   this->y = other.y;
   this->width = other.width;
   this->height = other.height;
-  setVisible(other.isVisible());
 }
 
 //////////////// public methods ///////////////////
 
 bool Annotation::operator> (const Annotation & right)
 {
-  return this->frame > right.frame;
+  return *this->frame > *right.frame;
 }
 
 bool Annotation::operator< (const Annotation & right)
 {
-  return this->frame < right.frame;
+  return *this->frame < *right.frame;
 }
 
 bool Annotation::operator<= (const Annotation & right)
 {
-  return this->frame <= right.frame;
+  return *this->frame <= *right.frame;
 }
 
 bool Annotation::operator>= (const Annotation & right)
 {
-  return this->frame >= right.frame;
+  return *this->frame >= *right.frame;
 }
 
 bool Annotation::operator== (const Annotation & right)
 {
-  return this->frame == right.frame;
+  return *this->frame == *right.frame;
 }
 
 bool Annotation::operator!= (const Annotation & right)
 {
-  return this->frame != right.frame;
+  return *this->frame != *right.frame;
 }
 
 unsigned long Annotation::getId() const { return id; }
@@ -142,16 +141,6 @@ void Annotation::setCenterPosition(float x, float y, float hradius,
   setVRadius(vradius);
 }
 
-void Annotation::setVisible(bool vis) {
-  visible = vis;
-  if (vis) {
-    registerAnnotation();
-  } else {
-    unregisterAnnotation();
-  }
-}
-bool Annotation::isVisible() const { return visible; }
-
 int Annotation::getX() const { return x; }
 
 void Annotation::setX(float x) { this->x = x; }
@@ -191,14 +180,14 @@ void Annotation::setVRadius(float vradius) {
 }
 
 void Annotation::setNext(Annotation *next) {
-  assert(next == nullptr || this->frame <= next->frame);
+  assert(next == nullptr || *this->frame <= *next->frame);
   this->next = next;
 }
 
 Annotation *Annotation::getNext() const { return next; }
 
 void Annotation::setPrevious(Annotation *previous) {
-  assert(previous == nullptr || this->frame > next->frame);
+  assert(previous == nullptr || *this->frame >= *previous->frame);
   this->previous = previous;
 }
 
@@ -249,6 +238,14 @@ void Annotation::setPosition(float x, float y, float width, float height) {
 }
 
 //////////////// private methods ///////////////////
+
+
+void Annotation::registerAnnotation(bool r) {
+  if (r)
+    registerAnnotation();
+  else
+    unregisterAnnotation();
+}
 
 void Annotation::registerAnnotation() {
   if (object)

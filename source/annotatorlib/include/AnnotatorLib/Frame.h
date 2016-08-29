@@ -44,7 +44,7 @@ public:
     std::vector<Annotation*> getAnnotations() const;
     bool hasAnnotations() const;
     bool addAnnotation(Annotation* annotation);
-    bool removeAnnotation(Annotation* annotation);
+    bool removeAnnotation(const Annotation* annotation);
     /**
      * @brief Checks if there is an annotation,
      * which belongs to the given object.

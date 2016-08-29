@@ -27,6 +27,7 @@ class Object;
 class ANNOTATORLIB_API Annotation {
 
   friend class Object;
+  friend class Session;
 
 public:
 
@@ -74,20 +75,6 @@ public:
   Frame *getFrame() const;
   Object *getObject() const;
   AnnotationType getType() const;
-  /**
-   * @brief Set this annotation to visible and
-   * register/unregister to its associated object and frame.
-   * @param vis
-   * @param autoreg [default = false]
-   */
-  void setVisible(bool vis);
-  /**
-   * @brief Retrun if the annotation is visible and
-   * registered to its object and frame.
-   * @return
-   */
-  bool isVisible() const;
-
 
   /**
    * @brief setPosition
@@ -158,7 +145,6 @@ protected:
   float height = 0;
 
   bool interpolated = false;
-  bool visible;
 
 private:
   /**
@@ -167,6 +153,7 @@ private:
    */
   void registerAnnotation();
   void unregisterAnnotation();
+  void registerAnnotation(bool r);
 
   ///////////////////////////////
 

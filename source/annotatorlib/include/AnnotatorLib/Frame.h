@@ -50,7 +50,7 @@ public:
      * which belongs to the given object.
      * @param annotation
      */
-    bool containsObject(const Object* obj) const;
+    Object* getObject(const Object* obj) const;
 
     std::vector<Attribute*> getAttributes() const;
 

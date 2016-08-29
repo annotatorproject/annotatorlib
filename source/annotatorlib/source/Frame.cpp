@@ -66,8 +66,6 @@ bool Frame::hasAnnotations() const
 
 bool Frame::addAnnotation(Annotation *annotation)
 {
-    assert(annotation->getFrame() == this || !containsObject(annotation->getObject()));
-
     if (annotation != nullptr && annotation->getFrame() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
         annotations.push_back(annotation);
         return true;
@@ -85,15 +83,15 @@ bool Frame::removeAnnotation(const Annotation *annotation)
     return false;
 }
 
-bool Frame::containsObject(const Object* obj) const
+Object* Frame::getObject(const Object* obj) const
 {
   std::vector<Annotation *>::const_iterator position = std::find_if(annotations.begin(),
                                                                     annotations.end(),
                                                                     [obj] (const Annotation* a) { return a->getObject() == obj; } );
   if (position != annotations.end()){
-      return true;
+      return (*position)->getObject();
   }
-  return false;
+  return nullptr;
 }
 
 std::vector<Attribute *> Frame::getAttributes() const

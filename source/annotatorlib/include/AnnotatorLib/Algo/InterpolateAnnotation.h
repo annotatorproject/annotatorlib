@@ -58,7 +58,7 @@ public:
 
     static std::vector<Annotation *> getInterpolations(Frame *frame, const Session *session, bool interpolationsOnly = false);
 
-    static std::vector<Annotation *> getInterpolations(Frame *frame, const std::vector<Annotation*> annotations, bool interpolationsOnly = false);
+    static std::vector<Annotation *> getInterpolations(Frame *frame, const std::vector<Object *> objects, bool interpolationsOnly = false);
 
 };
 

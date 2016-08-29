@@ -57,17 +57,23 @@ public:
     bool removeAttribute(Attribute* attribute);
 
     Annotation *getFirstAnnotation() const;
-    Annotation *getFirstAnnotation(AnnotatorLib::Frame *frame) const;
+    Annotation *getLastAnnotation() const;
     std::vector<Annotation*> getAnnotations() const;
     bool addAnnotation(Annotation* annotation);
     bool removeAnnotation(Annotation* annotation);
     bool hasAnnotations() const { return !annotations.empty(); }
 
+    /**
+     * @brief Get all frames of this object.
+     * Attention: Heavy operation!
+     * @return
+     */
     std::vector<Frame*> getFrames() const;
-    bool addFrame(Frame* frame);
-    bool removeFrame(Frame* frame);
-
-    bool appearsInFrame(Frame *frame) const;
+    //bool addFrame(Frame* frame);
+    //bool removeFrame(Frame* frame);
+    bool appearsInFrame(const Frame *frame) const;
+    Annotation* getAnnotation(const Frame *frame) const;
+    void findClosestKeyFrames(const Frame * target_frame, Annotation*& left, Annotation*& right) const;
 
 private:
 
@@ -88,7 +94,7 @@ private:
 	/**
 	 * 
 	 */
-    std::vector<Frame*> frames;
+    //std::vector<Frame*> frames;
 
 };
 /************************************************************/

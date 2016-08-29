@@ -44,7 +44,7 @@ AnnotatorLib::Session initSession() {
   object->setName("testobject");
   object2->setName("testobject2");
 
-  object->addFrame(frame);
+  //object->addFrame(frame);
 
   AnnotatorLib::Class *c = new AnnotatorLib::Class("testclass");
   object->setClass(c);

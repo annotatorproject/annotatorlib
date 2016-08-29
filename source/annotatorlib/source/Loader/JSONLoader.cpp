@@ -154,8 +154,8 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session)
         for(QJsonValue frame: frames){
             unsigned long frid = frame.toString().toLong();
             AnnotatorLib::Frame * fr = session->getFrame(frid);
-            if(fr != nullptr)
-                o->addFrame(fr);
+//            if(fr != nullptr)
+//                o->addFrame(fr);
         }
 
         QJsonArray attributes = object.value("attributes").toArray();

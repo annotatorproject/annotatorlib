@@ -76,7 +76,7 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
   //is frame with the valid range of the object?
   if (*frame <= *object->getLastAnnotation()->getFrame() && *frame >= *object->getFirstAnnotation()->getFrame()) {
     Annotation* a = object->getAnnotation(frame);
-    if (a == nullptr) {
+    if (a == nullptr || a->isInterpolated()) {
       //find the nearest neighbours (keyframes)
       Annotation* left = nullptr;
       Annotation* right = nullptr;

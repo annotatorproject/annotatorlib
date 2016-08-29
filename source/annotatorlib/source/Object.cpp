@@ -222,11 +222,24 @@ bool Object::appearsInFrame(const Frame *frame) const
 }
 
 void Object::findClosestKeyFrames(const Frame *target_frame, Annotation*& left, Annotation*& right) const {
-  std::vector<Annotation *>::const_iterator  it = std::lower_bound(annotations.begin(), annotations.end(), *target_frame, _CompareAnnotationPointerToFrame);
-  right = *(it);
-  if (it != annotations.cbegin())
-    left = *(it - 1);
+  std::vector<Annotation *>::const_iterator  it = std::lower_bound(annotations.cbegin(), annotations.cend(), *target_frame, _CompareAnnotationPointerToFrame);
+
+  std::vector<Annotation *>::const_iterator  it_fwd = it;
+  while ( it_fwd != annotations.cend() && (*it_fwd)->isInterpolated()) {
+    it_fwd++;
+  }
+  right = *(it_fwd);
+
+  while ( it != annotations.cbegin()) {
+    it--;
+    if ( !(*it)->isInterpolated())
+      break;
+  }
+  left = *(it);
+
   assert(right != left);
+  assert(right->isInterpolated() == false);
+  assert(left->isInterpolated() == false);
 }
 
 void Object::addAnnotationToSortedList(Annotation* a) {

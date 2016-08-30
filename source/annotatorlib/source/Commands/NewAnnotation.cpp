@@ -37,7 +37,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
-  annotation->setPosition(x, y, height, height);
+  annotation->setPosition(x, y, width, height);
   session->addAnnotation(annotation); //adds annotation
   session->addObject(object);         //adds object if it does not exist
   session->addFrame(frame);           //adds frame if it does not exist

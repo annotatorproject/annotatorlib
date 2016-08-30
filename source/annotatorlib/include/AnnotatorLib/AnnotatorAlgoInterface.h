@@ -35,18 +35,6 @@ public:
      *
      * @param image
      */
-    virtual void addPositive(cv::Mat image) = 0;
-
-    /**
-     *
-     * @param image
-     */
-    virtual void addNegative(cv::Mat image) = 0;
-
-    /**
-     *
-     * @param image
-     */
     virtual bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
 
     /**
@@ -64,12 +52,6 @@ public:
     virtual void setLastAnnotation(AnnotatorLib::Annotation *annotation) = 0;
 
     virtual std::vector<AnnotatorLib::Commands::Command*> getCommands() = 0;
-
-    /**
-     *
-     * @return annotation
-     */
-    virtual AnnotatorLib::Annotation *getAnnotation() = 0;
 
     virtual void setSession(AnnotatorLib::Session * session) = 0;
 

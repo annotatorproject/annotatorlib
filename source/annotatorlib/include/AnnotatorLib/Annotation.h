@@ -39,8 +39,9 @@ public:
   ////////CONSTRUCTORS//////////
 
   Annotation() = delete;
-  Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE);
+  Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE, bool isInterpolated = false);
   Annotation(Frame* frame, Object* obj, AnnotationType type);
+  Annotation(Annotation* a, Frame* frame, bool isInterpolated);
   Annotation(const Annotation &obj);
 
   /////////////////////////

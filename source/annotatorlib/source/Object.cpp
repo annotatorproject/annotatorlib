@@ -117,11 +117,8 @@ std::vector<Annotation *> Object::getAnnotations() const
 
 bool Object::addAnnotation(Annotation *annotation)
 {
-    if (annotation != nullptr && annotation->getObject() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
-        addAnnotationToSortedList(annotation);
-        //annotations.push_back(annotation);
-        //addFrame(annotation->getFrame());
-        return true;
+    if (annotation != nullptr && annotation->getObject() == this && !annotation->isInterpolated()) {
+        return addAnnotationToSortedList(annotation);
     }
     return false;
 }
@@ -238,21 +235,22 @@ void Object::findClosestKeyFrames(const Frame *target_frame, Annotation*& left, 
   left = *(it);
 
   assert(right != left);
-  assert(right->isInterpolated() == false);
+  assert(right == nullptr || right->isInterpolated() == false);
   assert(left->isInterpolated() == false);
 }
 
-void Object::addAnnotationToSortedList(Annotation* a) {
+bool Object::addAnnotationToSortedList(Annotation* a) {
 
   if (annotations.empty()) {
     annotations.push_back(a);
-    return;
+    return true;
   }
 
   // find the position for the lower_bound  element
   std::vector<Annotation*>::iterator pos = std::lower_bound( annotations.begin(), annotations.end(), a, _CompareAnnotationPointer);
 
-  assert(pos == annotations.end() || **pos > *a);
+  if(pos != annotations.end() && *a == **pos)
+    return false;
 
   // insert it before pos
   std::vector<Annotation*>::iterator new_pos = annotations.insert(pos, a);
@@ -269,7 +267,7 @@ void Object::addAnnotationToSortedList(Annotation* a) {
     a->setNext(next);
   }
 
-
+  return true;
 
 }
 

@@ -39,8 +39,8 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
   annotation->setPosition(x, y, height, height);
   session->addAnnotation(annotation); //adds annotation
-  session->addObject(object);         //adds object if it do not exist
-  session->addFrame(frame);           //adds frame if it do not exist
+  session->addObject(object);         //adds object if it does not exist
+  session->addFrame(frame);           //adds frame if it does not exist
   return true;
 }
 

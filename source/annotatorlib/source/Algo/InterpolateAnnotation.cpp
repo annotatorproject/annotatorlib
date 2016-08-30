@@ -23,12 +23,11 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Annotation *prev,
                                                     Annotation *next) {
   assert(prev->getNext() == next);
-  assert(next->getPrevious() == prev);
+  assert(next == nullptr || next->getPrevious() == prev);
 
   if (prev == nullptr) return nullptr;
 
-  Annotation *annotation = new Annotation(frame, prev->getObject(), prev->getType());
-  //annotation->setPrevious(prev); //NOTE: is now managed by Object
+  Annotation *annotation = new Annotation(prev, frame, true);
 
   if (next == nullptr) return annotation;
 
@@ -37,7 +36,6 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
   unsigned long curFrame = frame->getFrameNumber();
 
   assert(prev->getObject() == next->getObject());
-  assert(startFrame < endFrame);
   assert(startFrame < curFrame);
   assert(endFrame > curFrame);
 
@@ -57,48 +55,51 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
   annotation->setWidth(curWidth);
   annotation->setHeight(curHeight);
 
-  annotation->setNext(next);
-  annotation->setInterpolated(true);
-
   return annotation;
 }
 
 Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Object *object,
                                                     bool interpolationsOnly) {
-//  std::vector<Annotation *> annotations =
-//      getInterpolations(frame, object->getAnnotations(), interpolationsOnly);
-//  //if (annotations.size() > 0) return annotations[0];
-
-//  assert(annotations.size() == 1);
 
 
-  //is frame with the valid range of the object?
-  if (*frame <= *object->getLastAnnotation()->getFrame() && *frame >= *object->getFirstAnnotation()->getFrame()) {
-    Annotation* a = object->getAnnotation(frame);
-    if (a == nullptr || a->isInterpolated()) {
-      //find the nearest neighbours (keyframes)
-      Annotation* left = nullptr;
-      Annotation* right = nullptr;
-      object->findClosestKeyFrames(frame, left, right);
-      return getInterpolation(frame, left, right);
-    } else if (!interpolationsOnly){
-      return a;
-    }
+  if (object->getAnnotations().size() > 1) {
+
+      //is frame within the valid range of the object?
+      if (*frame <= *object->getLastAnnotation()->getFrame() && *frame >= *object->getFirstAnnotation()->getFrame()) {
+          Annotation* a = object->getAnnotation(frame);
+
+          if (a == nullptr) {
+            //find the nearest neighbours (keyframes)
+            Annotation* left = nullptr;
+            Annotation* right = nullptr;
+            object->findClosestKeyFrames(frame, left, right);
+            return getInterpolation(frame, left, right);
+          } else if (!interpolationsOnly){
+            return a;
+          }
+      }
+
+  } else if(*frame > *object->getLastAnnotation()->getFrame()) {
+      //copy the previous annotation to the requested frame
+      Annotation *annotation = new Annotation(object->getLastAnnotation(), frame, true);
+      return annotation;
   }
 
   return nullptr;
 }
 
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-  Frame *frame, const Session *session, bool interpolationsOnly) {
-  return getInterpolations(frame, session->getObjects(),
-                         interpolationsOnly);
+std::vector<Annotation *> InterpolateAnnotation::getInterpolations( Frame *frame,
+                                                                    const Session *session,
+                                                                    bool interpolationsOnly) {
+  return getInterpolations(frame,
+                           session->getObjects(),
+                           interpolationsOnly );
 }
 
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, const std::vector<Object *> objects,
-    bool interpolationsOnly) {
+std::vector<Annotation *> InterpolateAnnotation::getInterpolations( Frame *frame,
+                                                                    const std::vector<Object *> objects,
+                                                                    bool interpolationsOnly) {
 
   std::vector<Annotation *> return_annotations;
 
@@ -106,32 +107,9 @@ std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
 
       Annotation* a = getInterpolation(frame, o, interpolationsOnly);
 
-      if (a != nullptr)
+      if (a != nullptr) {
         return_annotations.push_back(a);
-
-//    // Is Annotation before actual frame?
-//    if ( *a->getFrame() < *frame ) {
-//      Annotation *annotation = nullptr;
-//      if (!a->isFinished() && a->isLast()) {
-//        annotation = new Annotation(frame, a->getObject(), a->getType());
-//        //annotation->setPrevious(a); //NOTE: is now managed by Object
-
-//        // Is next Annotation after actual frame? Then return interpolated
-//        // Annotation.
-//      } else if (*a->getNext()->getFrame() > *frame) {
-//        annotation = getInterpolation(frame, a, a->getNext());
-//      }
-
-//      if (annotation != nullptr) {
-//        annotation->setInterpolated(true);
-//        return_annotations.push_back(annotation);
-//      }
-//      // Is Annotation on actual frame?
-//    } else if (!interpolationsOnly &&
-//               a->getFrame()->getFrameNumber() == frame->getFrameNumber()) {
-//      return_annotations.push_back(a);
-//    } else {
-//    }
+      }
 
   }
 

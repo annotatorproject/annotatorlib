@@ -78,7 +78,7 @@ public:
 private:
 
     std::string genName();
-    void addAnnotationToSortedList(Annotation* a);
+    bool addAnnotationToSortedList(Annotation* a);
 
     std::string name;
 

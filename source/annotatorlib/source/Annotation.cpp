@@ -30,17 +30,22 @@ unsigned long Annotation::genId() {
 
 //////////////// constructors ///////////////////
 
-Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type) : id(id), frame(frame), object(obj), type(type)
+Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type, bool isInterpolated) : id(id), frame(frame), object(obj), type(type), interpolated(isInterpolated)
 {
   assert(frame != nullptr);
   assert(obj != nullptr);
 
   if (lastId < id) lastId = id;
-  registerAnnotation();
+  if (!this->isInterpolated())
+    registerAnnotation();
 
 }
 
 Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(genId(), frame, obj, type) { }
+
+Annotation::Annotation(Annotation* a, Frame* frame, bool isInterpolated) : Annotation(genId(), frame, a->getObject(), a->getType(), isInterpolated) {
+  this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
+}
 
 Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), other.getObject(), other.getType()) {
   this->attributes = other.attributes;
@@ -221,6 +226,7 @@ bool Annotation::isFinished() { return getLast()->next == getLast(); }
 
 void Annotation::setInterpolated(bool interpolated) {
   this->interpolated = interpolated;
+  registerAnnotation(!interpolated);
 }
 
 bool Annotation::isInterpolated() const { return interpolated; }

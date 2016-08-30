@@ -46,7 +46,7 @@ void JSONLoader::loadSession(Session *session)
         loadObjects(json, session);
         loadFrames(json, session);
         loadAnnotations(json, session);
-        loadAnnotationsNextPrevious(json, session);
+        //loadAnnotationsNextPrevious(json, session);
 
     }
     file.close();
@@ -87,7 +87,53 @@ void JSONLoader::loadAttributes(QJsonObject &json, Session *session)
     }
 }
 
+void JSONLoader::loadClasses(QJsonObject &json, Session *session)
+{
+    QJsonArray classes = json.value("classes").toArray();
+    for(QJsonValue value: classes){
+        QJsonObject object = value.toObject();
+        unsigned long id = object["id"].toString().toLong();
+        QString name = object["name"].toString();
+        AnnotatorLib::Class * c = new AnnotatorLib::Class(id, name.toStdString());
 
+        session->addClass(c);
+    }
+}
+
+void JSONLoader::loadObjects(QJsonObject &json, Session *session)
+{
+    QJsonArray objects = json.value("objects").toArray();
+    for(QJsonValue value: objects){
+        QJsonObject object = value.toObject();
+        unsigned long id = object["id"].toString().toLong();
+        QString name = object["name"].toString();
+        AnnotatorLib::Object * o = new AnnotatorLib::Object(id);
+        o->setName(name.toStdString());
+
+        if(object.contains("class"))
+            o->setClass(session->getClass(object["class"].toString().toLong()));
+
+        QJsonArray attributes = object.value("attributes").toArray();
+        for(QJsonValue attribute: attributes){
+            unsigned long atid = attribute.toString().toLong();
+            AnnotatorLib::Attribute * at = session->getAttribute(atid);
+            if(at != nullptr)
+                o->addAttribute(at);
+        }
+        session->addObject(o);
+    }
+}
+
+void JSONLoader::loadFrames(QJsonObject &json, Session *session)
+{
+    QJsonArray frames = json.value("frames").toArray();
+    for(QJsonValue value: frames){
+        QJsonObject frame = value.toObject();
+        unsigned long nmb = frame["number"].toString().toLong();
+        AnnotatorLib::Frame * f = new AnnotatorLib::Frame(nmb);
+        session->addFrame(f);
+    }
+}
 
 void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
 {
@@ -124,100 +170,27 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session)
     }
 }
 
-void JSONLoader::loadClasses(QJsonObject &json, Session *session)
-{
-    QJsonArray classes = json.value("classes").toArray();
-    for(QJsonValue value: classes){
-        QJsonObject object = value.toObject();
-        unsigned long id = object["id"].toString().toLong();
-        QString name = object["name"].toString();
-        AnnotatorLib::Class * c = new AnnotatorLib::Class(id, name.toStdString());
 
-        session->addClass(c);
-    }
-}
+//NOTE: Not needed anymore. Since objects take care for the correct order (based on frame-number)!
+//void JSONLoader::loadAnnotationsNextPrevious(QJsonObject &json, Session *session)
+//{
+//    QJsonArray annotations = json.value("annotations").toArray();
+//    for(QJsonValue value: annotations){
+//        QJsonObject annotation = value.toObject();
+//        unsigned long id = annotation["id"].toString().toLong();
+//        AnnotatorLib::Annotation * a = session->getAnnotation(id);
 
-void JSONLoader::loadObjects(QJsonObject &json, Session *session)
-{
-    QJsonArray objects = json.value("objects").toArray();
-    for(QJsonValue value: objects){
-        QJsonObject object = value.toObject();
-        unsigned long id = object["id"].toString().toLong();
-        QString name = object["name"].toString();
-        AnnotatorLib::Object * o = new AnnotatorLib::Object(id);
-        o->setName(name.toStdString());
+//        if(annotation.contains("previous")){
+//            unsigned long previousId = annotation["previous"].toString().toLong();
+//            a->setPrevious(session->getAnnotation(previousId));
+//        }
 
-        if(object.contains("class"))
-            o->setClass(session->getClass(object["class"].toString().toLong()));
-
-        QJsonArray frames = object.value("frames").toArray();
-        for(QJsonValue frame: frames){
-            unsigned long frid = frame.toString().toLong();
-            AnnotatorLib::Frame * fr = session->getFrame(frid);
-//            if(fr != nullptr)
-//                o->addFrame(fr);
-        }
-
-        QJsonArray attributes = object.value("attributes").toArray();
-        for(QJsonValue attribute: attributes){
-            unsigned long atid = attribute.toString().toLong();
-            AnnotatorLib::Attribute * at = session->getAttribute(atid);
-            if(at != nullptr)
-                o->addAttribute(at);
-        }
-
-        QJsonArray annotations = object.value("annotations").toArray();
-        for(QJsonValue annotation: annotations){
-            unsigned long anid = annotation.toString().toLong();
-            AnnotatorLib::Annotation * an = session->getAnnotation(anid);
-            if(an != nullptr)
-                o->addAnnotation(an);
-        }
-
-        session->addObject(o);
-    }
-}
-
-void JSONLoader::loadFrames(QJsonObject &json, Session *session)
-{
-    QJsonArray frames = json.value("frames").toArray();
-    for(QJsonValue value: frames){
-        QJsonObject frame = value.toObject();
-        unsigned long id = frame["number"].toString().toLong();
-
-        AnnotatorLib::Frame * f = new AnnotatorLib::Frame(id);
-
-        QJsonArray annotations = frame.value("annotations").toArray();
-        for(QJsonValue annotation: annotations){
-            unsigned long anid = annotation.toString().toLong();
-            AnnotatorLib::Annotation * an = session->getAnnotation(anid);
-            if(an != nullptr)
-                f->addAnnotation(an);
-        }
-
-        session->addFrame(f);
-    }
-}
-
-void JSONLoader::loadAnnotationsNextPrevious(QJsonObject &json, Session *session)
-{
-    QJsonArray annotations = json.value("annotations").toArray();
-    for(QJsonValue value: annotations){
-        QJsonObject annotation = value.toObject();
-        unsigned long id = annotation["id"].toString().toLong();
-        AnnotatorLib::Annotation * a = session->getAnnotation(id);
-
-        if(annotation.contains("previous")){
-            unsigned long previousId = annotation["previous"].toString().toLong();
-            a->setPrevious(session->getAnnotation(previousId));
-        }
-
-        if(annotation.contains("next")){
-            unsigned long nextId = annotation["next"].toString().toLong();
-            a->setNext(session->getAnnotation(nextId));
-        }
-    }
-}
+//        if(annotation.contains("next")){
+//            unsigned long nextId = annotation["next"].toString().toLong();
+//            a->setNext(session->getAnnotation(nextId));
+//        }
+//    }
+//}
 
 // static attributes (if any)
 

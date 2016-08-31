@@ -35,8 +35,7 @@ public:
 
     Object();
     Object(Class* c);
-    Object(unsigned long id);
-    Object(unsigned long id, Class* c);
+    Object(unsigned long id, Class* c = nullptr);
 
 	/**
 	 * 

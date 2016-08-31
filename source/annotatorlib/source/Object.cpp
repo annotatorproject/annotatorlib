@@ -20,18 +20,20 @@
 namespace AnnotatorLib {
 
 //statics
-static long lastId = 10000;
-static long lastNamePostfix = 1;
+static unsigned long lastId = 10000;
+static unsigned long lastNamePostfix = 1;
 
-Object::Object( ) : id(genId()) { genName(); }
+Object::Object( ) : Object(genId()) {
+  name = genName();
+}
 
-Object::Object(unsigned long id) : id(id) { genName(); }
+Object::Object(Class* c) : Object(genId(), c) { }
 
-Object::Object(Class* c) : id(genId()), objectClass(c) { genName(); }
-
-Object::Object(unsigned long id, Class* c) : id(id), objectClass(c) {
-  genName();
-  if (lastId < id) lastId = id;       //avoid collisions when loading objects from file
+Object::Object(unsigned long id, Class* c) : id(id) {
+  objectClass = c;
+  name = genName();
+  if (lastId < id)
+    lastId = id;       //avoid collisions when loading objects from file
 }
 
 unsigned long Object::genId() {

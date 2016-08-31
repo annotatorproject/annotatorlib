@@ -61,7 +61,8 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
 Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Object *object,
                                                     bool interpolationsOnly) {
-
+    assert(frame);
+    assert(object);
   //is it the first frame of the object?
   if (!interpolationsOnly && object->getAnnotations().size() == 1 && *frame == *object->getLastAnnotation()->getFrame()) {
     return object->getLastAnnotation();
@@ -84,7 +85,7 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
           }
       }
 
-  } else if(*frame > *object->getLastAnnotation()->getFrame()) {
+  } else if(object->getLastAnnotation() && *frame > *object->getLastAnnotation()->getFrame()) {
       //copy the previous annotation to the requested frame
       Annotation *annotation = new Annotation(object->getLastAnnotation(), frame, true);
       return annotation;

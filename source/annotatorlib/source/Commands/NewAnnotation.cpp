@@ -22,8 +22,8 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    Object *object, Frame *frame, float x, float y, float width, float height,
-    Session *session, bool isFinished = false) {
+    Object *object, AnnotatorLib::Frame *frame, float x, float y, float width, float height,
+    AnnotatorLib::Session *session, bool isFinished = false) {
   this->createNewObject = false;
   this->object = object;
   this->frame = frame;

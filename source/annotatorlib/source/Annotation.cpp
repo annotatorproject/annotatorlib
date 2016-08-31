@@ -214,16 +214,6 @@ bool Annotation::isLast() const {
 
 bool Annotation::isFirst() const { return this->previous == nullptr; }
 
-void Annotation::setFinished(bool ended) {
-  if (ended) {
-    getLast()->next = getLast();
-  } else {
-    getLast()->next = nullptr;
-  }
-}
-
-bool Annotation::isFinished() { return getLast()->next == getLast(); }
-
 void Annotation::setInterpolated(bool interpolated) {
   this->interpolated = interpolated;
   registerAnnotation(!interpolated);

@@ -119,15 +119,6 @@ public:
   bool isLast() const;
   bool isFirst() const;
 
-  void setFinished(bool ended);
-
-  /**
-   * @brief isFinished
-   * Returns if annotation is last annotation of track.
-   * @return
-   */
-  bool isFinished();
-
   void setInterpolated(bool interpolated);
   bool isInterpolated() const;
 

@@ -75,6 +75,15 @@ public:
     Annotation* getAnnotation(const Frame *frame) const;
     void findClosestKeyFrames(const Frame * target_frame, Annotation*& left, Annotation*& right) const;
 
+    void setActive(bool active);
+
+    /**
+     * @brief isActive
+     * Returns if object is active or blocked for new annotations.
+     * @return
+     */
+    bool isActive() const;
+
 private:
 
     std::string genName();

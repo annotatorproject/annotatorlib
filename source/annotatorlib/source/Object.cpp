@@ -268,7 +268,19 @@ bool Object::addAnnotationToSortedList(Annotation* a) {
   }
 
   return true;
+}
 
+
+void Object::setActive(bool is_active) {
+  if (is_active) {
+    getLastAnnotation()->setNext(nullptr);
+  } else {
+    getLastAnnotation()->setNext(getLastAnnotation());
+  }
+}
+
+bool Object::isActive() const {
+  return getLastAnnotation()->next == getLastAnnotation();
 }
 
 } // of namespace AnnotatorLib

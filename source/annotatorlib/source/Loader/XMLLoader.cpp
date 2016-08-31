@@ -98,6 +98,7 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
   if (!object) {
     object = new Object(id);
     object->setName(name);
+    object->setActive(false);
   }
   AnnotatorLib::Frame *frame = session->getFrame(start);
   AnnotatorLib::Annotation *previous = object->getFirstAnnotation();
@@ -113,7 +114,6 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
         previous->setNext(annotation);
         annotation->setPrevious(previous);
       }
-      annotation->setFinished(true);
       annotation->setPosition(x, y, width, height);
       frame->addAnnotation(annotation);
       object->addAnnotation(annotation);

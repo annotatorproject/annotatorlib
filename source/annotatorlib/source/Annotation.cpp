@@ -35,7 +35,7 @@ Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationTy
   assert(frame != nullptr);
   assert(obj != nullptr);
 
-  if (lastId < id) lastId = id;
+  if (lastId < id) lastId = id;  //  avoid collisions when loading annotations from file
   if (!this->isInterpolated())
     registerAnnotation();
 

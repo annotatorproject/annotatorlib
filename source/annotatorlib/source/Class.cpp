@@ -18,7 +18,9 @@ Class::Class() : id(genId()), name(genName()) { }
 
 Class::Class(std::string name) : id(genId()), name(name) { }
 
-Class::Class(unsigned long id, std::string name) : id(id), name(name) { }
+Class::Class(unsigned long id, std::string name) : id(id), name(name) {
+  if (lastId < id) lastId = id;
+}
 
 unsigned long Class::genId() {
   return lastId += 7;

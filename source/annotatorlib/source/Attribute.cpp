@@ -29,6 +29,7 @@ static long lastId = 100000;
  */
 Attribute::Attribute(unsigned long id, AttributeType type, std::string name) {
   this->id = id;
+  if (lastId < id) lastId = id;
   this->type = type;
   this->name = name;
 }

@@ -15,6 +15,8 @@ class ANNOTATORLIB_API UpdateAnnotation: public Command
 public:
     UpdateAnnotation(Annotation * annotation, float x, float y, float width, float height);
 
+    ~UpdateAnnotation() { }
+
     bool execute();
 
     bool undo();

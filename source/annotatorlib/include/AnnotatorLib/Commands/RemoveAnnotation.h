@@ -14,7 +14,7 @@ class ANNOTATORLIB_API RemoveAnnotation: public Command
 {
 public:
     RemoveAnnotation(Session *, Annotation *);
-    ~RemoveAnnotation() { delete annotation; }
+    ~RemoveAnnotation() { }
 
     bool execute();
 

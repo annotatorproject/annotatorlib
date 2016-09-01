@@ -40,6 +40,8 @@ public:
      */
     Class(unsigned long id, std::string name);
 
+    ~Class() {}
+
     /**
      *
      * @return id

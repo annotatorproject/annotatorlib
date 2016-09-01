@@ -15,14 +15,11 @@ TEST_F(session_test, getObject) {
   AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(f, o, AnnotatorLib::AnnotationType::RECTANGLE);
   o->addAnnotation(a);
   o->setName("testname");
+  session.addAnnotation(a);
   bool success = session.addObject(o);
 
   AnnotatorLib::Object *o2 = session.getFirstObjectByName("testname");
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testname");
   ASSERT_TRUE(success);
-
-  delete o;
-  delete a;
-  delete f;
 }

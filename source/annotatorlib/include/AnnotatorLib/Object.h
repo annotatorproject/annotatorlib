@@ -37,6 +37,8 @@ public:
     Object(Class* c);
     Object(unsigned long id, Class* c = nullptr);
 
+    ~Object();
+
 	/**
 	 * 
 	 * @return id 

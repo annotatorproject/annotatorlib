@@ -36,6 +36,11 @@ Object::Object(unsigned long id, Class* c) : id(id) {
     lastId = id;       //avoid collisions when loading objects from file
 }
 
+Object::~Object() {
+  this->attributes.clear();
+  this->annotations.clear();
+}
+
 unsigned long Object::genId() {
     lastId += 3;
     return lastId;

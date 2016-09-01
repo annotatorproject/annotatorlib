@@ -2,6 +2,7 @@
 #include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Object.h>
+#include <math.h>
 #include <AnnotatorLib/Algo/CompressObjectTrack.h>
 #include <AnnotatorLib/Algo/InterpolateAnnotation.h>
 
@@ -16,7 +17,10 @@ TEST_F(algo_test, compressObjectTrack) {
   for(unsigned long i = 0; i < 10; ++i) {
     AnnotatorLib::Frame* frame_i = new AnnotatorLib::Frame(i);
     AnnotatorLib::Annotation* a_i = new AnnotatorLib::Annotation(frame_i, obj);
-    a_i->setPosition(10, 10, 20, 20);
+    if (i < 5)
+      a_i->setPosition(i * 10, 40, 20, 20);               // movement on a horiz. line
+    else
+      a_i->setPosition(i * 10, i * 10, 20, 20);           // movement on a diagonal line
     obj->addAnnotation(a_i);
   }
   session.addObject(obj);
@@ -25,7 +29,7 @@ TEST_F(algo_test, compressObjectTrack) {
 
   AnnotatorLib::Algo::CompressObjectTrack::compress(&session, obj);
 
-  ASSERT_EQ(obj->getAnnotations().size(), 2);
+  ASSERT_EQ(obj->getAnnotations().size(), 3);
 
 }
 

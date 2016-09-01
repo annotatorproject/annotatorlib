@@ -27,7 +27,8 @@ void CompressObjectTrack::compress(Session* session, Object *object, float max_d
       curr = curr->getNext();
 
       //check if the interpolation is close enough to safely remove the annotation
-      if ( std::sqrt( std::pow(a_new->getX() - prev->getX(), 2) +  std::pow(a_new->getY() - prev->getY(), 2)) < max_diff) {
+      float dist = std::sqrt( std::pow(a_new->getX() - prev->getX(), 2) + std::pow(a_new->getY() - prev->getY(), 2));
+      if ( dist < max_diff) {
         Commands::RemoveAnnotation cmd(session, prev);
         cmd.execute();
       }

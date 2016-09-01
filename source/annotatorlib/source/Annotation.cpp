@@ -148,11 +148,11 @@ void Annotation::setCenterPosition(float x, float y, float hradius,
   setVRadius(vradius);
 }
 
-int Annotation::getX() const { return x; }
+float Annotation::getX() const { return x; }
 
 void Annotation::setX(float x) { this->x = x; }
 
-int Annotation::getY() const { return y; }
+float Annotation::getY() const { return y; }
 
 void Annotation::setY(float y) { this->y = y; }
 
@@ -192,6 +192,8 @@ void Annotation::setNext(Annotation *next) {
 }
 
 Annotation *Annotation::getNext() const { return next; }
+
+bool Annotation::hasNext() const { return (next != nullptr && next != this); }
 
 void Annotation::setPrevious(Annotation *previous) {
   assert(previous == nullptr || *this->frame >= *previous->frame);

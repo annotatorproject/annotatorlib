@@ -40,7 +40,7 @@ public:
 
   Annotation() = delete;
   Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE, bool isInterpolated = false);
-  Annotation(Frame* frame, Object* obj, AnnotationType type);
+  Annotation(Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE);
   Annotation(Annotation* a, Frame* frame, bool isInterpolated);
   Annotation(const Annotation &obj);
 
@@ -96,9 +96,9 @@ public:
    */
   void setCenterPosition(float x, float y, float hradius, float vradius);
 
-  int getX() const;
+  float getX() const;
   void setX(float x);
-  int getY() const;
+  float getY() const;
   void setY(float y);
 
   float getWidth() const;
@@ -112,6 +112,7 @@ public:
   void setVRadius(float vradius);
 
   Annotation *getNext() const;
+  bool hasNext() const;
   Annotation *getPrevious() const;
   void setPrevious(Annotation *previous);
   void setNext(Annotation *next);

@@ -5,7 +5,7 @@
 #define Annotator_AnnotatorLib_Algo_InterpolateAnnotation_BODY
 
 /************************************************************
- Annotation class body
+ InterpolateAnnotation class body
  ************************************************************/
 
 // include associated header file
@@ -22,9 +22,6 @@ namespace Algo {
 Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Annotation *prev,
                                                     Annotation *next) {
-  assert(prev->getNext() == next);
-  assert(next == nullptr || next->getPrevious() == prev);
-
   if (prev == nullptr) return nullptr;
 
   Annotation *annotation = new Annotation(prev, frame, true);

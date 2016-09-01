@@ -6,6 +6,7 @@
 namespace AnnotatorLib {
 
 class Session;
+class Frame;
 class Annotation;
 
 namespace Commands {

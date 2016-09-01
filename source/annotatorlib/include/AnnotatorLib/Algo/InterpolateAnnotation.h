@@ -2,7 +2,7 @@
 #define ANNOTATOR_ANNOTATORLIB_ALGO_INTERPOLATEANNOTATION_H
 
 /************************************************************
- Annotation class header
+ InterpolateAnnotation class header
  ************************************************************/
 #include <vector>
 

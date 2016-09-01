@@ -14,9 +14,11 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-void CompressObjectTrack::compress(Session* session, Object *object, float max_diff) {
+std::vector<Annotation*> CompressObjectTrack::compress(Session* session, Object *object, float max_diff) {
 
-  if (object->getAnnotations().size() < 3) return;
+  std::vector<Annotation*> removed_elements;
+
+  if (object->getAnnotations().size() < 3) return removed_elements;
 
   Annotation* curr = object->getFirstAnnotation()->getNext();  //get second
   while (curr->hasNext()) {
@@ -31,10 +33,11 @@ void CompressObjectTrack::compress(Session* session, Object *object, float max_d
       if ( dist < max_diff) {
         Commands::RemoveAnnotation cmd(session, prev);
         cmd.execute();
+        removed_elements.push_back(prev);
       }
       delete a_new;
   }
-
+  return removed_elements;
 }
 
 }  // of namespace Algo

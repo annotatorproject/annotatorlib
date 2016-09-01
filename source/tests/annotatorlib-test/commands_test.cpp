@@ -3,6 +3,7 @@
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/UpdateObject.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
+#include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Project.h>
 #include <string>
 
@@ -100,4 +101,31 @@ TEST_F(commands_test, removeObject) {
   session.redo();
   ASSERT_EQ(session.getAnnotations().size(), 0);
   ASSERT_EQ(session.getObjects().size(), 0);
+}
+
+TEST_F(commands_test, compressObject) {
+  AnnotatorLib::Session session;
+  AnnotatorLib::Object* obj = new AnnotatorLib::Object();
+
+  for(unsigned long i = 0; i < 5; ++i) {
+    AnnotatorLib::Frame* frame_i = new AnnotatorLib::Frame(i);
+    AnnotatorLib::Annotation* a_i = new AnnotatorLib::Annotation(frame_i, obj);
+    a_i->setPosition(i * 10, 40, 20, 20);
+  }
+  session.addObject(obj);
+
+  ASSERT_EQ(obj->getAnnotations().size(), 5);
+
+  AnnotatorLib::Commands::CompressObject* cmd = new AnnotatorLib::Commands::CompressObject(&session, obj);
+  session.execute(cmd);
+
+  ASSERT_EQ(obj->getAnnotations().size(), 2);
+
+  session.undo();
+
+  ASSERT_EQ(obj->getAnnotations().size(), 5);
+
+  session.redo();
+
+  ASSERT_EQ(obj->getAnnotations().size(), 2);
 }

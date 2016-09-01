@@ -8,15 +8,15 @@
 /************************************************************
  Image class header
  ************************************************************/
-#include <opencv2/core/core.hpp>
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <opencv2/core/core.hpp>
 
 namespace AnnotatorLib {
 
 /************************************************************/
 /**
- * 
+ *
  */
 
 typedef cv::Mat Image;
@@ -27,7 +27,7 @@ typedef cv::Mat Image;
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Image class header

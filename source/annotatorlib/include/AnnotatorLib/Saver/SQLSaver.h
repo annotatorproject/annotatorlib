@@ -18,18 +18,16 @@ namespace Saver {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API SQLSaver: public AbstractSaver {
-
-
-    // AbstractSaver interface
-public:
-    void saveAnnotation(Annotation annotation);
-    void setPath(std::string path);
-    StorageType getType();
-    void saveSession(AnnotatorLib::Session * session);
-    bool close();
+class ANNOTATORLIB_API SQLSaver : public AbstractSaver {
+  // AbstractSaver interface
+ public:
+  void saveAnnotation(Annotation annotation);
+  void setPath(std::string path);
+  StorageType getType();
+  void saveSession(AnnotatorLib::Session* session);
+  bool close();
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -37,8 +35,8 @@ public:
 
 /* Inline functions                                         */
 
-} // of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLSaver class header

@@ -11,25 +11,22 @@ class Annotation;
 
 namespace Commands {
 
-class ANNOTATORLIB_API RemoveAnnotation: public Command
-{
-public:
-    RemoveAnnotation(Session *, Annotation *);
-    ~RemoveAnnotation() { }
+class ANNOTATORLIB_API RemoveAnnotation : public Command {
+ public:
+  RemoveAnnotation(Session *, Annotation *);
+  ~RemoveAnnotation() {}
 
-    bool execute();
+  bool execute();
 
-    bool undo();
+  bool undo();
 
-    Annotation *getAnnotation();
+  Annotation *getAnnotation();
 
-protected:
-    Annotation *annotation = nullptr;
-    Session *session = nullptr;
-    Frame *frame = nullptr;
+ protected:
+  Annotation *annotation = nullptr;
+  Session *session = nullptr;
+  Frame *frame = nullptr;
 };
-
 }
 }
-#endif // REMOVEANNOTATION
-
+#endif  // REMOVEANNOTATION

@@ -23,8 +23,8 @@ namespace AnnotatorLib {
 namespace Saver {
 
 // Types defined within the package
-}// of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Pkg_Saver package header

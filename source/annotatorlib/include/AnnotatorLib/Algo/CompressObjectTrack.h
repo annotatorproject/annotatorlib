@@ -4,10 +4,9 @@
 /************************************************************
  CompressObjectTrack class header
  ************************************************************/
-#include <vector>
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <vector>
 
 namespace AnnotatorLib {
 
@@ -19,13 +18,13 @@ namespace Algo {
 
 /************************************************************/
 /**
- * 
+ *
  */
 class ANNOTATORLIB_API CompressObjectTrack {
-public:
-static std::vector<Annotation*> compress(Session* session, Object *object, float max_diff = 5);
+ public:
+  static std::vector<Annotation*> compress(Session* session, Object* object,
+                                           float max_diff = 5);
 };
-
 }
 }
 #endif

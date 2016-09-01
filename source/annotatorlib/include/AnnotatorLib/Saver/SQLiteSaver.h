@@ -21,26 +21,24 @@ namespace Saver {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API SQLiteSaver: public AbstractSaver {
+class ANNOTATORLIB_API SQLiteSaver : public AbstractSaver {
+  // AbstractSaver interface
+ public:
+  void saveAnnotation(Annotation annotation);
+  void setPath(std::string path);
+  StorageType getType();
+  void saveSession(AnnotatorLib::Session *session);
+  bool close();
 
+  static int createObjectsTable(sqlite3 *db);
+  static int createAttributesTable(sqlite3 *db);
+  static int createAnnotationsTable(sqlite3 *db);
 
-    // AbstractSaver interface
-public:
-    void saveAnnotation(Annotation annotation);
-    void setPath(std::string path);
-    StorageType getType();
-    void saveSession(AnnotatorLib::Session * session);
-    bool close();
-
-    static int createObjectsTable(sqlite3 *db);
-    static int createAttributesTable(sqlite3 *db);
-    static int createAnnotationsTable(sqlite3 *db);
-
-protected:
-    std::string path;
-    sqlite3 *db;
+ protected:
+  std::string path;
+  sqlite3 *db;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -48,12 +46,12 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLiteSaver class header
  ************************************************************/
 
-#endif // WITH_SQLITE3
+#endif  // WITH_SQLITE3
 #endif

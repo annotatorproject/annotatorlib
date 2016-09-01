@@ -10,23 +10,20 @@ class Object;
 
 namespace Commands {
 
-class ANNOTATORLIB_API RemoveObject: public Command
-{
-public:
-    RemoveObject() = delete;
-    RemoveObject(Session *, Object *);
-    ~RemoveObject() { }
+class ANNOTATORLIB_API RemoveObject : public Command {
+ public:
+  RemoveObject() = delete;
+  RemoveObject(Session *, Object *);
+  ~RemoveObject() {}
 
-    bool execute();
+  bool execute();
 
-    bool undo();
+  bool undo();
 
-protected:
-    Object *object = nullptr;
-    Session *session = nullptr;
+ protected:
+  Object *object = nullptr;
+  Session *session = nullptr;
 };
-
 }
 }
-#endif // REMOVEOBJECT
-
+#endif  // REMOVEOBJECT

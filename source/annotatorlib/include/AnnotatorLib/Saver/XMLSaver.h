@@ -18,34 +18,32 @@
 
 namespace AnnotatorLib {
 
-    class Frame;
+class Frame;
 
 namespace Saver {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API XMLSaver: public AbstractSaver {
+class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
+  // AbstractSaver interface
+ public:
+  void saveFrame(AnnotatorLib::Frame *frame, AnnotatorLib::Session *session);
+  void saveAnnotation(Annotation annotation);
+  void setPath(std::string path);
+  StorageType getType();
+  void saveSession(AnnotatorLib::Session *session);
+  bool close();
 
+ protected:
+  QDomElement meta(AnnotatorLib::Frame *frame);
+  QDomElement fromObject(AnnotatorLib::Object *object,
+                         AnnotatorLib::Frame *frame);
 
-    // AbstractSaver interface
-public:
-    void saveFrame(AnnotatorLib::Frame *frame, AnnotatorLib::Session *session);
-    void saveAnnotation(Annotation annotation);
-    void setPath(std::string path);
-    StorageType getType();
-    void saveSession(AnnotatorLib::Session * session);
-    bool close();
+  std::string path;
 
-protected:
-
-    QDomElement meta(AnnotatorLib::Frame *frame);
-    QDomElement fromObject(AnnotatorLib::Object * object, AnnotatorLib::Frame *frame);
-
-    std::string path;
-
-    QDomDocument document;
+  QDomDocument document;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -53,8 +51,8 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of XMLSaver class header

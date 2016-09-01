@@ -13,138 +13,138 @@
 #include <QFile>
 #include <QTextStream>
 
+#include "AnnotatorLib/Algo/InterpolateAnnotation.h"
+#include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
 #include "AnnotatorLib/Saver/XMLSaver.h"
-#include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Session.h"
-#include "AnnotatorLib/Algo/InterpolateAnnotation.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 namespace Saver {
 
-void XMLSaver::saveFrame(AnnotatorLib::Frame *frame, Session *session)
-{
-    QString filename = QString::fromStdString(path) +
-            QString("%1").arg(frame->getFrameNumber(), 8, 10, QChar('0')) +".xml";
+void XMLSaver::saveFrame(AnnotatorLib::Frame *frame, Session *session) {
+  QString filename =
+      QString::fromStdString(path) +
+      QString("%1").arg(frame->getFrameNumber(), 8, 10, QChar('0')) + ".xml";
 
-    QFile file(filename);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
+  QFile file(filename);
+  file.open(QIODevice::WriteOnly | QIODevice::Text);
 
-    if(file.isOpen()){
-        QTextStream stream(&file);
-        document.clear();
-        QDomElement root = document.createElement("OBJECTS");
-        root.appendChild(meta(frame));
-        for(Object * object: session->getObjects()){
-            if(object->appearsInFrame(frame))
-                root.appendChild(fromObject(object, frame));
-        }
-
-
-        document.appendChild(root);
-        document.save(stream, QDomNode::EncodingFromTextStream);
-        file.close();
-    }
-}
-
-void XMLSaver::saveAnnotation(Annotation annotation)
-{
-
-}
-
-void XMLSaver::setPath(std::string path)
-{
-    this->path = path;
-}
-
-StorageType XMLSaver::getType()
-{
-    return AnnotatorLib::StorageType::XML;
-}
-
-void XMLSaver::saveSession(Session *session)
-{
-    for(Frame *frame: session->getFrames()){
-        saveFrame(frame, session);
-    }
-}
-
-bool XMLSaver::close()
-{
-    return true;
-}
-
-QDomElement XMLSaver::meta(Frame *frame)
-{
-    QDomElement element = document.createElement("META");
-    QDomElement filename = document.createElement("FILENAME");
-    QDomText filenameText = document.createTextNode(QString::number(frame->getFrameNumber()));
-    filename.appendChild(filenameText);
-    element.appendChild(filename);
-    return element;
-}
-
-QDomElement XMLSaver::fromObject(AnnotatorLib::Object *object, Frame *frame)
-{
-    QDomElement element = document.createElement("OBJECT");
-    // ID
-    QDomElement id = document.createElement("ID");
-    id.appendChild(document.createTextNode(QString::number(object->getId())));
-    element.appendChild(id);
-    // NAME
-    QDomElement name = document.createElement("NAME");
-    name.appendChild(document.createTextNode(QString::fromStdString(object->getName())));
-    element.appendChild(name);
-    // OBJ_COLOR
-    QDomElement obj_name = document.createElement("OBJ_COLOR");
-    obj_name.appendChild(document.createTextNode("#0000ff"));
-    element.appendChild(obj_name);
-
-
-    AnnotatorLib::Annotation * annotation = AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(frame, object);
-
-    element.setAttribute("StartFr", QString::number(annotation->getFirst()->getFrame()->getFrameNumber()));
-    element.setAttribute("EndFr", QString::number(annotation->getLast()->getFrame()->getFrameNumber()));
-
-    // START
-    QDomElement start = document.createElement("START");
-    // END
-    QDomElement end = document.createElement("END");
-
-    if(annotation->isInterpolated()){
-        start.appendChild(document.createTextNode(QString::number(annotation->getPrevious()->getFrame()->getFrameNumber())));
-    }else{
-        start.appendChild(document.createTextNode(QString::number(annotation->getFrame()->getFrameNumber())));
-        end.appendChild(document.createTextNode(annotation->getNext() ?
-                                                    QString::number(annotation->getNext()->getFrame()->getFrameNumber()):"-1"));
+  if (file.isOpen()) {
+    QTextStream stream(&file);
+    document.clear();
+    QDomElement root = document.createElement("OBJECTS");
+    root.appendChild(meta(frame));
+    for (Object *object : session->getObjects()) {
+      if (object->appearsInFrame(frame))
+        root.appendChild(fromObject(object, frame));
     }
 
-    element.appendChild(start);
-    element.appendChild(end);
+    document.appendChild(root);
+    document.save(stream, QDomNode::EncodingFromTextStream);
+    file.close();
+  }
+}
 
-    // UL
-    QDomElement ul = document.createElement("UL");
-    QString ulStr = "UL:(" + QString::number(annotation->getX() - annotation->getHRadius()) +
-            ", " + QString::number(annotation->getY() - annotation->getHRadius()) + ")";
-    ul.appendChild(document.createTextNode(ulStr));
-    element.appendChild(ul);
+void XMLSaver::saveAnnotation(Annotation annotation) {}
 
-    // LR
-    QDomElement lr = document.createElement("LR");
-    QString lrStr = "LR:(" + QString::number(annotation->getX() + annotation->getHRadius()) +
-            ", " + QString::number(annotation->getY() + annotation->getHRadius()) + ")";
-    lr.appendChild(document.createTextNode(lrStr));
-    element.appendChild(lr);
+void XMLSaver::setPath(std::string path) { this->path = path; }
 
-    return element;
+StorageType XMLSaver::getType() { return AnnotatorLib::StorageType::XML; }
+
+void XMLSaver::saveSession(Session *session) {
+  for (Frame *frame : session->getFrames()) {
+    saveFrame(frame, session);
+  }
+}
+
+bool XMLSaver::close() { return true; }
+
+QDomElement XMLSaver::meta(Frame *frame) {
+  QDomElement element = document.createElement("META");
+  QDomElement filename = document.createElement("FILENAME");
+  QDomText filenameText =
+      document.createTextNode(QString::number(frame->getFrameNumber()));
+  filename.appendChild(filenameText);
+  element.appendChild(filename);
+  return element;
+}
+
+QDomElement XMLSaver::fromObject(AnnotatorLib::Object *object, Frame *frame) {
+  QDomElement element = document.createElement("OBJECT");
+  // ID
+  QDomElement id = document.createElement("ID");
+  id.appendChild(document.createTextNode(QString::number(object->getId())));
+  element.appendChild(id);
+  // NAME
+  QDomElement name = document.createElement("NAME");
+  name.appendChild(
+      document.createTextNode(QString::fromStdString(object->getName())));
+  element.appendChild(name);
+  // OBJ_COLOR
+  QDomElement obj_name = document.createElement("OBJ_COLOR");
+  obj_name.appendChild(document.createTextNode("#0000ff"));
+  element.appendChild(obj_name);
+
+  AnnotatorLib::Annotation *annotation =
+      AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(frame,
+                                                                  object);
+
+  element.setAttribute(
+      "StartFr",
+      QString::number(annotation->getFirst()->getFrame()->getFrameNumber()));
+  element.setAttribute(
+      "EndFr",
+      QString::number(annotation->getLast()->getFrame()->getFrameNumber()));
+
+  // START
+  QDomElement start = document.createElement("START");
+  // END
+  QDomElement end = document.createElement("END");
+
+  if (annotation->isInterpolated()) {
+    start.appendChild(document.createTextNode(QString::number(
+        annotation->getPrevious()->getFrame()->getFrameNumber())));
+  } else {
+    start.appendChild(document.createTextNode(
+        QString::number(annotation->getFrame()->getFrameNumber())));
+    end.appendChild(document.createTextNode(
+        annotation->getNext()
+            ? QString::number(
+                  annotation->getNext()->getFrame()->getFrameNumber())
+            : "-1"));
+  }
+
+  element.appendChild(start);
+  element.appendChild(end);
+
+  // UL
+  QDomElement ul = document.createElement("UL");
+  QString ulStr =
+      "UL:(" + QString::number(annotation->getX() - annotation->getHRadius()) +
+      ", " + QString::number(annotation->getY() - annotation->getHRadius()) +
+      ")";
+  ul.appendChild(document.createTextNode(ulStr));
+  element.appendChild(ul);
+
+  // LR
+  QDomElement lr = document.createElement("LR");
+  QString lrStr =
+      "LR:(" + QString::number(annotation->getX() + annotation->getHRadius()) +
+      ", " + QString::number(annotation->getY() + annotation->getHRadius()) +
+      ")";
+  lr.appendChild(document.createTextNode(lrStr));
+  element.appendChild(lr);
+
+  return element;
 }
 
 // static attributes (if any)
 
-}// of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of XMLSaver class body

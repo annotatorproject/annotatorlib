@@ -1,8 +1,8 @@
 #ifndef COMPRESSOBJECT_CMD_H
 #define COMPRESSOBJECT_CMD_H
 
-#include <vector>
 #include <AnnotatorLib/Commands/Command.h>
+#include <vector>
 
 namespace AnnotatorLib {
 
@@ -12,27 +12,25 @@ class Annotation;
 
 namespace Commands {
 
-class ANNOTATORLIB_API CompressObject : public Command
-{
-public:
-    CompressObject() = delete;
+class ANNOTATORLIB_API CompressObject : public Command {
+ public:
+  CompressObject() = delete;
 
-    CompressObject(Session * session, Object * obj);
+  CompressObject(Session* session, Object* obj);
 
-    ~CompressObject() { }
+  ~CompressObject() {}
 
-    bool execute();
+  bool execute();
 
-    bool undo();
+  bool undo();
 
-protected:
-    Object* obj = nullptr;
-    Session* session = nullptr;
+ protected:
+  Object* obj = nullptr;
+  Session* session = nullptr;
 
-private:
-    std::vector<Annotation*> removed_annotations;
+ private:
+  std::vector<Annotation*> removed_annotations;
 };
-
 }
 }
-#endif // UPDATEANNOTATION_H
+#endif  // UPDATEANNOTATION_H

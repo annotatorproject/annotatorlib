@@ -19,83 +19,58 @@
 
 namespace AnnotatorLib {
 
-Video::Video(std::string path)
-{
-    this->path = path;
-    initCapture();
+Video::Video(std::string path) {
+  this->path = path;
+  initCapture();
 }
 
-Video::~Video()
-{
-    if(capture != nullptr)
-        delete capture;
+Video::~Video() {
+  if (capture != nullptr) delete capture;
 }
 
-ImageSetType Video::getType()
-{
-    return ImageSetType::VIDEO;
+ImageSetType Video::getType() { return ImageSetType::VIDEO; }
+
+Image Video::getImage(unsigned intframe) {
+  gotoPosition(intframe - 1);
+  return next();
 }
 
-Image Video::getImage(unsigned intframe)
-{
-    gotoPosition(intframe - 1);
-    return next();
+bool Video::gotoPosition(long position) {
+  return capture->set(CV_CAP_PROP_POS_FRAMES, position);
 }
 
-bool Video::gotoPosition(long position)
-{
-    return capture->set(CV_CAP_PROP_POS_FRAMES, position);
+long Video::getPosition() { return capture->get(CV_CAP_PROP_POS_FRAMES); }
+
+bool Video::hasNext() {
+  return capture->get(CV_CAP_PROP_POS_FRAMES) <
+         capture->get(CV_CAP_PROP_FRAME_COUNT);
 }
 
-long Video::getPosition()
-{
-    return capture->get(CV_CAP_PROP_POS_FRAMES);
+Image Video::next() {
+  cv::Mat frame;
+  capture->read(frame);
+  Image img = frame;
+  return img;
 }
 
-bool Video::hasNext()
-{
-    return capture->get(CV_CAP_PROP_POS_FRAMES) < capture->get(CV_CAP_PROP_FRAME_COUNT);
+unsigned int Video::size() { return capture->get(CV_CAP_PROP_FRAME_COUNT); }
+
+std::string Video::getPath() { return this->path; }
+
+bool Video::equals(ImageSet *other) {
+  if (this == other) return true;
+  // if(other == nullptr)
+  //    return false;
+  if (other->getType() != ImageSetType::VIDEO) return false;
+  if (this->getPath() != other->getPath()) return false;
+  return true;
 }
 
-Image Video::next()
-{
-    cv::Mat frame;
-    capture->read(frame);
-    Image img = frame;
-    return img;
-}
-
-unsigned int Video::size()
-{
-    return capture->get(CV_CAP_PROP_FRAME_COUNT);
-}
-
-std::string Video::getPath()
-{
-    return this->path;
-}
-
-bool Video::equals(ImageSet *other)
-{
-    if(this == other)
-        return true;
-    //if(other == nullptr)
-    //    return false;
-    if(other->getType() != ImageSetType::VIDEO)
-        return false;
-    if(this->getPath() != other->getPath())
-        return false;
-    return true;
-}
-
-void Video::initCapture()
-{
-    capture = new cv::VideoCapture(path);
-}
+void Video::initCapture() { capture = new cv::VideoCapture(path); }
 
 // static attributes (if any)
 
-}// of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Video class body

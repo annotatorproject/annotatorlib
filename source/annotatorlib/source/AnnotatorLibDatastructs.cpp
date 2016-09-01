@@ -123,4 +123,3 @@ std::string AnnotationTypeToString(AnnotationType type) {
 }
 
 }  // of namespace AnnotatorLib
-

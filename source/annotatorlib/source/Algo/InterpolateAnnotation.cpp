@@ -58,61 +58,58 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
 Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
                                                     Object *object,
                                                     bool interpolationsOnly) {
-    assert(frame);
-    assert(object);
-  //is it the first frame of the object?
-  if (!interpolationsOnly && object->getAnnotations().size() == 1 && *frame == *object->getLastAnnotation()->getFrame()) {
+  assert(frame);
+  assert(object);
+  // is it the first frame of the object?
+  if (!interpolationsOnly && object->getAnnotations().size() == 1 &&
+      *frame == *object->getLastAnnotation()->getFrame()) {
     return object->getLastAnnotation();
   }
 
   if (object->getAnnotations().size() > 1) {
+    // is frame within the valid range of the object?
+    if (*frame <= *object->getLastAnnotation()->getFrame() &&
+        *frame >= *object->getFirstAnnotation()->getFrame()) {
+      Annotation *a = object->getAnnotation(frame);
 
-      //is frame within the valid range of the object?
-      if (*frame <= *object->getLastAnnotation()->getFrame() && *frame >= *object->getFirstAnnotation()->getFrame()) {
-          Annotation* a = object->getAnnotation(frame);
-
-          if (a == nullptr) {
-            //find the nearest neighbours (keyframes)
-            Annotation* left = nullptr;
-            Annotation* right = nullptr;
-            object->findClosestKeyFrames(frame, left, right);
-            return getInterpolation(frame, left, right);
-          } else if (!interpolationsOnly){
-            return a;
-          }
+      if (a == nullptr) {
+        // find the nearest neighbours (keyframes)
+        Annotation *left = nullptr;
+        Annotation *right = nullptr;
+        object->findClosestKeyFrames(frame, left, right);
+        return getInterpolation(frame, left, right);
+      } else if (!interpolationsOnly) {
+        return a;
       }
+    }
 
-  } else if(object->getLastAnnotation() && *frame > *object->getLastAnnotation()->getFrame()) {
-      //copy the previous annotation to the requested frame
-      Annotation *annotation = new Annotation(object->getLastAnnotation(), frame, true);
-      return annotation;
+  } else if (object->getLastAnnotation() &&
+             *frame > *object->getLastAnnotation()->getFrame()) {
+    // copy the previous annotation to the requested frame
+    Annotation *annotation =
+        new Annotation(object->getLastAnnotation(), frame, true);
+    return annotation;
   }
 
   return nullptr;
 }
 
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations( Frame *frame,
-                                                                    const Session *session,
-                                                                    bool interpolationsOnly) {
-  return getInterpolations(frame,
-                           session->getObjects(),
-                           interpolationsOnly );
+std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
+    Frame *frame, const Session *session, bool interpolationsOnly) {
+  return getInterpolations(frame, session->getObjects(), interpolationsOnly);
 }
 
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations( Frame *frame,
-                                                                    const std::vector<Object *> objects,
-                                                                    bool interpolationsOnly) {
-
+std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
+    Frame *frame, const std::vector<Object *> objects,
+    bool interpolationsOnly) {
   std::vector<Annotation *> return_annotations;
 
   for (Object *o : objects) {
+    Annotation *a = getInterpolation(frame, o, interpolationsOnly);
 
-      Annotation* a = getInterpolation(frame, o, interpolationsOnly);
-
-      if (a != nullptr) {
-        return_annotations.push_back(a);
-      }
-
+    if (a != nullptr) {
+      return_annotations.push_back(a);
+    }
   }
 
   return return_annotations;

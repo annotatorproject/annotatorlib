@@ -54,12 +54,9 @@ void Attribute::setDefaultValue(AttributeValue *value) {
 AttributeValue *Attribute::getDefaultValue() { return defaultValue; }
 
 bool Attribute::equals(Attribute *other) {
-  if (this == other)
-    return true;
-  if (this->type != other->type)
-    return false;
-  if (this->name != other->name)
-    return false;
+  if (this == other) return true;
+  if (this->type != other->type) return false;
+  if (this->name != other->name) return false;
   return true;
 }
 
@@ -115,23 +112,23 @@ std::string AttributeValue::toString() {
   std::string number;
   std::stringstream strstream;
   switch (type) {
-  case AnnotatorLib::AttributeType::STRING:
-    return stringValue;
-  case AnnotatorLib::AttributeType::INTEGER:
-    strstream << integerValue;
-    strstream >> number;
-    return number;
-  case AnnotatorLib::AttributeType::FLOAT:
-    strstream << floatValue;
-    strstream >> number;
-    return number;
-  case AnnotatorLib::AttributeType::BOOLEAN:
-    if (booleanValue)
-      return "true";
-    else
-      return "false";
-  case AnnotatorLib::AttributeType::UNKNOWN:
-    break;
+    case AnnotatorLib::AttributeType::STRING:
+      return stringValue;
+    case AnnotatorLib::AttributeType::INTEGER:
+      strstream << integerValue;
+      strstream >> number;
+      return number;
+    case AnnotatorLib::AttributeType::FLOAT:
+      strstream << floatValue;
+      strstream >> number;
+      return number;
+    case AnnotatorLib::AttributeType::BOOLEAN:
+      if (booleanValue)
+        return "true";
+      else
+        return "false";
+    case AnnotatorLib::AttributeType::UNKNOWN:
+      break;
   };
   return "";
 }
@@ -171,7 +168,7 @@ AttributeValue::AttributeValue(bool booleanValue) {
   this->booleanValue = booleanValue;
 }
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Attribute class body

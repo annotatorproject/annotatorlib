@@ -8,8 +8,8 @@
 /************************************************************
  JSONStorage class header
  ************************************************************/
-#include <QJsonObject>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include <QJsonObject>
 #include "AnnotatorLib/Storage/Pkg_Storage.h"
 
 #include "AnnotatorLib/Storage/AbstractStorage.h"
@@ -19,34 +19,30 @@ namespace Storage {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API XMLStorage: public AbstractStorage {
+class ANNOTATORLIB_API XMLStorage : public AbstractStorage {
+  // AbstractStorage interface
+ public:
+  bool open();
 
+  bool isOpen();
 
-    // AbstractStorage interface
-public:
+  bool flush();
 
-    bool open();
+  bool isSaved();
 
-    bool isOpen();
+  bool close();
 
-    bool flush();
+  void setPath(std::string path);
 
-    bool isSaved();
+  StorageType getType();
 
-    bool close();
+ protected:
+  std::string path;
 
-    void setPath(std::string path);
-
-    StorageType getType();
-
-protected:
-    std::string path;
-
-    bool _open = false;
-    bool _save = true;
-
+  bool _open = false;
+  bool _save = true;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -54,8 +50,8 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace Storage
-} // of namespace AnnotatorLib
+}  // of namespace Storage
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of JSONStorage class header

@@ -44,30 +44,30 @@ AnnotatorLib::Session initSession() {
   object->setName("testobject");
   object2->setName("testobject2");
 
-  //object->addFrame(frame);
+  // object->addFrame(frame);
 
   AnnotatorLib::Class *c = new AnnotatorLib::Class("testclass");
   object->setClass(c);
   object2->setClass(c);
   session.addClass(c);
 
-  AnnotatorLib::Annotation *annotation =
-      new AnnotatorLib::Annotation(frame, object, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation *annotation = new AnnotatorLib::Annotation(
+      frame, object, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation->setPosition(100, 100, 100, 100);
   annotation->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation2 =
-      new AnnotatorLib::Annotation(frame1, object2, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation *annotation2 = new AnnotatorLib::Annotation(
+      frame1, object2, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation2->setPosition(200, 200, 200, 200);
   annotation2->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation3 =
-      new AnnotatorLib::Annotation(frame2, object2, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation *annotation3 = new AnnotatorLib::Annotation(
+      frame2, object2, AnnotatorLib::AnnotationType::RECTANGLE);
   annotation3->setPosition(300, 300, 300, 300);
   annotation3->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation4 =
-      new AnnotatorLib::Annotation(frame3, object2, AnnotatorLib::AnnotationType::ELLIPSE);
+  AnnotatorLib::Annotation *annotation4 = new AnnotatorLib::Annotation(
+      frame3, object2, AnnotatorLib::AnnotationType::ELLIPSE);
   annotation4->setPosition(400, 400, 400, 400);
   annotation4->addAttribute(attribute);
 

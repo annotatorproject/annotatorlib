@@ -9,130 +9,107 @@
  ************************************************************/
 
 // include associated header file
-#include <algorithm>
-#include <assert.h>
 #include "AnnotatorLib/Frame.h"
+#include <assert.h>
+#include <algorithm>
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 
-Frame::Frame(unsigned long frame_number) : frame_number(frame_number) { }
+Frame::Frame(unsigned long frame_number) : frame_number(frame_number) {}
 
-Frame::~Frame()
-{
-    annotations.clear();
-}
+Frame::~Frame() { annotations.clear(); }
 
-bool Frame::operator> (const Frame & right)
-{
+bool Frame::operator>(const Frame &right) {
   return frame_number > right.frame_number;
 }
 
-bool Frame::operator< (const Frame & right)
-{
+bool Frame::operator<(const Frame &right) {
   return frame_number < right.frame_number;
 }
 
-bool Frame::operator<= ( const Frame & right)
-{
+bool Frame::operator<=(const Frame &right) {
   return frame_number <= right.frame_number;
 }
 
-bool Frame::operator>= (const Frame & right)
-{
+bool Frame::operator>=(const Frame &right) {
   return frame_number >= right.frame_number;
 }
 
-bool Frame::operator== (const Frame & right)
-{
+bool Frame::operator==(const Frame &right) {
   return frame_number == right.frame_number;
 }
 
-bool Frame::operator!= (const Frame & right)
-{
+bool Frame::operator!=(const Frame &right) {
   return frame_number != right.frame_number;
 }
 
-std::vector<Annotation *> Frame::getAnnotations() const
-{
-    return annotations;
+std::vector<Annotation *> Frame::getAnnotations() const { return annotations; }
+
+bool Frame::hasAnnotations() const { return !annotations.empty(); }
+
+bool Frame::addAnnotation(Annotation *annotation) {
+  if (annotation != nullptr && annotation->getFrame() == this &&
+      std::find(annotations.begin(), annotations.end(), annotation) ==
+          annotations.end()) {
+    annotations.push_back(annotation);
+    return true;
+  }
+  return false;
 }
 
-bool Frame::hasAnnotations() const
-{
-    return !annotations.empty();
+bool Frame::removeAnnotation(const Annotation *annotation) {
+  std::vector<Annotation *>::const_iterator position =
+      std::find(annotations.cbegin(), annotations.cend(), annotation);
+  if (position != annotations.cend()) {
+    annotations.erase(position);
+    return true;
+  }
+  return false;
 }
 
-bool Frame::addAnnotation(Annotation *annotation)
-{
-    if (annotation != nullptr && annotation->getFrame() == this && std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {
-        annotations.push_back(annotation);
-        return true;
-    }
-    return false;
-}
-
-bool Frame::removeAnnotation(const Annotation *annotation)
-{
-    std::vector<Annotation *>::const_iterator position = std::find(annotations.cbegin(), annotations.cend(), annotation);
-    if (position != annotations.cend()){
-        annotations.erase(position);
-        return true;
-    }
-    return false;
-}
-
-Object* Frame::getObject(const Object* obj) const
-{
-  std::vector<Annotation *>::const_iterator position = std::find_if(annotations.begin(),
-                                                                    annotations.end(),
-                                                                    [obj] (const Annotation* a) { return a->getObject() == obj; } );
-  if (position != annotations.end()){
-      return (*position)->getObject();
+Object *Frame::getObject(const Object *obj) const {
+  std::vector<Annotation *>::const_iterator position = std::find_if(
+      annotations.begin(), annotations.end(),
+      [obj](const Annotation *a) { return a->getObject() == obj; });
+  if (position != annotations.end()) {
+    return (*position)->getObject();
   }
   return nullptr;
 }
 
-std::vector<Attribute *> Frame::getAttributes() const
-{
-    std::vector<Attribute *> attributes;
+std::vector<Attribute *> Frame::getAttributes() const {
+  std::vector<Attribute *> attributes;
 
-    for (std::vector<Annotation *>::const_iterator it = annotations.begin() ; it != annotations.end(); ++it)
-    {
-        Annotation * annotation = *it;
-        for(Attribute *attribute: annotation->getAttributes()){
-            if(attribute != nullptr)
-                attributes.push_back(attribute);
-        }
+  for (std::vector<Annotation *>::const_iterator it = annotations.begin();
+       it != annotations.end(); ++it) {
+    Annotation *annotation = *it;
+    for (Attribute *attribute : annotation->getAttributes()) {
+      if (attribute != nullptr) attributes.push_back(attribute);
     }
+  }
 
-    // remove duplicates
-    std::sort( attributes.begin(), attributes.end() );
-    attributes.erase( std::unique( attributes.begin(), attributes.end() ), attributes.end() );
+  // remove duplicates
+  std::sort(attributes.begin(), attributes.end());
+  attributes.erase(std::unique(attributes.begin(), attributes.end()),
+                   attributes.end());
 
-    return attributes;
+  return attributes;
 }
 
-unsigned long Frame::getFrameNumber() const
-{
-    return frame_number;
-}
+unsigned long Frame::getFrameNumber() const { return frame_number; }
 
-bool Frame::equals(Frame *other) const
-{
-    if(this == other)
-        return true;
-    if(this->frame_number != other->frame_number)
-        return false;
-    if(this->annotations.size() != other->annotations.size())
-        return false;
-    return true;
+bool Frame::equals(Frame *other) const {
+  if (this == other) return true;
+  if (this->frame_number != other->frame_number) return false;
+  if (this->annotations.size() != other->annotations.size()) return false;
+  return true;
 }
 
 // static attributes (if any)
 
-}// of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Frame class body

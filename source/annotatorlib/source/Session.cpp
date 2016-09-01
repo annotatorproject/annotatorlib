@@ -9,297 +9,252 @@
  ************************************************************/
 
 // include associated header file
-#include <algorithm>
 #include "AnnotatorLib/Session.h"
+#include <algorithm>
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 
-Session::Session()
-{
+Session::Session() {}
 
-}
-
-template<typename T>
-struct deleter : std::unary_function<const T*, void>
-{
-  void operator() (const T *ptr) const
-  {
-    delete ptr;
-  }
+template <typename T>
+struct deleter : std::unary_function<const T *, void> {
+  void operator()(const T *ptr) const { delete ptr; }
 };
 
-Session::~Session()
-{
+Session::~Session() {
   // call deleter for each element , freeing them
-  std::for_each (annotations.begin (), annotations.end (), deleter<Annotation> ());
+  std::for_each(annotations.begin(), annotations.end(), deleter<Annotation>());
   this->annotations.clear();
-  std::for_each (objects.begin (), objects.end (), deleter<Object> ());
+  std::for_each(objects.begin(), objects.end(), deleter<Object>());
   this->objects.clear();
-  std::for_each (frames.begin (), frames.end (), deleter<Frame> ());
+  std::for_each(frames.begin(), frames.end(), deleter<Frame>());
   this->frames.clear();
-  std::for_each (classes.begin (), classes.end (), deleter<Class> ());
+  std::for_each(classes.begin(), classes.end(), deleter<Class>());
   this->classes.clear();
-  std::for_each (attributes.begin (), attributes.end (), deleter<Attribute> ());
+  std::for_each(attributes.begin(), attributes.end(), deleter<Attribute>());
   this->attributes.clear();
 
-  //delete commands
-  std::for_each (commands.begin (), commands.end (), deleter<AnnotatorLib::Commands::Command> ());
+  // delete commands
+  std::for_each(commands.begin(), commands.end(),
+                deleter<AnnotatorLib::Commands::Command>());
   this->commands.clear();
 }
 
-std::vector<Attribute *> Session::getAttributes() const
-{
-    return attributes;
-}
+std::vector<Attribute *> Session::getAttributes() const { return attributes; }
 
-bool Session::addAttribute(Attribute *attribute)
-{
-    if (std::find(attributes.begin(), attributes.end(), attribute) == attributes.end()) {
-        attributes.push_back(attribute);
-        return true;
-    }
-    return false;
-}
-
-bool Session::removeAttribute(Attribute *attribute)
-{
-    std::vector<Attribute *>::const_iterator position = std::find(attributes.begin(), attributes.end(), attribute);
-    if (position != attributes.cend()){
-        attributes.erase(position);
-        return true;
-    }
-    return false;
-}
-
-Attribute *Session::getAttribute(unsigned long id) const
-{
-    for(Attribute * attribute: attributes)
-    {
-        if(attribute->getId() == id)
-            return attribute;
-    }
-    return nullptr;
-}
-
-std::vector<Annotation *> Session::getAnnotations() const
-{
-    return annotations;
-}
-
-bool Session::addAnnotation(Annotation *annotation)
-{
-    if (std::find(annotations.begin(), annotations.end(), annotation) == annotations.end()) {                
-        annotation->registerAnnotation();
-        annotations.push_back(annotation);
-        return true;
-    }
-    return false;
-}
-
-bool Session::removeAnnotation(Annotation *annotation, bool unregister)
-{
-    std::vector<Annotation *>::iterator position = std::find(annotations.begin(), annotations.end(), annotation);
-    if (position != annotations.end()){
-        if (unregister) annotation->unregisterAnnotation();
-        if ( !annotation->getObject()->hasAnnotations()) removeObject(annotation->getObject(), false);
-        if ( !annotation->getFrame()->hasAnnotations()) removeFrame(annotation->getFrame(), false);
-        annotations.erase(position);
-        return true;
-    }
-    return false;
-}
-
-Annotation *Session::getAnnotation(unsigned long id) const
-{
-    for(Annotation * annotation: annotations)
-    {
-        if(annotation->getId() == id)
-            return annotation;
-    }
-    return nullptr;
-}
-
-std::vector<Class *> Session::getClasses() const
-{
-    return classes;
-}
-
-bool Session::addClass(Class *c)
-{
-    if (std::find(classes.begin(), classes.end(), c) == classes.end()) {
-        classes.push_back(c);
-        return true;
-    }
-    return false;
-}
-
-bool Session::removeClass(Class *c)
-{
-    std::vector<Class *>::const_iterator position = std::find(classes.begin(), classes.end(), c);
-    if (position != classes.end()){
-        classes.erase(position);
-        return true;
-    }
-    return false;
-}
-
-Class *Session::getClass(unsigned long id) const
-{
-    for(Class * c: classes)
-    {
-        if(c->getId() == id)
-            return c;
-    }
-    return nullptr;
-}
-
-Class *Session::getClass(std::string name) const
-{
-    for(Class * c: classes)
-    {
-        if(c->getName() == name)
-            return c;
-    }
-    return nullptr;
-}
-
-std::vector<Frame *> Session::getFrames() const
-{
-    return frames;
-}
-
-bool Session::addFrame(Frame *frame)
-{
-    if (frame != nullptr && std::find(frames.begin(), frames.end(), frame) == frames.end()) {
-        if(frame->hasAnnotations()) {
-            for ( Annotation * a : frame->getAnnotations()) {
-              addAnnotation(a); //will add annotation, object and frame
-            }
-        } else {
-            frames.push_back(frame);
-        }
-        return true;
-    }
-    return false;
-}
-
-bool Session::removeFrame(Frame *frame, bool remove_annotations)
-{
-    std::vector<Frame*>::const_iterator position = std::find(frames.begin(), frames.end(), frame);
-    if (position != frames.cend()) {
-        if ( remove_annotations ) {
-            for ( Annotation * a : frame->getAnnotations()) {
-              removeAnnotation(a, false);   //will remove annotations
-                                            //and unregister from objects/frames
-            }
-            return true;
-        }
-        frames.erase(position);
-        return true;
-    }
-    return false;
-}
-
-Frame *Session::getFrame(unsigned long number)
-{
-    for(Frame * frame: frames)
-    {
-        if(frame != nullptr && frame->getFrameNumber() == number)
-            return frame;
-    }
-    Frame* f = new Frame(number);
-    addFrame(f);
-    return f;
-}
-
-std::vector<Object *> Session::getObjects() const
-{
-    return objects;
-}
-
-bool Session::addObject(Object *object)
-{
-    if (object && std::find(objects.begin(), objects.end(), object) == objects.end()) {
-        objects.push_back(object);
-        if (object->hasAnnotations()) {
-            for ( Annotation * a : object->getAnnotations()) {
-              addAnnotation(a); //will add annotation, object and frame
-            }
-        }
-        if(object->getClass())
-           addClass(object->getClass());
-        return true;
-    }
-    return false;
-}
-
-bool Session::removeObject(Object *object, bool remove_annotations)
-{
-  std::vector<Object *>::const_iterator position = std::find(objects.begin(), objects.end(), object);
-  if (position != objects.cend()) {
-      if ( remove_annotations ) {
-        for ( Annotation * a : object->getAnnotations()) {
-          removeAnnotation(a, false);  //will remove annotations, without unregistering it
-
-        }
-      }
-      objects.erase(position);
-      return true;
+bool Session::addAttribute(Attribute *attribute) {
+  if (std::find(attributes.begin(), attributes.end(), attribute) ==
+      attributes.end()) {
+    attributes.push_back(attribute);
+    return true;
   }
   return false;
 }
 
-Object *Session::getFirstObjectByName(std::string name) const
-{
-    for(Object * object: objects)
-    {
-        if(object->getName() == name)
-            return object;
-    }
-    return nullptr;
+bool Session::removeAttribute(Attribute *attribute) {
+  std::vector<Attribute *>::const_iterator position =
+      std::find(attributes.begin(), attributes.end(), attribute);
+  if (position != attributes.cend()) {
+    attributes.erase(position);
+    return true;
+  }
+  return false;
 }
 
-Object *Session::getObject(unsigned long id) const
-{
-    for(Object * object: objects)
-    {
-        if(object->getId() == id)
-            return object;
-    }
-    return nullptr;
+Attribute *Session::getAttribute(unsigned long id) const {
+  for (Attribute *attribute : attributes) {
+    if (attribute->getId() == id) return attribute;
+  }
+  return nullptr;
 }
 
-bool Session::execute(Commands::Command *command)
-{
-    commands.erase(commands.begin() + commandIndex, commands.end());
-    commands.push_back(command);
+std::vector<Annotation *> Session::getAnnotations() const {
+  return annotations;
+}
+
+bool Session::addAnnotation(Annotation *annotation) {
+  if (std::find(annotations.begin(), annotations.end(), annotation) ==
+      annotations.end()) {
+    annotation->registerAnnotation();
+    annotations.push_back(annotation);
+    return true;
+  }
+  return false;
+}
+
+bool Session::removeAnnotation(Annotation *annotation, bool unregister) {
+  std::vector<Annotation *>::iterator position =
+      std::find(annotations.begin(), annotations.end(), annotation);
+  if (position != annotations.end()) {
+    if (unregister) annotation->unregisterAnnotation();
+    if (!annotation->getObject()->hasAnnotations())
+      removeObject(annotation->getObject(), false);
+    if (!annotation->getFrame()->hasAnnotations())
+      removeFrame(annotation->getFrame(), false);
+    annotations.erase(position);
+    return true;
+  }
+  return false;
+}
+
+Annotation *Session::getAnnotation(unsigned long id) const {
+  for (Annotation *annotation : annotations) {
+    if (annotation->getId() == id) return annotation;
+  }
+  return nullptr;
+}
+
+std::vector<Class *> Session::getClasses() const { return classes; }
+
+bool Session::addClass(Class *c) {
+  if (std::find(classes.begin(), classes.end(), c) == classes.end()) {
+    classes.push_back(c);
+    return true;
+  }
+  return false;
+}
+
+bool Session::removeClass(Class *c) {
+  std::vector<Class *>::const_iterator position =
+      std::find(classes.begin(), classes.end(), c);
+  if (position != classes.end()) {
+    classes.erase(position);
+    return true;
+  }
+  return false;
+}
+
+Class *Session::getClass(unsigned long id) const {
+  for (Class *c : classes) {
+    if (c->getId() == id) return c;
+  }
+  return nullptr;
+}
+
+Class *Session::getClass(std::string name) const {
+  for (Class *c : classes) {
+    if (c->getName() == name) return c;
+  }
+  return nullptr;
+}
+
+std::vector<Frame *> Session::getFrames() const { return frames; }
+
+bool Session::addFrame(Frame *frame) {
+  if (frame != nullptr &&
+      std::find(frames.begin(), frames.end(), frame) == frames.end()) {
+    if (frame->hasAnnotations()) {
+      for (Annotation *a : frame->getAnnotations()) {
+        addAnnotation(a);  // will add annotation, object and frame
+      }
+    } else {
+      frames.push_back(frame);
+    }
+    return true;
+  }
+  return false;
+}
+
+bool Session::removeFrame(Frame *frame, bool remove_annotations) {
+  std::vector<Frame *>::const_iterator position =
+      std::find(frames.begin(), frames.end(), frame);
+  if (position != frames.cend()) {
+    if (remove_annotations) {
+      for (Annotation *a : frame->getAnnotations()) {
+        removeAnnotation(a, false);  // will remove annotations
+                                     // and unregister from objects/frames
+      }
+      return true;
+    }
+    frames.erase(position);
+    return true;
+  }
+  return false;
+}
+
+Frame *Session::getFrame(unsigned long number) {
+  for (Frame *frame : frames) {
+    if (frame != nullptr && frame->getFrameNumber() == number) return frame;
+  }
+  Frame *f = new Frame(number);
+  addFrame(f);
+  return f;
+}
+
+std::vector<Object *> Session::getObjects() const { return objects; }
+
+bool Session::addObject(Object *object) {
+  if (object &&
+      std::find(objects.begin(), objects.end(), object) == objects.end()) {
+    objects.push_back(object);
+    if (object->hasAnnotations()) {
+      for (Annotation *a : object->getAnnotations()) {
+        addAnnotation(a);  // will add annotation, object and frame
+      }
+    }
+    if (object->getClass()) addClass(object->getClass());
+    return true;
+  }
+  return false;
+}
+
+bool Session::removeObject(Object *object, bool remove_annotations) {
+  std::vector<Object *>::const_iterator position =
+      std::find(objects.begin(), objects.end(), object);
+  if (position != objects.cend()) {
+    if (remove_annotations) {
+      for (Annotation *a : object->getAnnotations()) {
+        removeAnnotation(a, false);  // will remove annotations,
+                                     // without unregistering it
+      }
+    }
+    objects.erase(position);
+    return true;
+  }
+  return false;
+}
+
+Object *Session::getFirstObjectByName(std::string name) const {
+  for (Object *object : objects) {
+    if (object->getName() == name) return object;
+  }
+  return nullptr;
+}
+
+Object *Session::getObject(unsigned long id) const {
+  for (Object *object : objects) {
+    if (object->getId() == id) return object;
+  }
+  return nullptr;
+}
+
+bool Session::execute(Commands::Command *command) {
+  commands.erase(commands.begin() + commandIndex, commands.end());
+  commands.push_back(command);
+  commandIndex++;
+  return command->execute();
+}
+
+bool Session::redo() {
+  if (commands.size() >= commandIndex) {
+    AnnotatorLib::Commands::Command *command = commands.at(commandIndex);
     commandIndex++;
     return command->execute();
+  }
+  return false;
 }
 
-bool Session::redo()
-{
-    if(commands.size() >= commandIndex){
-        AnnotatorLib::Commands::Command *command = commands.at(commandIndex);
-        commandIndex++;
-        return command->execute();
-    }
-    return false;
+bool Session::undo() {
+  commandIndex--;
+  AnnotatorLib::Commands::Command *command = commands.at(commandIndex);
+  return command->undo();
 }
-
-bool Session::undo()
-{
-    commandIndex--;
-    AnnotatorLib::Commands::Command *command = commands.at(commandIndex);
-    return command->undo();
-}
-
 
 // static attributes (if any)
 
-}// of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Session class body

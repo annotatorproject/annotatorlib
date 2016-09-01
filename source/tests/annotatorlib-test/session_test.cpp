@@ -12,7 +12,8 @@ TEST_F(session_test, getObject) {
   AnnotatorLib::Session session;
   AnnotatorLib::Object *o = new AnnotatorLib::Object();
   AnnotatorLib::Frame *f = new AnnotatorLib::Frame(1);
-  AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(f, o, AnnotatorLib::AnnotationType::RECTANGLE);
+  AnnotatorLib::Annotation *a = new AnnotatorLib::Annotation(
+      f, o, AnnotatorLib::AnnotationType::RECTANGLE);
   o->addAnnotation(a);
   o->setName("testname");
   session.addAnnotation(a);

@@ -23,8 +23,8 @@ namespace AnnotatorLib {
 namespace Loader {
 
 // Types defined within the package
-}// of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Pkg_Loader package header

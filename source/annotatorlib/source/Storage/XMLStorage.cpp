@@ -9,63 +9,48 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Storage/XMLStorage.h>
 #include <AnnotatorLib/Loader/XMLLoader.h>
 #include <AnnotatorLib/Saver/XMLSaver.h>
+#include <AnnotatorLib/Storage/XMLStorage.h>
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 namespace Storage {
 
-void XMLStorage::setPath(std::string path)
-{
-    this->path = path;
+void XMLStorage::setPath(std::string path) { this->path = path; }
+
+StorageType XMLStorage::getType() { return AnnotatorLib::StorageType::XML; }
+
+bool XMLStorage::open() {
+  AnnotatorLib::Loader::XMLLoader loader;
+  loader.setPath(this->path);
+  loader.loadSession(this);
+  this->_open = true;
+  return _open;
 }
 
-StorageType XMLStorage::getType()
-{
-    return AnnotatorLib::StorageType::XML;
+bool XMLStorage::isOpen() { return _open; }
+
+bool XMLStorage::flush() {
+  AnnotatorLib::Saver::XMLSaver saver;
+  saver.setPath(this->path);
+  saver.saveSession(this);
+  _save = saver.close();
+  return _save;
 }
 
-bool XMLStorage::open()
-{
-    AnnotatorLib::Loader::XMLLoader loader;
-    loader.setPath(this->path);
-    loader.loadSession(this);
-    this->_open = true;
-    return _open;
-}
+bool XMLStorage::isSaved() { return _save; }
 
-bool XMLStorage::isOpen()
-{
-    return _open;
-}
-
-bool XMLStorage::flush()
-{
-    AnnotatorLib::Saver::XMLSaver saver;
-    saver.setPath(this->path);
-    saver.saveSession(this);
-    _save = saver.close();
-    return _save;
-}
-
-bool XMLStorage::isSaved()
-{
-    return _save;
-}
-
-bool XMLStorage::close()
-{
-    this->_open = false;
-    return flush();
+bool XMLStorage::close() {
+  this->_open = false;
+  return flush();
 }
 
 // static attributes (if any)
 
-}// of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of JSONLoader class body

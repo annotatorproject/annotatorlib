@@ -4,8 +4,8 @@
 /************************************************************
  Annotation class header
  ************************************************************/
-#include <vector>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include <vector>
 
 namespace AnnotatorLib {
 
@@ -13,18 +13,16 @@ namespace Commands {
 
 /************************************************************/
 /**
- * 
+ *
  */
 class ANNOTATORLIB_API Command {
-public:
+ public:
+  virtual ~Command() {}
 
-    virtual ~Command() {}
+  virtual bool execute() = 0;
 
-    virtual bool execute() = 0;
-
-    virtual bool undo() = 0;
+  virtual bool undo() = 0;
 };
-
 }
 }
 #endif

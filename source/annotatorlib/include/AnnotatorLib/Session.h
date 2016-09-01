@@ -10,16 +10,16 @@
  ************************************************************/
 #include <vector>
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
-#include <AnnotatorLib/AnnotatorAlgoInterface.h>
 #include <AnnotatorLib/Annotation.h>
+#include <AnnotatorLib/AnnotatorAlgoInterface.h>
 #include <AnnotatorLib/Attribute.h>
 #include <AnnotatorLib/Class.h>
+#include <AnnotatorLib/Commands/Command.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
-#include <AnnotatorLib/Commands/Command.h>
 
 namespace AnnotatorLib {
 
@@ -29,115 +29,111 @@ namespace AnnotatorLib {
  * Contains pointers to all data within a session.
  */
 class ANNOTATORLIB_API Session {
+ public:
+  Session();
+  virtual ~Session();
 
+  // Attributes
+  virtual std::vector<Attribute *> getAttributes() const;
+  /**
+   * @brief Add an attribute to the session.
+   * @param c
+   * @return
+   */
+  virtual bool addAttribute(Attribute *attribute);
+  virtual bool removeAttribute(Attribute *attribute);
+  virtual Attribute *getAttribute(unsigned long id) const;
 
-public:
-    Session();
-    virtual ~Session();
+  // Annotations
+  virtual std::vector<Annotation *> getAnnotations() const;
+  /**
+   * @brief Will add the given annotation, the associated object
+   * and frame to this session. Checks for duplicates.
+   * @param annotation
+   * @return
+   */
+  virtual bool addAnnotation(Annotation *annotation);
+  virtual bool removeAnnotation(Annotation *annotation, bool unregister = true);
+  virtual Annotation *getAnnotation(unsigned long id) const;
 
-    // Attributes
-    virtual std::vector<Attribute *> getAttributes() const;
-    /**
-     * @brief Add an attribute to the session.
-     * @param c
-     * @return
-     */
-    virtual bool addAttribute(Attribute* attribute);
-    virtual bool removeAttribute(Attribute* attribute);
-    virtual Attribute *getAttribute(unsigned long id) const;
+  // Classes
+  virtual std::vector<Class *> getClasses() const;
+  /**
+   * @brief Add a class to the session.
+   * @param c
+   * @return
+   */
+  virtual bool addClass(Class *c);
+  virtual bool removeClass(Class *c);
+  virtual Class *getClass(unsigned long id) const;
+  virtual Class *getClass(std::string name) const;
 
-    // Annotations
-    virtual std::vector<Annotation *> getAnnotations() const;
-    /**
-     * @brief Will add the given annotation, the associated object
-     * and frame to this session. Checks for duplicates.
-     * @param annotation
-     * @return
-     */
-    virtual bool addAnnotation(Annotation* annotation);
-    virtual bool removeAnnotation(Annotation* annotation, bool unregister = true);
-    virtual Annotation *getAnnotation(unsigned long id) const;
+  // Frames
+  virtual std::vector<Frame *> getFrames() const;
+  /**
+   * @brief Will add the given frame and all annotations, objects
+   * within this frame to this session. Checks for duplicates.
+   * @param frame
+   * @return
+   */
+  virtual bool addFrame(Frame *frame);
+  virtual bool removeFrame(Frame *frame, bool remove_annotations = true);
+  /**
+   * @brief getFrame by given number.
+   * If it does not exist we create it.
+   * @param number
+   * @return The Frame by given Frame Number
+   */
+  virtual Frame *getFrame(unsigned long number);
 
-    // Classes
-    virtual std::vector<Class *> getClasses() const;
-    /**
-     * @brief Add a class to the session.
-     * @param c
-     * @return
-     */
-    virtual bool addClass(Class *c);
-    virtual bool removeClass(Class * c);
-    virtual Class *getClass(unsigned long id) const;
-    virtual Class *getClass(std::string name) const;
+  virtual std::vector<Object *> getObjects() const;
+  /**
+   * @brief Will add the given object and all associated annotations, plus
+   * frames
+   * to this session. Checks for duplicates.
+   * @param object
+   * @return
+   */
+  virtual bool addObject(Object *object);
+  virtual bool removeObject(Object *object, bool remove_annotations = true);
+  /**
+   * @brief getFirstObjectByName
+   * @param name
+   * @return Object with given name
+   */
+  virtual Object *getFirstObjectByName(std::string name) const;
+  virtual Object *getObject(unsigned long id) const;
 
-    // Frames
-    virtual std::vector<Frame *> getFrames() const;
-    /**
-     * @brief Will add the given frame and all annotations, objects
-     * within this frame to this session. Checks for duplicates.
-     * @param frame
-     * @return
-     */
-    virtual bool addFrame(Frame* frame);
-    virtual bool removeFrame(Frame* frame, bool remove_annotations = true);
-    /**
-     * @brief getFrame by given number.
-     * If it does not exist we create it.
-     * @param number
-     * @return The Frame by given Frame Number
-     */
-    virtual Frame *getFrame(unsigned long number);
+  virtual bool execute(AnnotatorLib::Commands::Command *command);
+  virtual bool redo();
+  virtual bool undo();
 
-    virtual std::vector<Object *> getObjects() const;
-    /**
-     * @brief Will add the given object and all associated annotations, plus frames
-     * to this session. Checks for duplicates.
-     * @param object
-     * @return
-     */
-    virtual bool addObject(Object* object);
-    virtual bool removeObject(Object* object, bool remove_annotations = true);
-    /**
-     * @brief getFirstObjectByName
-     * @param name
-     * @return Object with given name
-     */
-    virtual Object * getFirstObjectByName(std::string name) const;
-    virtual Object *getObject(unsigned long id) const;
+ private:
+  /**
+   *
+   */
+  std::vector<Frame *> frames;
+  /**
+   *
+   */
+  std::vector<Object *> objects;
+  /**
+   *
+   */
+  std::vector<Attribute *> attributes;
+  /**
+   *
+   */
+  std::vector<Annotation *> annotations;
+  /**
+   *
+   */
+  std::vector<Class *> classes;
 
-    virtual bool execute(AnnotatorLib::Commands::Command *command);
-    virtual bool redo();
-    virtual bool undo();
+  unsigned int commandIndex = 0;
+  std::vector<AnnotatorLib::Commands::Command *> commands;
 
-
-private:
-
-	/**
-	 * 
-	 */
-    std::vector<Frame*> frames;
-	/**
-	 * 
-	 */
-    std::vector<Object*> objects;
-	/**
-	 * 
-	 */
-    std::vector<Attribute*> attributes;
-	/**
-	 * 
-	 */
-    std::vector<Annotation*> annotations;
-	/**
-	 * 
-	 */
-    std::vector<Class*> classes;
-
-    unsigned int commandIndex = 0;
-    std::vector<AnnotatorLib::Commands::Command*> commands;
-
-    AnnotatorAlgo::AnnotatorAlgoInterface *annotatorAlgo;
-
+  AnnotatorAlgo::AnnotatorAlgoInterface *annotatorAlgo;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -145,7 +141,7 @@ private:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Session class header

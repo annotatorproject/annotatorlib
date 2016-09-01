@@ -1,12 +1,11 @@
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
-#include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Frame.h>
+#include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
-    AnnotatorLib::Session *session,
-    AnnotatorLib::Annotation *annotation) {
+    AnnotatorLib::Session *session, AnnotatorLib::Annotation *annotation) {
   this->annotation = annotation;
   this->frame = annotation->getFrame();
   this->session = session;
@@ -26,4 +25,3 @@ AnnotatorLib::Annotation *
 AnnotatorLib::Commands::RemoveAnnotation::getAnnotation() {
   return annotation;
 }
-

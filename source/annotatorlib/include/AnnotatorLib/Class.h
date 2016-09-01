@@ -13,50 +13,49 @@ namespace AnnotatorLib {
  * Represents a class that objects can affiliate to.
  */
 class ANNOTATORLIB_API Class {
-public:
+ public:
+  const unsigned long id;
+  const std::string name;
 
-    const unsigned long id;
-    const std::string name;
+  /**
+   * @brief Class constructor
+   *
+   * The id and the name will be generated automatically.
+   */
+  Class();
 
-    /**
-     * @brief Class constructor
-     *
-     * The id and the name will be generated automatically.
-     */
-    Class();
+  /**
+   * @brief Class constructor
+   * @param name A for humans readable name for the class.
+   *
+   * The id will be generated automatically.
+   */
+  Class(std::string name);
 
-    /**
-     * @brief Class constructor
-     * @param name A for humans readable name for the class.
-     *
-     * The id will be generated automatically.
-     */
-    Class(std::string name);
+  /**
+   * @brief Class
+   * @param id
+   * @param name
+   */
+  Class(unsigned long id, std::string name);
 
-    /**
-     * @brief Class
-     * @param id
-     * @param name
-     */
-    Class(unsigned long id, std::string name);
+  ~Class() {}
 
-    ~Class() {}
+  /**
+   *
+   * @return id
+   */
+  static unsigned long genId();
 
-    /**
-     *
-     * @return id
-     */
-    static unsigned long genId();
+  unsigned long getId() const;
+  std::string getName() const;
 
-    unsigned long getId() const;
-    std::string getName() const;
+  bool equals(Class *other);
 
-    bool equals(Class *other);
-
-private:
-    static std::string genName();
+ private:
+  static std::string genName();
 };
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 #endif

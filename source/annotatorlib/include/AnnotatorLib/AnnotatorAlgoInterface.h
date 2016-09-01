@@ -8,18 +8,18 @@
 /************************************************************
  AnnotatorAlgoInterface class header
  ************************************************************/
-#include <vector>
 #include <opencv2/core/core.hpp>
+#include <vector>
 
-#include "AnnotatorLib/Commands/Command.h"
 #include <AnnotatorLib/annotatorlib_api.h>
+#include "AnnotatorLib/Commands/Command.h"
 #include "AnnotatorLib/Image.h"
 
 namespace AnnotatorLib {
-    class Annotation;
-    class Frame;
-    class Object;
-    class Session;
+class Annotation;
+class Frame;
+class Object;
+class Session;
 }
 
 namespace AnnotatorAlgo {
@@ -29,34 +29,30 @@ namespace AnnotatorAlgo {
  *
  */
 class ANNOTATORLIB_API AnnotatorAlgoInterface {
-public:
+ public:
+  /**
+   *
+   * @param image
+   */
+  virtual bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
 
-    /**
-     *
-     * @param image
-     */
-    virtual bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
+  /**
+   *
+   * @param object
+   */
+  virtual void setObject(AnnotatorLib::Object /*in*/ *object) = 0;
 
-    /**
-     *
-     * @param object
-     */
-    virtual void setObject(AnnotatorLib::Object /*in*/*object) = 0;
+  virtual AnnotatorLib::Object *getObject() = 0;
 
-    virtual AnnotatorLib::Object * getObject() = 0;
+  /**
+   * @brief setLastAnnotation
+   * @param annotation
+   */
+  virtual void setLastAnnotation(AnnotatorLib::Annotation *annotation) = 0;
 
-    /**
-     * @brief setLastAnnotation
-     * @param annotation
-     */
-    virtual void setLastAnnotation(AnnotatorLib::Annotation *annotation) = 0;
+  virtual std::vector<AnnotatorLib::Commands::Command *> getCommands() = 0;
 
-    virtual std::vector<AnnotatorLib::Commands::Command*> getCommands() = 0;
-
-    virtual void setSession(AnnotatorLib::Session * session) = 0;
-
-
-
+  virtual void setSession(AnnotatorLib::Session *session) = 0;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -64,7 +60,7 @@ public:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorAlgo
+}  // of namespace AnnotatorAlgo
 
 /************************************************************
  End of AnnotatorAlgoInterface class header

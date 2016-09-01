@@ -5,7 +5,6 @@
 #ifndef ANNOTATOR_ANNOTATORLIB_OBJECT_H
 #define ANNOTATOR_ANNOTATORLIB_OBJECT_H
 
-
 /************************************************************
  Object class header
  ************************************************************/
@@ -13,8 +12,8 @@
 #include <string>
 #include <vector>
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Attribute.h"
@@ -29,83 +28,81 @@ class Class;
  * @brief The Object class that represents an object of a specific class.
  */
 class ANNOTATORLIB_API Object {
-public:
+ public:
+  const unsigned long id = 0;
 
-    const unsigned long id = 0;
+  Object();
+  Object(Class* c);
+  Object(unsigned long id, Class* c = nullptr);
 
-    Object();
-    Object(Class* c);
-    Object(unsigned long id, Class* c = nullptr);
+  ~Object();
 
-    ~Object();
+  /**
+   *
+   * @return id
+   */
+  static unsigned long genId();
 
-	/**
-	 * 
-	 * @return id 
-	 */
-    static unsigned long genId();
+  unsigned long getId() const;
 
-    unsigned long getId() const;
+  std::string getName();
+  void setName(std::string name);
 
-    std::string getName();
-    void setName(std::string name);
+  Class* getClass() const;
+  void setClass(Class* c);
 
-    Class *getClass() const;
-    void setClass(Class *c);
+  std::vector<Attribute*> getAttributes() const;
+  bool addAttribute(Attribute* attribute);
+  bool removeAttribute(Attribute* attribute);
 
-    std::vector<Attribute*> getAttributes() const;
-    bool addAttribute(Attribute* attribute);
-    bool removeAttribute(Attribute* attribute);
+  Annotation* getFirstAnnotation() const;
+  Annotation* getLastAnnotation() const;
+  std::vector<Annotation*> getAnnotations() const;
+  bool addAnnotation(Annotation* annotation);
+  bool removeAnnotation(Annotation* annotation);
+  bool hasAnnotations() const { return !annotations.empty(); }
 
-    Annotation *getFirstAnnotation() const;
-    Annotation *getLastAnnotation() const;
-    std::vector<Annotation*> getAnnotations() const;
-    bool addAnnotation(Annotation* annotation);
-    bool removeAnnotation(Annotation* annotation);
-    bool hasAnnotations() const { return !annotations.empty(); }
+  /**
+   * @brief Get all frames of this object.
+   * Attention: Heavy operation!
+   * @return
+   */
+  std::vector<Frame*> getFrames() const;
+  // bool addFrame(Frame* frame);
+  // bool removeFrame(Frame* frame);
+  bool appearsInFrame(const Frame* frame) const;
+  Annotation* getAnnotation(const Frame* frame) const;
+  void findClosestKeyFrames(const Frame* target_frame, Annotation*& left,
+                            Annotation*& right) const;
 
-    /**
-     * @brief Get all frames of this object.
-     * Attention: Heavy operation!
-     * @return
-     */
-    std::vector<Frame*> getFrames() const;
-    //bool addFrame(Frame* frame);
-    //bool removeFrame(Frame* frame);
-    bool appearsInFrame(const Frame *frame) const;
-    Annotation* getAnnotation(const Frame *frame) const;
-    void findClosestKeyFrames(const Frame * target_frame, Annotation*& left, Annotation*& right) const;
+  void setActive(bool active);
 
-    void setActive(bool active);
+  /**
+   * @brief isActive
+   * Returns if object is active or blocked for new annotations.
+   * @return
+   */
+  bool isActive() const;
 
-    /**
-     * @brief isActive
-     * Returns if object is active or blocked for new annotations.
-     * @return
-     */
-    bool isActive() const;
+ private:
+  std::string genName();
+  bool addAnnotationToSortedList(Annotation* a);
 
-private:
+  std::string name;
 
-    std::string genName();
-    bool addAnnotationToSortedList(Annotation* a);
-
-    std::string name;
-
-    Class *objectClass = nullptr;
-	/**
-	 * 
-	 */
-    std::vector<Attribute*> attributes;
-	/**
-	 * 
-	 */
-    std::vector<Annotation*> annotations;
-	/**
-	 * 
-	 */
-    //std::vector<Frame*> frames;
-
+  Class* objectClass = nullptr;
+  /**
+   *
+   */
+  std::vector<Attribute*> attributes;
+  /**
+   *
+   */
+  std::vector<Annotation*> annotations;
+  /**
+   *
+   */
+  // std::vector<Frame*> frames;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -113,7 +110,7 @@ private:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Object class header

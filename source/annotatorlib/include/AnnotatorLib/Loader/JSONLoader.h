@@ -8,9 +8,9 @@
 /************************************************************
  JSONLoader class header
  ************************************************************/
-#include <QJsonObject>
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <QJsonObject>
 
 #include <AnnotatorLib/Loader/AbstractLoader.h>
 
@@ -26,25 +26,23 @@ namespace Loader {
  * loads session from json file format.
  */
 class ANNOTATORLIB_API JSONLoader : public AbstractLoader {
+  // AbstractLoader interface
+ public:
+  void setPath(std::string path);
+  StorageType getType();
+  void loadSession(AnnotatorLib::Session *session);
 
+ protected:
+  std::string path;
 
-    // AbstractLoader interface
-public:
-    void setPath(std::string path);
-    StorageType getType();
-    void loadSession(AnnotatorLib::Session *session);
+  void loadAttributes(QJsonObject &json, AnnotatorLib::Session *session);
+  void loadAnnotations(QJsonObject &json, AnnotatorLib::Session *session);
+  void loadClasses(QJsonObject &json, AnnotatorLib::Session *session);
+  void loadObjects(QJsonObject &json, AnnotatorLib::Session *session);
+  void loadFrames(QJsonObject &json, AnnotatorLib::Session *session);
 
-protected:
-    std::string path;
-
-    void loadAttributes(QJsonObject& json, AnnotatorLib::Session *session);
-    void loadAnnotations(QJsonObject& json, AnnotatorLib::Session *session);
-    void loadClasses(QJsonObject& json, AnnotatorLib::Session *session);
-    void loadObjects(QJsonObject& json, AnnotatorLib::Session *session);
-    void loadFrames(QJsonObject& json, AnnotatorLib::Session *session);
-
-    void loadAnnotationsNextPrevious(QJsonObject& json, AnnotatorLib::Session *session);
-
+  void loadAnnotationsNextPrevious(QJsonObject &json,
+                                   AnnotatorLib::Session *session);
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -52,8 +50,8 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of JSONLoader class header

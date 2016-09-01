@@ -25,12 +25,10 @@ class Object;
  * Represents a label for an object on a specific frame.
  */
 class ANNOTATORLIB_API Annotation {
-
   friend class Object;
   friend class Session;
 
-public:
-
+ public:
   /////////CONSTANTS/////////////
 
   const unsigned long id = 0;
@@ -39,9 +37,12 @@ public:
   ////////CONSTRUCTORS//////////
 
   Annotation() = delete;
-  Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE, bool isInterpolated = false);
-  Annotation(Frame* frame, Object* obj, AnnotationType type = AnnotationType::RECTANGLE);
-  Annotation(Annotation* a, Frame* frame, bool isInterpolated);
+  Annotation(unsigned long id, Frame *frame, Object *obj,
+             AnnotationType type = AnnotationType::RECTANGLE,
+             bool isInterpolated = false);
+  Annotation(Frame *frame, Object *obj,
+             AnnotationType type = AnnotationType::RECTANGLE);
+  Annotation(Annotation *a, Frame *frame, bool isInterpolated);
   Annotation(const Annotation &obj);
 
   /////////////////////////
@@ -54,13 +55,12 @@ public:
    * @param right
    * @return
    */
-  bool operator> (const Annotation & right);
-  bool operator>= (const Annotation & right);
-  bool operator< (const Annotation & right);
-  bool operator<= (const Annotation & right);
-  bool operator== (const Annotation & right);
-  bool operator!= (const Annotation & right);
-
+  bool operator>(const Annotation &right);
+  bool operator>=(const Annotation &right);
+  bool operator<(const Annotation &right);
+  bool operator<=(const Annotation &right);
+  bool operator==(const Annotation &right);
+  bool operator!=(const Annotation &right);
 
   ////////METHODS//////////
 
@@ -125,8 +125,7 @@ public:
   void setInterpolated(bool interpolated);
   bool isInterpolated() const;
 
-protected:
-
+ protected:
   std::vector<Attribute *> attributes;
 
   Annotation *next = nullptr;
@@ -141,7 +140,7 @@ protected:
 
   bool interpolated = false;
 
-private:
+ private:
   /**
    * @brief Register annotation to its object and frame.
    * @param vis
@@ -156,7 +155,6 @@ private:
   Object *object = nullptr;
 
   bool is_registered;
-
 };
 /************************************************************/
 /* External declarations (package visibility)               */

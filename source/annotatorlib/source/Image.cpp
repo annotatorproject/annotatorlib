@@ -17,7 +17,7 @@ namespace AnnotatorLib {
 
 // static attributes (if any)
 
-}// of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Image class body

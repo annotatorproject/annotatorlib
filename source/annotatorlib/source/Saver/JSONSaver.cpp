@@ -47,8 +47,7 @@ QJsonObject JSONSaver::sessionToJson(Session *session) {
   // insert list of objects
   QJsonArray objects;
   for (Object *object : session->getObjects()) {
-      if (object->hasAnnotations())
-        objects.append(objectToJson(object));
+    if (object->hasAnnotations()) objects.append(objectToJson(object));
   }
   json["objects"] = objects;
 
@@ -76,11 +75,9 @@ QJsonObject JSONSaver::sessionToJson(Session *session) {
   // insert list of frames
   QJsonArray frames;
   for (Frame *frame : session->getFrames()) {
-      if (frame->hasAnnotations())
-        frames.append(frameToJson(frame));
+    if (frame->hasAnnotations()) frames.append(frameToJson(frame));
   }
   json["frames"] = frames;
-
 
   return json;
 }
@@ -179,12 +176,11 @@ QJsonObject JSONSaver::objectToJson(Object *object) {
   return json;
 }
 
-QJsonObject JSONSaver::classToJson(Class *c)
-{
-    QJsonObject json;
-    json["id"] = QString::number(c->getId());
-    json["name"] = QString::fromStdString(c->getName());
-    return json;
+QJsonObject JSONSaver::classToJson(Class *c) {
+  QJsonObject json;
+  json["id"] = QString::number(c->getId());
+  json["name"] = QString::fromStdString(c->getName());
+  return json;
 }
 
 void JSONSaver::save() {

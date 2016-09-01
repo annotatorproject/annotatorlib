@@ -18,16 +18,14 @@ namespace Loader {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API SQLLoader: public AbstractLoader {
-
-
-    // AbstractLoader interface
-public:
-    void setPath(std::string path);
-    StorageType getType();
-    void loadSession(AnnotatorLib::Session * session);
+class ANNOTATORLIB_API SQLLoader : public AbstractLoader {
+  // AbstractLoader interface
+ public:
+  void setPath(std::string path);
+  StorageType getType();
+  void loadSession(AnnotatorLib::Session* session);
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -35,8 +33,8 @@ public:
 
 /* Inline functions                                         */
 
-} // of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLLoader class header

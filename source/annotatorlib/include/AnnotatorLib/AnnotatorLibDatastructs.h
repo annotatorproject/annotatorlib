@@ -90,8 +90,6 @@ std::string ANNOTATORLIB_API StorageTypeToString(StorageType type);
 
 StorageType ANNOTATORLIB_API StorageTypeFromString(std::string str);
 
-
-
 /**
   Converts a String to an ImageSetType
 
@@ -109,8 +107,6 @@ ImageSetType ANNOTATORLIB_API ImageSetTypeFromString(std::string str);
  * @return
  */
 std::string ANNOTATORLIB_API ImageSetTypeToString(ImageSetType type);
-
-
 
 /**
  * @brief AnnotationTypeFromString

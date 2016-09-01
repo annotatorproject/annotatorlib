@@ -13,8 +13,8 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include "AnnotatorLib/ImageSet.h"
 
@@ -22,59 +22,57 @@ namespace AnnotatorLib {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API Camera: public ImageSet {
+class ANNOTATORLIB_API Camera : public ImageSet {
+ public:
+  Camera(std::string path);
 
-public:
-    Camera(std::string path);
+  /**
+   *
+   * @return type
+   */
+  virtual ImageSetType getType();
 
-    /**
-     *
-     * @return type
-     */
-    virtual ImageSetType getType();
+  /**
+   *
+   * @param frame
+   * @return image
+   */
+  virtual Image getImage(unsigned int /*in*/ frame);
 
-    /**
-     *
-     * @param frame
-     * @return image
-     */
-    virtual Image getImage(unsigned int /*in*/frame);
+  virtual bool gotoPosition(long position);
 
-    virtual bool gotoPosition(long position);
+  virtual long getPosition();
 
-    virtual long getPosition();
+  /**
+   *
+   * @return next
+   */
+  virtual bool hasNext();
 
-    /**
-     *
-     * @return next
-     */
-    virtual bool hasNext();
+  /**
+   *
+   * @return image
+   */
+  virtual Image next();
 
-    /**
-     *
-     * @return image
-     */
-    virtual Image next();
+  /**
+   *
+   * @return size
+   */
+  virtual unsigned int size();
 
-    /**
-     *
-     * @return size
-     */
-    virtual unsigned int size();
+  virtual std::string getPath();
 
-    virtual std::string getPath();
+  virtual bool equals(ImageSet *other);
 
-    virtual bool equals(ImageSet *other);
+ protected:
+  void initCamera();
 
-protected:
-    void initCamera();
+  std::string path;
 
-    std::string path;
-
-    cv::VideoCapture capture;
-
+  cv::VideoCapture capture;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -82,7 +80,7 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Camera class header

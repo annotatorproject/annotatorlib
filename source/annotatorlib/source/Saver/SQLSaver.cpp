@@ -17,35 +17,20 @@
 namespace AnnotatorLib {
 namespace Saver {
 
-void SQLSaver::saveAnnotation(Annotation annotation)
-{
+void SQLSaver::saveAnnotation(Annotation annotation) {}
 
-}
+void SQLSaver::setPath(std::string path) {}
 
-void SQLSaver::setPath(std::string path)
-{
+StorageType SQLSaver::getType() { return AnnotatorLib::StorageType::SQL; }
 
-}
+void SQLSaver::saveSession(Session *session) {}
 
-StorageType SQLSaver::getType()
-{
-    return AnnotatorLib::StorageType::SQL;
-}
-
-void SQLSaver::saveSession(Session *session)
-{
-
-}
-
-bool SQLSaver::close()
-{
-    return true;
-}
+bool SQLSaver::close() { return true; }
 
 // static attributes (if any)
 
-}// of namespace Saver
-} // of namespace AnnotatorLib
+}  // of namespace Saver
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLSaver class body

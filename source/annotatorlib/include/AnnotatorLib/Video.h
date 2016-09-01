@@ -9,78 +9,73 @@
  Video class header
  ************************************************************/
 
-
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include <AnnotatorLib/ImageSet.h>
 
-namespace cv{
-    class VideoCapture;
+namespace cv {
+class VideoCapture;
 }
 
 namespace AnnotatorLib {
 
 /************************************************************/
 /**
- * 
+ *
  */
-class ANNOTATORLIB_API Video: public ImageSet {
+class ANNOTATORLIB_API Video : public ImageSet {
+ protected:
+  std::string path;
 
-protected:
-    std::string path;
+ public:
+  Video(std::string path);
 
-public:
-    Video(std::string path);
+  ~Video();
 
-    ~Video();
+  /**
+   *
+   * @return type
+   */
+  virtual ImageSetType getType();
 
-    /**
-     *
-     * @return type
-     */
-    virtual ImageSetType getType();
+  /**
+   *
+   * @param frame
+   * @return image
+   */
+  virtual Image getImage(unsigned int /*in*/ frame);
 
-    /**
-     *
-     * @param frame
-     * @return image
-     */
-    virtual Image getImage(unsigned int /*in*/frame);
+  bool gotoPosition(long position);
 
-    bool gotoPosition(long position);
+  long getPosition();
 
-    long getPosition();
+  /**
+   *
+   * @return next
+   */
+  virtual bool hasNext();
 
-    /**
-     *
-     * @return next
-     */
-    virtual bool hasNext();
+  /**
+   *
+   * @return image
+   */
+  virtual Image next();
 
-    /**
-     *
-     * @return image
-     */
-    virtual Image next();
+  /**
+   *
+   * @return size
+   */
+  virtual unsigned int size();
 
-    /**
-     *
-     * @return size
-     */
-    virtual unsigned int size();
+  virtual std::string getPath();
 
-    virtual std::string getPath();
+  virtual bool equals(ImageSet *other);
 
-    virtual bool equals(ImageSet *other);
+ protected:
+  void initCapture();
 
-protected:
-
-    void initCapture();
-
-    cv::VideoCapture *capture = nullptr;
-
-
+  cv::VideoCapture *capture = nullptr;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -88,7 +83,7 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Video class header

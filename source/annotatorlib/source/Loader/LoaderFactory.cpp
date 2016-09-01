@@ -10,9 +10,9 @@
 
 // include associated header file
 #include "AnnotatorLib/Loader/LoaderFactory.h"
-#include "AnnotatorLib/Loader/XMLLoader.h"
 #include "AnnotatorLib/Loader/JSONLoader.h"
 #include "AnnotatorLib/Loader/SQLLoader.h"
+#include "AnnotatorLib/Loader/XMLLoader.h"
 
 // Derived includes directives
 
@@ -21,38 +21,31 @@ namespace Loader {
 
 // static attributes (if any)
 
-
-AbstractLoader *LoaderFactory::createLoader(std::string type)
-{
-    if("xml" == type)
-        return createLoader(AnnotatorLib::StorageType::XML);
-    if("json" == type)
-        return createLoader(AnnotatorLib::StorageType::JSON);
-    if("sql" == type)
-        return createLoader(AnnotatorLib::StorageType::SQL);
-    if("sqlite" == type)
-        return createLoader(AnnotatorLib::StorageType::SQLITE);
-    return createLoader(AnnotatorLib::StorageType::UNKNOWN);
+AbstractLoader *LoaderFactory::createLoader(std::string type) {
+  if ("xml" == type) return createLoader(AnnotatorLib::StorageType::XML);
+  if ("json" == type) return createLoader(AnnotatorLib::StorageType::JSON);
+  if ("sql" == type) return createLoader(AnnotatorLib::StorageType::SQL);
+  if ("sqlite" == type) return createLoader(AnnotatorLib::StorageType::SQLITE);
+  return createLoader(AnnotatorLib::StorageType::UNKNOWN);
 }
 
-AbstractLoader *LoaderFactory::createLoader(
-        AnnotatorLib::StorageType type) {
-    switch(type){
+AbstractLoader *LoaderFactory::createLoader(AnnotatorLib::StorageType type) {
+  switch (type) {
     case StorageType::XML:
-        return new XMLLoader();
+      return new XMLLoader();
     case StorageType::JSON:
-        return new JSONLoader();
+      return new JSONLoader();
     case StorageType::SQL:
-        return new SQLLoader();
+      return new SQLLoader();
     case StorageType::SQLITE:
-        return nullptr;
+      return nullptr;
     default:
-        return nullptr;
-    }
+      return nullptr;
+  }
 }
 
-} // of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of LoaderFactory class body

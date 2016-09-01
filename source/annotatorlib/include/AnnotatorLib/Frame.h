@@ -10,8 +10,8 @@
  ************************************************************/
 #include <vector>
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include "AnnotatorLib/Annotation.h"
 
@@ -27,47 +27,43 @@ class Attribute;
  * Representing a frame in a movie or an image.
  */
 class ANNOTATORLIB_API Frame {
+ public:
+  Frame() = delete;
+  Frame(unsigned long frame_nmb);
+  ~Frame();
 
-public:
+  bool operator>(const Frame& right);
+  bool operator>=(const Frame& right);
+  bool operator<(const Frame& right);
+  bool operator<=(const Frame& right);
+  bool operator==(const Frame& right);
+  bool operator!=(const Frame& right);
 
-    Frame() = delete;
-    Frame(unsigned long frame_nmb);
-    ~Frame();
+  std::vector<Annotation*> getAnnotations() const;
+  bool hasAnnotations() const;
+  bool addAnnotation(Annotation* annotation);
+  bool removeAnnotation(const Annotation* annotation);
+  /**
+   * @brief Checks if there is an annotation,
+   * which belongs to the given object.
+   * @param annotation
+   */
+  Object* getObject(const Object* obj) const;
 
-    bool operator> (const Frame & right);
-    bool operator>= (const Frame & right);
-    bool operator< (const Frame & right);
-    bool operator<= (const Frame & right);
-    bool operator== (const Frame & right);
-    bool operator!= (const Frame & right);
+  std::vector<Attribute*> getAttributes() const;
 
-    std::vector<Annotation*> getAnnotations() const;
-    bool hasAnnotations() const;
-    bool addAnnotation(Annotation* annotation);
-    bool removeAnnotation(const Annotation* annotation);
-    /**
-     * @brief Checks if there is an annotation,
-     * which belongs to the given object.
-     * @param annotation
-     */
-    Object* getObject(const Object* obj) const;
+  unsigned long getFrameNumber() const;
 
-    std::vector<Attribute*> getAttributes() const;
+  bool equals(Frame* other) const;
 
-    unsigned long getFrameNumber() const;
+ protected:
+  /**
+   *
+   */
+  const unsigned long frame_number;
 
-    bool equals(Frame *other) const;
-
-protected:
-    /**
-     *
-     */
-    const unsigned long frame_number;
-
-private:
-    std::vector<Annotation*> annotations;
-
-
+ private:
+  std::vector<Annotation*> annotations;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -75,7 +71,7 @@ private:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Frame class header

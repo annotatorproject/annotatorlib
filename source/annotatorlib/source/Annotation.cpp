@@ -30,24 +30,31 @@ unsigned long Annotation::genId() {
 
 //////////////// constructors ///////////////////
 
-Annotation::Annotation(unsigned long id, Frame* frame, Object* obj, AnnotationType type, bool isInterpolated) : id(id), frame(frame), object(obj), type(type), interpolated(isInterpolated)
-{
+Annotation::Annotation(unsigned long id, Frame *frame, Object *obj,
+                       AnnotationType type, bool isInterpolated)
+    : id(id),
+      frame(frame),
+      object(obj),
+      type(type),
+      interpolated(isInterpolated) {
   assert(frame != nullptr);
   assert(obj != nullptr);
 
-  if (lastId < id) lastId = id;  //  avoid collisions when loading annotations from file
-  if (!this->isInterpolated())
-    registerAnnotation();
-
+  if (lastId < id)
+    lastId = id;  //  avoid collisions when loading annotations from file
+  if (!this->isInterpolated()) registerAnnotation();
 }
 
-Annotation::Annotation(Frame* frame, Object* obj, AnnotationType type) : Annotation(genId(), frame, obj, type) { }
+Annotation::Annotation(Frame *frame, Object *obj, AnnotationType type)
+    : Annotation(genId(), frame, obj, type) {}
 
-Annotation::Annotation(Annotation* a, Frame* frame, bool isInterpolated) : Annotation(genId(), frame, a->getObject(), a->getType(), isInterpolated) {
+Annotation::Annotation(Annotation *a, Frame *frame, bool isInterpolated)
+    : Annotation(genId(), frame, a->getObject(), a->getType(), isInterpolated) {
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
 }
 
-Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), other.getObject(), other.getType()) {
+Annotation::Annotation(const Annotation &other)
+    : Annotation(other.getFrame(), other.getObject(), other.getType()) {
   this->attributes = other.attributes;
   this->next = other.next;
   this->previous = other.previous;
@@ -57,43 +64,39 @@ Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), o
   this->height = other.height;
 }
 
-Annotation::~Annotation() { }
+Annotation::~Annotation() {}
 
 //////////////// public methods ///////////////////
 
-bool Annotation::operator> (const Annotation & right)
-{
+bool Annotation::operator>(const Annotation &right) {
   return *this->frame > *right.frame;
 }
 
-bool Annotation::operator< (const Annotation & right)
-{
+bool Annotation::operator<(const Annotation &right) {
   return *this->frame < *right.frame;
 }
 
-bool Annotation::operator<= (const Annotation & right)
-{
+bool Annotation::operator<=(const Annotation &right) {
   return *this->frame <= *right.frame;
 }
 
-bool Annotation::operator>= (const Annotation & right)
-{
+bool Annotation::operator>=(const Annotation &right) {
   return *this->frame >= *right.frame;
 }
 
-bool Annotation::operator== (const Annotation & right)
-{
+bool Annotation::operator==(const Annotation &right) {
   return *this->frame == *right.frame;
 }
 
-bool Annotation::operator!= (const Annotation & right)
-{
+bool Annotation::operator!=(const Annotation &right) {
   return *this->frame != *right.frame;
 }
 
 unsigned long Annotation::getId() const { return id; }
 
-std::vector<Attribute *> Annotation::getAttributes() const { return attributes; }
+std::vector<Attribute *> Annotation::getAttributes() const {
+  return attributes;
+}
 
 bool Annotation::addAttribute(Attribute *attribute) {
   if (attribute != nullptr &&
@@ -117,8 +120,9 @@ bool Annotation::removeAttribute(Attribute *attribute) {
 
 Frame *Annotation::getFrame() const { return frame; }
 
-// removed this setter function, since we don't want that the user can change this afterwards
-//void Annotation::setFrame(Frame *frame) {
+// removed this setter function, since we don't want that the user can change
+// this afterwards
+// void Annotation::setFrame(Frame *frame) {
 //  if (this->frame != frame) {
 //    this->frame = frame;
 //    // if(frame != nullptr)
@@ -128,8 +132,9 @@ Frame *Annotation::getFrame() const { return frame; }
 
 Object *Annotation::getObject() const { return object; }
 
-// removed this setter function, since we don't want that the user can change this afterwards
-//void Annotation::setObject(Object *object) {
+// removed this setter function, since we don't want that the user can change
+// this afterwards
+// void Annotation::setObject(Object *object) {
 //  if (this->object != object) {
 //    this->object = object;
 //    if (object != nullptr) object->addAnnotation(this);
@@ -138,7 +143,7 @@ Object *Annotation::getObject() const { return object; }
 
 AnnotationType Annotation::getType() const { return this->type; }
 
-//void Annotation::setType(AnnotationType type) { this->type = type; }
+// void Annotation::setType(AnnotationType type) { this->type = type; }
 
 void Annotation::setCenterPosition(float x, float y, float hradius,
                                    float vradius) {
@@ -239,7 +244,6 @@ void Annotation::setPosition(float x, float y, float width, float height) {
 
 //////////////// private methods ///////////////////
 
-
 void Annotation::registerAnnotation(bool r) {
   if (r)
     registerAnnotation();
@@ -248,18 +252,14 @@ void Annotation::registerAnnotation(bool r) {
 }
 
 void Annotation::registerAnnotation() {
-  if (object)
-    object->addAnnotation(this);
-  if (frame)
-    frame->addAnnotation(this);
-  if(object && frame) is_registered = true;
+  if (object) object->addAnnotation(this);
+  if (frame) frame->addAnnotation(this);
+  if (object && frame) is_registered = true;
 }
 
 void Annotation::unregisterAnnotation() {
-  if (object)
-    object->removeAnnotation(this);
-  if (frame)
-    frame->removeAnnotation(this);
+  if (object) object->removeAnnotation(this);
+  if (frame) frame->removeAnnotation(this);
   is_registered = false;
 }
 

@@ -3,8 +3,8 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveObject::RemoveObject(
-    AnnotatorLib::Session *session,
-    AnnotatorLib::Object *obj) : object(obj), session(session) { }
+    AnnotatorLib::Session *session, AnnotatorLib::Object *obj)
+    : object(obj), session(session) {}
 
 bool AnnotatorLib::Commands::RemoveObject::execute() {
   bool success = session->removeObject(object);
@@ -15,4 +15,3 @@ bool AnnotatorLib::Commands::RemoveObject::undo() {
   this->session->addObject(this->object);
   return true;
 }
-

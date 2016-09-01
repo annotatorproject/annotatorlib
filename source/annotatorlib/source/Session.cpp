@@ -98,11 +98,11 @@ bool Session::addAnnotation(Annotation *annotation)
     return false;
 }
 
-bool Session::removeAnnotation(Annotation *annotation)
+bool Session::removeAnnotation(Annotation *annotation, bool unregister)
 {
     std::vector<Annotation *>::iterator position = std::find(annotations.begin(), annotations.end(), annotation);
     if (position != annotations.end()){
-        annotation->unregisterAnnotation();
+        if (unregister) annotation->unregisterAnnotation();
         if ( !annotation->getObject()->hasAnnotations()) removeObject(annotation->getObject(), false);
         if ( !annotation->getFrame()->hasAnnotations()) removeFrame(annotation->getFrame(), false);
         annotations.erase(position);
@@ -191,9 +191,10 @@ bool Session::removeFrame(Frame *frame, bool remove_annotations)
     if (position != frames.cend()) {
         if ( remove_annotations ) {
             for ( Annotation * a : frame->getAnnotations()) {
-              removeAnnotation(a);  //will remove annotations
-                                    //and unregister from objects/frames
+              removeAnnotation(a, false);   //will remove annotations
+                                            //and unregister from objects/frames
             }
+            return true;
         }
         frames.erase(position);
         return true;
@@ -240,8 +241,8 @@ bool Session::removeObject(Object *object, bool remove_annotations)
   if (position != objects.cend()) {
       if ( remove_annotations ) {
         for ( Annotation * a : object->getAnnotations()) {
-          removeAnnotation(a);  //will remove annotations
-                                //and unregister from objects/frames
+          removeAnnotation(a, false);  //will remove annotations, without unregistering it
+
         }
       }
       objects.erase(position);

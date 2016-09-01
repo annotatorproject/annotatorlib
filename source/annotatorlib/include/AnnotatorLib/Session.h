@@ -55,7 +55,7 @@ public:
      * @return
      */
     virtual bool addAnnotation(Annotation* annotation);
-    virtual bool removeAnnotation(Annotation* annotation);
+    virtual bool removeAnnotation(Annotation* annotation, bool unregister = true);
     virtual Annotation *getAnnotation(unsigned long id) const;
 
     // Classes

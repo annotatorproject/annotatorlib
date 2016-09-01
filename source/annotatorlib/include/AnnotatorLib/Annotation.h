@@ -46,6 +46,8 @@ public:
 
   /////////////////////////
 
+  ~Annotation();
+
   /**
    * @brief operator >: comparing is based on frame-number
    * @param left

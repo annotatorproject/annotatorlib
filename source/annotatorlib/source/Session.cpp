@@ -16,6 +16,39 @@
 
 namespace AnnotatorLib {
 
+Session::Session()
+{
+
+}
+
+template<typename T>
+struct deleter : std::unary_function<const T*, void>
+{
+  void operator() (const T *ptr) const
+  {
+    delete ptr;
+  }
+};
+
+Session::~Session()
+{
+  // call deleter for each element , freeing them
+  std::for_each (annotations.begin (), annotations.end (), deleter<Annotation> ());
+  this->annotations.clear();
+  std::for_each (objects.begin (), objects.end (), deleter<Object> ());
+  this->objects.clear();
+  std::for_each (frames.begin (), frames.end (), deleter<Frame> ());
+  this->frames.clear();
+  std::for_each (classes.begin (), classes.end (), deleter<Class> ());
+  this->classes.clear();
+  std::for_each (attributes.begin (), attributes.end (), deleter<Attribute> ());
+  this->attributes.clear();
+
+  //delete commands
+  std::for_each (commands.begin (), commands.end (), deleter<AnnotatorLib::Commands::Command> ());
+  this->commands.clear();
+}
+
 std::vector<Attribute *> Session::getAttributes() const
 {
     return attributes;
@@ -262,15 +295,6 @@ bool Session::undo()
     return command->undo();
 }
 
-Session::Session()
-{
-
-}
-
-Session::~Session()
-{
-
-}
 
 // static attributes (if any)
 

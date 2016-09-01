@@ -47,19 +47,19 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
   session->removeAnnotation(annotation); //remove annotation from session, (plus frame and object if empty)
 
-  if (createNewObject) session->removeObject(object);
+//  if (createNewObject) session->removeObject(object);
 
-  if (next != nullptr && previous != nullptr) {
-    next->setPrevious(previous);
-    previous->setNext(next);
-  } else {
-    if (next != nullptr) {
-      next->setPrevious(nullptr);
-    }
-    if (previous != nullptr) {
-      previous->setNext(nullptr);
-    }
-  }
+//  if (next != nullptr && previous != nullptr) {
+//    next->setPrevious(previous);
+//    previous->setNext(next);
+//  } else {
+//    if (next != nullptr) {
+//      next->setPrevious(nullptr);
+//    }
+//    if (previous != nullptr) {
+//      previous->setNext(nullptr);
+//    }
+//  }
   return true;
 }
 

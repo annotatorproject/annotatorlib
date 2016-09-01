@@ -25,6 +25,8 @@ public:
 
     NewAnnotation(const NewAnnotation& other);
 
+    ~NewAnnotation() {}
+
     bool execute();
 
     bool undo();

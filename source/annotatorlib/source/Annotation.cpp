@@ -57,6 +57,8 @@ Annotation::Annotation(const Annotation &other) : Annotation(other.getFrame(), o
   this->height = other.height;
 }
 
+Annotation::~Annotation() { }
+
 //////////////// public methods ///////////////////
 
 bool Annotation::operator> (const Annotation & right)

@@ -17,6 +17,9 @@ namespace Commands {
  */
 class ANNOTATORLIB_API Command {
 public:
+
+    virtual ~Command() {}
+
     virtual bool execute() = 0;
 
     virtual bool undo() = 0;

@@ -1,7 +1,6 @@
 
 #include <gmock/gmock.h>
 #include <string>
-#include <AnnotatorLib/Algo/InterpolateAnnotation.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
@@ -65,54 +64,4 @@ TEST_F(annotation_test, previousAndNext) {
   ASSERT_EQ(annotation10.getNext(), nullptr);
   ASSERT_EQ(annotation15.getNext(), nullptr);
   ASSERT_EQ(annotation15.getPrevious(), nullptr);
-}
-
-TEST_F(annotation_test, interpolation) {
-  AnnotatorLib::Object obj3;
-  AnnotatorLib::Frame frame2(2);
-  AnnotatorLib::Annotation annotation2(&frame2, &obj3, AnnotatorLib::AnnotationType::RECTANGLE);
-  annotation2.setPosition(100, 200, 20, 40);
-
-  AnnotatorLib::Frame frame4(4);
-  AnnotatorLib::Annotation annotation4(&frame4, &obj3, AnnotatorLib::AnnotationType::RECTANGLE);
-  annotation4.setPosition(200, 140, 40, 30);
-
-  AnnotatorLib::Frame frame3(3);
-  AnnotatorLib::Annotation* annotation3 =
-      AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(
-          &frame3, &annotation2, &annotation4);
-
-  ASSERT_EQ(annotation3->getFrame(), &frame3);
-  ASSERT_EQ(annotation3->getX(), 150);
-  ASSERT_EQ(annotation3->getY(), 170);
-  ASSERT_EQ(annotation3->getHRadius(), 30 / 2.f);
-  ASSERT_EQ(annotation3->getVRadius(), 35 / 2.f);
-  ASSERT_EQ(annotation3->isInterpolated(), true);
-
-  delete annotation3;
-}
-
-TEST_F(annotation_test, interpolation2) {
-  AnnotatorLib::Object obj3;
-  AnnotatorLib::Frame frame2(2);
-  AnnotatorLib::Annotation annotation2(&frame2, &obj3, AnnotatorLib::AnnotationType::RECTANGLE);
-  annotation2.setPosition(100, -100, 20, 40);
-
-  AnnotatorLib::Frame frame4(4);
-  AnnotatorLib::Annotation annotation4(&frame4, &obj3, AnnotatorLib::AnnotationType::RECTANGLE);
-  annotation4.setPosition(300, 100, 30, 20);
-
-  AnnotatorLib::Frame frame3(3);
-  AnnotatorLib::Annotation* annotation3 =
-      AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(
-          &frame3, &obj3, true);
-
-  ASSERT_EQ(annotation3->getFrame(), &frame3);
-  ASSERT_EQ(annotation3->getX(), 200);
-  ASSERT_EQ(annotation3->getY(), 0);
-  ASSERT_EQ(annotation3->getHRadius(), 25 / 2.f);
-  ASSERT_EQ(annotation3->getVRadius(), 30 / 2.f);
-  ASSERT_EQ(annotation3->isInterpolated(), true);
-
-  delete annotation3;
 }

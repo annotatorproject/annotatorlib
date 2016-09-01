@@ -77,7 +77,7 @@ Class *Object::getClass() const
 
 void Object::setClass(Class *c)
 {
-    this->objectClass = c;
+    objectClass = c;
 }
 
 std::vector<Attribute *> Object::getAttributes() const

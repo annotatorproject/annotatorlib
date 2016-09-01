@@ -155,14 +155,14 @@ bool Object::removeAnnotation(Annotation *annotation)
           Frame* frame = annotation->getFrame();
           if (frame) {
               frame->removeAnnotation(annotation);
-              //this->removeFrame(frame);
           }
           if (annotation->getPrevious())
-            annotation->getPrevious()->setNext(annotation->getNext());
-            annotation->setPrevious(nullptr);
+            annotation->getPrevious()->setNext(annotation->getNext());            
           if (annotation->getNext())
             annotation->getNext()->setPrevious(annotation->getPrevious());
-            annotation->setNext(nullptr);
+
+          annotation->setNext(nullptr);
+          annotation->setPrevious(nullptr);
           annotations.erase(it);
           return true;
       }

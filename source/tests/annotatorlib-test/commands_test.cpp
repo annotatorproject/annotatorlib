@@ -30,6 +30,7 @@ TEST_F(commands_test, newAnnotation) {
 
   session.redo();
   ASSERT_EQ(session.getAnnotations().size(), 1);
+  delete frame;
 }
 
 TEST_F(commands_test, updateObject) {
@@ -66,6 +67,7 @@ TEST_F(commands_test, updateObject) {
   ASSERT_EQ(session.getObject(1001)->getClass()->getName(), "person");
   ASSERT_EQ(session.getAnnotations().size(), 1);
   ASSERT_EQ(session.getObjects().size(), 1);
+  delete frame;
 }
 
 TEST_F(commands_test, removeObject) {

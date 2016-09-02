@@ -14,10 +14,14 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-int CompressObjectTrack::compressSession(Session* session, float max_diff) {
-  int removed_elements = 0;
+std::vector<Annotation*>  CompressObjectTrack::compressSession(Session* session, float max_diff) {
+  std::vector<Annotation*> removed_elements;
   for (auto it = session->getObjects().begin(); it != session->getObjects().end(); it++) {
-    removed_elements += compress(session, *it, max_diff).size();
+      if ((Object*)(*it)->hasAnnotations()) {
+        std::vector<Annotation*> removed_elements_obj = compress(session, *it, max_diff);
+        if (!removed_elements_obj.empty())
+          removed_elements.insert( removed_elements.end(), removed_elements_obj.begin(), removed_elements_obj.end() );
+        }
   }
   return removed_elements;
 }
@@ -30,7 +34,7 @@ std::vector<Annotation*> CompressObjectTrack::compress(Session* session,
   if (object->getAnnotations().size() < 3) return removed_elements;
 
   Annotation* curr = object->getFirstAnnotation()->getNext();  // get second
-  while (curr->hasNext()) {
+  while (curr && curr->hasNext()) {
     Annotation* a_new = InterpolateAnnotation::getInterpolation(
         curr->getFrame(), curr->getPrevious(), curr->getNext());
 

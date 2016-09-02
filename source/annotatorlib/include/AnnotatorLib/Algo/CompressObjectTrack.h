@@ -24,6 +24,7 @@ class ANNOTATORLIB_API CompressObjectTrack {
  public:
   static std::vector<Annotation*> compress(Session* session, Object* object,
                                            float max_diff = 5);
+  static int compressSession(Session* session, float max_diff = 5);
 };
 }
 }

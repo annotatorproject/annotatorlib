@@ -14,6 +14,14 @@
 namespace AnnotatorLib {
 namespace Algo {
 
+int CompressObjectTrack::compressSession(Session* session, float max_diff) {
+  int removed_elements = 0;
+  for (auto it = session->getObjects().begin(); it != session->getObjects().end(); it++) {
+    removed_elements += compress(session, *it, max_diff).size();
+  }
+  return removed_elements;
+}
+
 std::vector<Annotation*> CompressObjectTrack::compress(Session* session,
                                                        Object* object,
                                                        float max_diff) {

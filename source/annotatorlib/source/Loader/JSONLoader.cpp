@@ -104,7 +104,7 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session) {
     o->setName(name.toStdString());
 
     if (object.contains("class"))
-      o->setClass(session->getClass(object["class"].toString().toLong()));
+      o->setClass(session->getClass(name.toStdString()));
 
     QJsonArray attributes = object.value("attributes").toArray();
     for (QJsonValue attribute : attributes) {

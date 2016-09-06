@@ -17,8 +17,8 @@ namespace Algo {
 std::vector<Annotation*>  CompressObjectTrack::compressSession(Session* session, float max_diff) {
   std::vector<Annotation*> removed_elements;
   for (auto it = session->getObjects().begin(); it != session->getObjects().end(); it++) {
-      if ((Object*)(*it)->hasAnnotations()) {
-        std::vector<Annotation*> removed_elements_obj = compress(session, *it, max_diff);
+      if (it->second->hasAnnotations()) {
+        std::vector<Annotation*> removed_elements_obj = compress(session, it->second.get(), max_diff);
         if (!removed_elements_obj.empty())
           removed_elements.insert( removed_elements.end(), removed_elements_obj.begin(), removed_elements_obj.end() );
         }

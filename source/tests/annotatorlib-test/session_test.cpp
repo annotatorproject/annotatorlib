@@ -19,7 +19,7 @@ TEST_F(session_test, getObject) {
   session.addAnnotation(a);
   bool success = session.addObject(o);
 
-  AnnotatorLib::Object *o2 = session.getFirstObjectByName("testname");
+  AnnotatorLib::Object *o2 = session.getObject(o->getId());
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testname");
   ASSERT_TRUE(success);

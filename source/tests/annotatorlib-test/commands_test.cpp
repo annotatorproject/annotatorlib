@@ -31,7 +31,6 @@ TEST_F(commands_test, newAnnotation) {
 
   session.redo();
   ASSERT_EQ(session.getAnnotations().size(), 1);
-  delete frame;
 }
 
 TEST_F(commands_test, updateObject) {

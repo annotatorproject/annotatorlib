@@ -39,19 +39,19 @@ unsigned long Attribute::genId() {
   return lastId;
 }
 
-unsigned long Attribute::getId() { return id; }
+unsigned long Attribute::getId() const { return id; }
 
-AttributeType Attribute::getType() { return type; }
+AttributeType Attribute::getType() const { return type; }
 
 void Attribute::setName(std::string name) { this->name = name; }
 
-std::string Attribute::getName() { return name; }
+std::string Attribute::getName() const { return name; }
 
 void Attribute::setDefaultValue(AttributeValue *value) {
   this->defaultValue = value;
 }
 
-AttributeValue *Attribute::getDefaultValue() { return defaultValue; }
+AttributeValue *Attribute::getDefaultValue() const { return defaultValue; }
 
 bool Attribute::equals(Attribute *other) {
   if (this == other) return true;

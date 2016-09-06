@@ -17,13 +17,13 @@
 namespace AnnotatorLib {
 namespace Saver {
 
-void SQLSaver::saveAnnotation(Annotation annotation) {}
+void SQLSaver::saveAnnotation(const Annotation annotation) {}
 
 void SQLSaver::setPath(std::string path) {}
 
 StorageType SQLSaver::getType() { return AnnotatorLib::StorageType::SQL; }
 
-void SQLSaver::saveSession(Session *session) {}
+void SQLSaver::saveSession(const Session *session) {}
 
 bool SQLSaver::close() { return true; }
 

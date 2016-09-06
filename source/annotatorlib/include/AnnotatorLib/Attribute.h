@@ -62,15 +62,15 @@ class ANNOTATORLIB_API Attribute {
    */
   static unsigned long genId();
 
-  unsigned long getId();
+  unsigned long getId() const;
 
-  AttributeType getType();
+  AttributeType getType() const;
 
   void setName(std::string name);
-  std::string getName();
+  std::string getName() const;
 
   void setDefaultValue(AttributeValue *value);
-  AttributeValue *getDefaultValue();
+  AttributeValue *getDefaultValue() const;
 
   bool equals(Attribute *other);
 

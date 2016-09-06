@@ -25,8 +25,8 @@ TEST_F(annotation_test, genId) {
 }
 
 TEST_F(annotation_test, previousAndNext) {
-  // first object
 
+  // first object
   AnnotatorLib::Object obj;
   AnnotatorLib::Frame frame1(1);
   AnnotatorLib::Frame frame2(2);
@@ -42,7 +42,6 @@ TEST_F(annotation_test, previousAndNext) {
   ASSERT_EQ(annotation2.getNext(), nullptr);
 
   // second object
-
   AnnotatorLib::Object obj2;
   AnnotatorLib::Frame frame5(5);
   AnnotatorLib::Annotation annotation5(&frame5, &obj2,

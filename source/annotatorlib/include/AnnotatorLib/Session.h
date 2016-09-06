@@ -9,10 +9,10 @@
  Session class header
  ************************************************************/
 #include <vector>
-
+#include <unordered_map>
+#include <memory> //smart pointer
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
-
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/AnnotatorAlgoInterface.h>
 #include <AnnotatorLib/Attribute.h>
@@ -20,6 +20,9 @@
 #include <AnnotatorLib/Commands/Command.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
+
+using std::shared_ptr;
+using std::unordered_map;
 
 namespace AnnotatorLib {
 
@@ -34,7 +37,11 @@ class ANNOTATORLIB_API Session {
   virtual ~Session();
 
   // Attributes
-  virtual std::vector<Attribute *> getAttributes() const;
+
+//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Attribute>>::const_iterator,
+//  std::unordered_map<unsigned long, std::shared_ptr<Attribute>>::const_iterator> getAttributesIterator() const;
+
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const { return attributes;}
   /**
    * @brief Add an attribute to the session.
    * @param c
@@ -45,7 +52,12 @@ class ANNOTATORLIB_API Session {
   virtual Attribute *getAttribute(unsigned long id) const;
 
   // Annotations
-  virtual std::vector<Annotation *> getAnnotations() const;
+
+//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Annotation>>::const_iterator,
+//  std::unordered_map<unsigned long, std::shared_ptr<Annotation>>::const_iterator> getAnnotationsIterator() const;
+
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Annotation>> const& getAnnotations() const { return annotations;}
+
   /**
    * @brief Will add the given annotation, the associated object
    * and frame to this session. Checks for duplicates.
@@ -57,7 +69,8 @@ class ANNOTATORLIB_API Session {
   virtual Annotation *getAnnotation(unsigned long id) const;
 
   // Classes
-  virtual std::vector<Class *> getClasses() const;
+  virtual std::unordered_map<std::string, std::shared_ptr<Class>> const& getClasses() const { return classes; }
+
   /**
    * @brief Add a class to the session.
    * @param c
@@ -65,11 +78,20 @@ class ANNOTATORLIB_API Session {
    */
   virtual bool addClass(Class *c);
   virtual bool removeClass(Class *c);
-  virtual Class *getClass(unsigned long id) const;
   virtual Class *getClass(std::string name) const;
 
   // Frames
-  virtual std::vector<Frame *> getFrames() const;
+
+//  /**
+//   * Get a read-only iterator (first: begin, second: end).
+//   * @brief getFramesIterator
+//   * @return
+//   */
+//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Frame>>::const_iterator,
+//  std::unordered_map<unsigned long, std::shared_ptr<Frame>>::const_iterator> getFramesIterator() const;
+
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const& getFrames() const { return frames; }
+
   /**
    * @brief Will add the given frame and all annotations, objects
    * within this frame to this session. Checks for duplicates.
@@ -86,7 +108,6 @@ class ANNOTATORLIB_API Session {
    */
   virtual Frame *getFrame(unsigned long number);
 
-  virtual std::vector<Object *> getObjects() const;
   /**
    * @brief Will add the given object and all associated annotations, plus
    * frames
@@ -95,43 +116,29 @@ class ANNOTATORLIB_API Session {
    * @return
    */
   virtual bool addObject(Object *object);
-  virtual bool removeObject(Object *object, bool remove_annotations = true);
-  /**
-   * @brief getFirstObjectByName
-   * @param name
-   * @return Object with given name
-   */
-  virtual Object *getFirstObjectByName(std::string name) const;
+  virtual bool removeObject(Object *object, bool remove_annotations = true);  
   virtual Object *getObject(unsigned long id) const;
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const& getObjects() const { return objects; }
 
+  /**
+   * Executes the command and manages all involved memory.
+   * @brief execute
+   * @param command
+   * @return
+   */
   virtual bool execute(AnnotatorLib::Commands::Command *command);
   virtual bool redo();
   virtual bool undo();
 
  private:
-  /**
-   *
-   */
-  std::vector<Frame *> frames;
-  /**
-   *
-   */
-  std::vector<Object *> objects;
-  /**
-   *
-   */
-  std::vector<Attribute *> attributes;
-  /**
-   *
-   */
-  std::vector<Annotation *> annotations;
-  /**
-   *
-   */
-  std::vector<Class *> classes;
+  std::unordered_map<unsigned long, std::shared_ptr<Frame>> frames;
+  std::unordered_map<unsigned long, std::shared_ptr<Object>> objects;
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> attributes;
+  std::unordered_map<unsigned long, std::shared_ptr<Annotation>> annotations;
+  std::unordered_map<std::string, std::shared_ptr<Class>> classes;
 
   unsigned int commandIndex = 0;
-  std::vector<AnnotatorLib::Commands::Command *> commands;
+  std::vector<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
 
   AnnotatorAlgo::AnnotatorAlgoInterface *annotatorAlgo;
 };

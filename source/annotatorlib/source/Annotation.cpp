@@ -53,17 +53,6 @@ Annotation::Annotation(Annotation *a, Frame *frame, bool isInterpolated)
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
 }
 
-Annotation::Annotation(const Annotation &other)
-    : Annotation(other.getFrame(), other.getObject(), other.getType()) {
-  this->attributes = other.attributes;
-  this->next = other.next;
-  this->previous = other.previous;
-  this->x = other.x;
-  this->y = other.y;
-  this->width = other.width;
-  this->height = other.height;
-}
-
 Annotation::~Annotation() {}
 
 //////////////// public methods ///////////////////

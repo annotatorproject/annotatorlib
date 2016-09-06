@@ -26,10 +26,10 @@ namespace Saver {
 class ANNOTATORLIB_API SQLiteSaver : public AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveAnnotation(Annotation annotation);
+  void saveAnnotation(const Annotation annotation);
   void setPath(std::string path);
   StorageType getType();
-  void saveSession(AnnotatorLib::Session *session);
+  void saveSession(const AnnotatorLib::Session *session);
   bool close();
 
   static int createObjectsTable(sqlite3 *db);

@@ -43,7 +43,7 @@ class ANNOTATORLIB_API Annotation {
   Annotation(Frame *frame, Object *obj,
              AnnotationType type = AnnotationType::RECTANGLE);
   Annotation(Annotation *a, Frame *frame, bool isInterpolated);
-  Annotation(const Annotation &obj);
+  Annotation(const Annotation &obj) = delete;
 
   /////////////////////////
 

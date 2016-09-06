@@ -100,6 +100,22 @@ std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
 }
 
 std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
+    Frame *frame, const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map,
+    bool interpolationsOnly) {
+  std::vector<Annotation *> return_annotations;
+
+  for (auto& o : objects_map) {
+    Annotation *a = getInterpolation(frame, o.second.get(), interpolationsOnly);
+
+    if (a != nullptr) {
+      return_annotations.push_back(a);
+    }
+  }
+
+  return return_annotations;
+}
+
+std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
     Frame *frame, const std::vector<Object *> objects,
     bool interpolationsOnly) {
   std::vector<Annotation *> return_annotations;

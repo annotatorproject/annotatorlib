@@ -26,20 +26,20 @@ namespace Saver {
 class ANNOTATORLIB_API JSONSaver : public AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveAnnotation(Annotation annotation);
+  void saveAnnotation(const Annotation annotation);
   void setPath(std::string path);
   StorageType getType();
-  void saveSession(AnnotatorLib::Session* session);
+  void saveSession(const AnnotatorLib::Session* session);
   bool close();
 
  protected:
   std::string path;
-  QJsonObject sessionToJson(AnnotatorLib::Session* session);
-  QJsonObject attributeToJson(AnnotatorLib::Attribute* attribute);
-  QJsonObject annotationToJson(AnnotatorLib::Annotation* annotation);
-  QJsonObject frameToJson(AnnotatorLib::Frame* frame);
-  QJsonObject objectToJson(AnnotatorLib::Object* object);
-  QJsonObject classToJson(AnnotatorLib::Class* c);
+  QJsonObject sessionToJson(const AnnotatorLib::Session* session);
+  QJsonObject attributeToJson(const AnnotatorLib::Attribute* attribute);
+  QJsonObject annotationToJson(const AnnotatorLib::Annotation* annotation);
+  QJsonObject frameToJson(const AnnotatorLib::Frame* frame);
+  QJsonObject objectToJson(const AnnotatorLib::Object* object);
+  QJsonObject classToJson(const AnnotatorLib::Class* c);
 
   QJsonObject session;
   void save();

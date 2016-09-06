@@ -32,7 +32,7 @@ class ANNOTATORLIB_API AbstractSaver {
    *
    * @param annotation
    */
-  virtual void saveAnnotation(AnnotatorLib::Annotation /*in*/ annotation) = 0;
+  virtual void saveAnnotation(const AnnotatorLib::Annotation /*in*/ annotation) = 0;
 
   /**
    *
@@ -46,7 +46,7 @@ class ANNOTATORLIB_API AbstractSaver {
    */
   virtual AnnotatorLib::StorageType getType() = 0;
 
-  virtual void saveSession(AnnotatorLib::Session* session) = 0;
+  virtual void saveSession(const AnnotatorLib::Session* session) = 0;
 
   virtual bool close() = 0;
 

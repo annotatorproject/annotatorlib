@@ -46,7 +46,7 @@ unsigned long Object::genId() {
 
 unsigned long Object::getId() const { return id; }
 
-std::string Object::getName() { return name; }
+std::string Object::getName() const { return name; }
 
 void Object::setName(std::string name) { this->name = name; }
 

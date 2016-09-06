@@ -53,6 +53,7 @@ class ANNOTATORLIB_API Frame {
   std::vector<Attribute*> getAttributes() const;
 
   unsigned long getFrameNumber() const;
+  unsigned long getId( ) const { return getFrameNumber(); }
 
   bool equals(Frame* other) const;
 

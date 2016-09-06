@@ -5,7 +5,8 @@
  InterpolateAnnotation class header
  ************************************************************/
 #include <vector>
-
+#include <memory>
+#include <unordered_map>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
@@ -62,8 +63,15 @@ class ANNOTATORLIB_API InterpolateAnnotation {
   static std::vector<Annotation *> getInterpolations(
       Frame *frame, const Session *session, bool interpolationsOnly = false);
 
+
   static std::vector<Annotation *> getInterpolations(
-      Frame *frame, const std::vector<Object *> objects,
+      Frame *frame,
+      const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map,
+      bool interpolationsOnly);
+
+  static std::vector<Annotation *> getInterpolations(
+      Frame *frame,
+      const std::vector<Object *> objects,
       bool interpolationsOnly = false);
 };
 }

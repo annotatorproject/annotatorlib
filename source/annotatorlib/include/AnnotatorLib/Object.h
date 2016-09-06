@@ -45,7 +45,7 @@ class ANNOTATORLIB_API Object {
 
   unsigned long getId() const;
 
-  std::string getName();
+  std::string getName() const;
   void setName(std::string name);
 
   Class* getClass() const;

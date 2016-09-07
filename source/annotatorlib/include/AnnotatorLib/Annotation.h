@@ -43,7 +43,10 @@ class ANNOTATORLIB_API Annotation {
       make_shared_enabler(_Args &&... args) : Annotation(std::forward<_Args>(args)...) {}
     };
     shared_ptr<Annotation> a = std::make_shared<make_shared_enabler>(std::forward<_Args>(__args)...);
-    if (!a->isInterpolated()) Annotation::registerAnnotation(a);
+    a->setSelf(a);
+    if (!a->isTemporary()) {
+        a->setRegistered(true);
+    }
     return a;
   }
 
@@ -56,7 +59,11 @@ class ANNOTATORLIB_API Annotation {
 
   /////////////////////////
 
-  virtual ~Annotation() {}
+  virtual ~Annotation() {
+    if (registered) {
+      setRegistered(false);
+    }
+  }
 
   void operator=(const Annotation&) = delete;
 
@@ -76,7 +83,7 @@ class ANNOTATORLIB_API Annotation {
   ////////METHODS//////////
 
   unsigned long getId() const;
-  const bool interpolated;
+  const bool is_temporary;
 
   std::vector<shared_ptr<Attribute>> const& getAttributes() const;
   bool addAttribute(shared_ptr<Attribute> attribute);
@@ -126,7 +133,10 @@ class ANNOTATORLIB_API Annotation {
   bool isLast() const;
   bool isFirst() const;
 
-  bool isInterpolated() const;
+  bool isTemporary() const;
+  bool isRegistered() const;
+
+  bool setRegistered(bool r);
 
  protected:
 
@@ -140,13 +150,13 @@ class ANNOTATORLIB_API Annotation {
 
   Annotation( shared_ptr<Annotation> a,
               shared_ptr<Frame> f,
-              bool isInterpolated = false);
+              bool isTemporary = false);
 
   Annotation(unsigned long id,
              const shared_ptr<Frame>& frame,
              const shared_ptr<Object>& obj,
              const AnnotationType type = AnnotationType::RECTANGLE,
-             bool isInterpolated = false);
+             bool isTemporary = false);
   Annotation(const Annotation &obj) = delete;
 
   ////////////////////////////////////////
@@ -154,6 +164,7 @@ class ANNOTATORLIB_API Annotation {
   std::vector<shared_ptr<Attribute>> attributes;
   weak_ptr<Annotation> next;
   weak_ptr<Annotation> previous;
+  bool registered;
 
   // top, left corner, width, height
   float x = 0;
@@ -161,12 +172,15 @@ class ANNOTATORLIB_API Annotation {
   float width = 0;
   float height = 0;
 
+  weak_ptr<Annotation> self_;
+
  private:
 
   /////////////PRIVATE METHODS/////////////
 
   void setPrevious(weak_ptr<Annotation> previous);
   void setNext(weak_ptr<Annotation> next);
+  void setSelf(weak_ptr<Annotation> self);
 
   /**
    * @brief Register annotation to its object and frame.

@@ -93,7 +93,12 @@ shared_ptr<Annotation> Object::getLastAnnotation() const {
 std::vector<weak_ptr<Annotation>> const& Object::getAnnotations() const { return annotations; }
 
 bool Object::addAnnotation(shared_ptr<Annotation> annotation) {
-    assert(!annotation->isInterpolated());
+    assert(!annotation->isTemporary());
+    return addAnnotationToSortedList(annotation);
+}
+
+bool Object::addAnnotation(weak_ptr<Annotation> annotation) {
+    assert(!annotation.lock()->isTemporary());
     return addAnnotationToSortedList(annotation);
 }
 
@@ -108,6 +113,10 @@ static struct _CompareAnnotationPointerToFrame {
     return *left.lock().get()->getFrame() < right;
   }
 } _CompareAnnotationPointerToFrame;
+
+bool Object::removeAnnotation( weak_ptr<Annotation> annotation) {
+  removeAnnotation(annotation.lock());
+}
 
 bool Object::removeAnnotation( shared_ptr<Annotation> annotation) {
   // binary search for annotation
@@ -162,19 +171,19 @@ void Object::findClosestKeyFrames(const Frame *target_frame,
                        _CompareAnnotationPointerToFrame);
 
   std::vector<weak_ptr<Annotation>>::const_iterator it_fwd = it;
-  while (it_fwd != annotations.cend() && it_fwd->lock()->isInterpolated()) {
+  while (it_fwd != annotations.cend() && it_fwd->lock()->isTemporary()) {
     it_fwd++;
   }
   right = it_fwd->lock();
 
   while (it != annotations.cbegin()) {
     it--;
-    if (!it->lock()->isInterpolated()) break;
+    if (!it->lock()->isTemporary()) break;
   }
   left = it->lock();
   assert(right != left);
-  assert(right == nullptr || right->isInterpolated() == false);
-  assert(left->isInterpolated() == false);
+  assert(right == nullptr || right->isTemporary() == false);
+  assert(left->isTemporary() == false);
 }
 
 bool Object::addAnnotationToSortedList(weak_ptr<Annotation> a) {

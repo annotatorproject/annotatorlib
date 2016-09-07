@@ -61,7 +61,9 @@ class ANNOTATORLIB_API Object {
   shared_ptr<Annotation> getLastAnnotation() const;
   std::vector<weak_ptr<Annotation>> const& getAnnotations() const;
   bool addAnnotation(shared_ptr<Annotation> annotation);
+  bool addAnnotation(weak_ptr<Annotation> annotation);
   bool removeAnnotation( shared_ptr<Annotation> annotation);
+  bool removeAnnotation( weak_ptr<Annotation> annotation);
   bool hasAnnotations() const { return !annotations.empty(); }
 
   /**

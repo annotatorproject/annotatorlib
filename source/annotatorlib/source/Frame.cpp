@@ -56,10 +56,23 @@ bool Frame::addAnnotation(const shared_ptr<Annotation> annotation) {
   return false;
 }
 
+bool Frame::addAnnotation(const weak_ptr<Annotation> annotation) {
+  if (!annotation.expired()) {
+    annotations[annotation.lock()->getId()] = annotation;
+    return true;
+  }
+  return false;
+}
+
 bool Frame::removeAnnotation(const shared_ptr<Annotation> annotation) {
   if (annotation->getFrame().get() == this)
     return false;
   return removeAnnotation(annotation->getId());
+}
+
+bool Frame::removeAnnotation(const weak_ptr<Annotation> annotation) {
+  if (annotation.expired()) return false;
+  return removeAnnotation(annotation.lock());
 }
 
 bool Frame::removeAnnotation(unsigned int id) {

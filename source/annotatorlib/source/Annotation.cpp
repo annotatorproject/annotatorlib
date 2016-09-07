@@ -48,7 +48,7 @@ Annotation::Annotation(unsigned long id,
            const shared_ptr<Object>& obj,
            const AnnotationType type,
            bool isInterpolated)
-  : id(id), frame(frame), object(obj), type(type), interpolated(isInterpolated) { }
+  : id(id), frame(frame), object(obj), type(type), is_temporary(isInterpolated) { }
 
 //////////////// public methods ///////////////////
 
@@ -152,6 +152,10 @@ void Annotation::setVRadius(float vradius) {
   this->height = vradius * 2;
 }
 
+void Annotation::setSelf(weak_ptr<Annotation> self) {
+  this->self_ = self;
+}
+
 void Annotation::setNext(weak_ptr<Annotation> next) {
   assert(!next.lock() || *this->frame <= *next.lock()->getFrame());
   this->next = next;
@@ -188,7 +192,24 @@ bool Annotation::isLast() const {
 
 bool Annotation::isFirst() const { return !this->previous.lock(); }
 
-bool Annotation::isInterpolated() const { return interpolated; }
+bool Annotation::isTemporary() const { return is_temporary; }
+
+bool Annotation::isRegistered() const { return registered; }
+
+bool Annotation::setRegistered(bool do_register)  {
+  if (isTemporary())
+    return false;
+  if (do_register && !registered) {
+    this->getObject()->addAnnotation(self_);
+    this->getFrame()->addAnnotation(self_);
+  }
+  if (!do_register && registered) {
+    this->getObject()->removeAnnotation(self_);
+    this->getFrame()->removeAnnotation(self_);
+  }
+  registered = do_register;
+  return true;
+}
 
 void Annotation::setPosition(float x, float y) {
   this->x = x;
@@ -205,19 +226,15 @@ void Annotation::setPosition(float x, float y, float width, float height) {
 //////////////// private static methods ///////////////////
 
 void Annotation::registerAnnotation(const shared_ptr<Annotation> a, bool r) {
-  if (r)
-    registerAnnotation(a);
-  else
-    unregisterAnnotation(a);
+  a->setRegistered(r);
 }
 
 void Annotation::registerAnnotation(const shared_ptr<Annotation> a) {
-  a->getObject()->addAnnotation(a);
-  a->getFrame()->addAnnotation(a);
+  a->setRegistered(true);
 }
 
 void Annotation::unregisterAnnotation(const shared_ptr<Annotation> a) {
-  if (a->getObject()) a->getObject()->removeAnnotation(a); //remove annotation from object and frame
+  a->setRegistered(false);
 }
 
 }  // of namespace AnnotatorLib

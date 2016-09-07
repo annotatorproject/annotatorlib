@@ -44,6 +44,7 @@ class ANNOTATORLIB_API Frame {
   std::unordered_map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
   bool hasAnnotations() const;
   bool addAnnotation(const shared_ptr<Annotation> annotation);
+  bool addAnnotation(const weak_ptr<Annotation> annotation);
 
   std::unordered_map<unsigned long, shared_ptr<Attribute>> const& getAttributes() const;
   bool addAttribute(const shared_ptr<Attribute> attr);
@@ -57,6 +58,7 @@ class ANNOTATORLIB_API Frame {
  protected:
 
   bool removeAnnotation(const shared_ptr<Annotation> annotation);
+  bool removeAnnotation(const weak_ptr<Annotation> annotation);
   bool removeAnnotation(unsigned int id);
 
   const unsigned long frame_number;

@@ -9,7 +9,7 @@
  ************************************************************/
 #include <QDomDocument>
 #include <QFile>
-
+#include <memory>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
@@ -94,14 +94,14 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
   int x = ulX + width / 2;
   int y = ulY + height / 2;
 
-  AnnotatorLib::Object *object = session->getObject(id);
+  shared_ptr<AnnotatorLib::Object> object = session->getObject(id);
   if (!object) {
-    object = new Object(id);
+    object = std::make_shared<Object>(id);
     object->setName(name);
     object->setActive(false);
   }
-  AnnotatorLib::Frame *frame = session->getFrame(start);
-  AnnotatorLib::Annotation *previous = object->getFirstAnnotation();
+  shared_ptr<AnnotatorLib::Frame> frame = session->getFrame(start);
+  shared_ptr<Annotation> previous = object->getFirstAnnotation();
   if (previous) previous = previous->getLast();
 
   if (previous && previous->getFrame()->getFrameNumber() == start) {
@@ -109,19 +109,11 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
   }
 
   if (frame != nullptr && object != nullptr) {
-    AnnotatorLib::Annotation *annotation = new Annotation(
-        frame, object,
-        AnnotationType::RECTANGLE);  // TODO: read type from file!
-    if (previous) {
-      previous->setNext(annotation);
-      annotation->setPrevious(previous);
-    }
+    shared_ptr<Annotation> annotation = Annotation::make_shared(
+        frame, object, AnnotationType::RECTANGLE);  // TODO: read type from file!
+
     annotation->setPosition(x, y, width, height);
-    frame->addAnnotation(annotation);
-    object->addAnnotation(annotation);
-    session->addAnnotation(annotation);
-    session->addObject(object);
-    session->addFrame(frame);
+    session->addAnnotation(shared_ptr<Annotation>(annotation), true);
   }
 }
 

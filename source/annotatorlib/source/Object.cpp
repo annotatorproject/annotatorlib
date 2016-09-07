@@ -23,20 +23,15 @@ namespace AnnotatorLib {
 static unsigned long lastId = 10000;
 static unsigned long lastNamePostfix = 1;
 
-Object::Object() : Object(genId()) { name = genName(); }
+Object::Object() : Object(genId(), shared_ptr<Class>(nullptr)) { name = genName(); }
 
-Object::Object(Class *c) : Object(genId(), c) {}
+Object::Object(const shared_ptr<Class> c) : Object(genId(), c) {}
 
-Object::Object(unsigned long id, Class *c) : id(id) {
+Object::Object(unsigned long id, const shared_ptr<Class> c) : id(id) {
   objectClass = c;
   name = genName();
   if (lastId < id)
     lastId = id;  // avoid collisions when loading objects from file
-}
-
-Object::~Object() {
-  this->attributes.clear();
-  this->annotations.clear();
 }
 
 unsigned long Object::genId() {
@@ -52,18 +47,18 @@ void Object::setName(std::string name) { this->name = name; }
 
 std::string Object::genName() {
   std::string prefix = "unnamed_obj_";
-  const Class *c = getClass();
+  const shared_ptr<Class> c = getClass();
   if (c) prefix = c->getName() + "_";
   return prefix + std::to_string(lastNamePostfix++);
 }
 
-Class *Object::getClass() const { return objectClass; }
+shared_ptr<Class> Object::getClass() const { return objectClass; }
 
-void Object::setClass(Class *c) { objectClass = c; }
+void Object::setClass(shared_ptr<Class> c) { objectClass = c; }
 
-std::vector<Attribute *> Object::getAttributes() const { return attributes; }
+std::vector<shared_ptr<Attribute>> Object::getAttributes() const { return attributes; }
 
-bool Object::addAttribute(Attribute *attribute) {
+bool Object::addAttribute(shared_ptr<Attribute> attribute) {
   if (attribute != nullptr &&
       std::find(attributes.begin(), attributes.end(), attribute) ==
           attributes.end()) {
@@ -73,8 +68,8 @@ bool Object::addAttribute(Attribute *attribute) {
   return false;
 }
 
-bool Object::removeAttribute(Attribute *attribute) {
-  std::vector<Attribute *>::const_iterator position =
+bool Object::removeAttribute(shared_ptr<Attribute> attribute) {
+  std::vector<shared_ptr<Attribute>>::const_iterator position =
       std::find(attributes.begin(), attributes.end(), attribute);
   if (position != attributes.end()) {
     attributes.erase(position);
@@ -83,48 +78,45 @@ bool Object::removeAttribute(Attribute *attribute) {
   return false;
 }
 
-Annotation *Object::getFirstAnnotation() const {
+shared_ptr<Annotation> Object::getFirstAnnotation() const {
   if (annotations.size() == 0) return nullptr;
   // anntations are sorted by frame-number, thus we directly return the first
-  return annotations[0];
+  return annotations[0].lock();
 }
 
-Annotation *Object::getLastAnnotation() const {
-  if (annotations.size() == 0) return nullptr;
+shared_ptr<Annotation> Object::getLastAnnotation() const {
+  if (annotations.size() == 0) return shared_ptr<Annotation>(nullptr);
   // anntations are sorted by frame-number, thus we directly return the last
-  return annotations[annotations.size() - 1];
+  return annotations[annotations.size() - 1].lock();
 }
 
-std::vector<Annotation *> Object::getAnnotations() const { return annotations; }
+std::vector<weak_ptr<Annotation>> const& Object::getAnnotations() const { return annotations; }
 
-bool Object::addAnnotation(Annotation *annotation) {
-  if (annotation != nullptr && annotation->getObject() == this &&
-      !annotation->isInterpolated()) {
+bool Object::addAnnotation(shared_ptr<Annotation> annotation) {
+    assert(!annotation->isInterpolated());
     return addAnnotationToSortedList(annotation);
-  }
-  return false;
 }
 
 static struct _CompareAnnotationPointer {
-  bool operator()(Annotation *left, Annotation *right) {
-    return *left < *right;
+  bool operator()(const weak_ptr<Annotation> left, const shared_ptr<Annotation> right) {
+    return *left.lock()->getFrame() < *right->getFrame();
   }
 } _CompareAnnotationPointer;
 
 static struct _CompareAnnotationPointerToFrame {
-  bool operator()(const Annotation *left, const Frame right) {
-    return *left->getFrame() < right;
+  bool operator()(const weak_ptr<Annotation> left, const Frame right) {
+    return *left.lock().get()->getFrame() < right;
   }
 } _CompareAnnotationPointerToFrame;
 
-bool Object::removeAnnotation(Annotation *annotation) {
-  // binary search for anntation
-  if (annotation) {
-    std::vector<Annotation *>::iterator it =
+bool Object::removeAnnotation( shared_ptr<Annotation> annotation) {
+  // binary search for annotation
+  if (annotation && !annotations.empty()) {
+    std::vector<weak_ptr<Annotation>>::iterator it =
         std::lower_bound(annotations.begin(), annotations.end(), annotation,
                          _CompareAnnotationPointer);
-    if (**it == *annotation) {
-      Frame *frame = annotation->getFrame();
+    if (it != annotations.end() && !it->expired() && annotation == it->lock()) {
+      Frame *frame = annotation->getFrame().get();
       if (frame) {
         frame->removeAnnotation(annotation);
       }
@@ -133,8 +125,8 @@ bool Object::removeAnnotation(Annotation *annotation) {
       if (annotation->getNext())
         annotation->getNext()->setPrevious(annotation->getPrevious());
 
-      annotation->setNext(nullptr);
-      annotation->setPrevious(nullptr);
+      annotation->setNext(weak_ptr<Annotation>());
+      annotation->setPrevious(weak_ptr<Annotation>());
       annotations.erase(it);
       return true;
     }
@@ -142,113 +134,72 @@ bool Object::removeAnnotation(Annotation *annotation) {
   return false;
 }
 
-std::vector<Frame *> Object::getFrames() const {
-  std::vector<Frame *> frames;
-  for (Annotation *a : annotations) {
-    frames.push_back(a->getFrame());
+std::vector<shared_ptr<Frame>> Object::getFrames() const {
+  std::vector<shared_ptr<Frame>> frames;
+  for (auto& a : annotations) {
+    frames.push_back(a.lock()->getFrame());
   }
   return frames;
 }
 
-// bool Object::addFrame(Frame *frame)
-//{
-//    if (frame != nullptr && std::find(frames.begin(), frames.end(), frame) ==
-//    frames.end()) {
-//        frames.push_back(frame);
-//        return true;
-//    }
-//    return false;
-//}
-
-// bool Object::removeFrame(Frame *frame)
-//{
-//    std::vector<Frame *>::const_iterator position = std::find(frames.begin(),
-//    frames.end(), frame);
-//    if (position != frames.end()){
-//        frames.erase(position);
-//        //TODO: remove all annotations of this frame
-//        return true;
-//    }
-//    return false;
-//}
-
-Annotation *Object::getAnnotation(const Frame *frame) const {
-  std::vector<Annotation *>::const_iterator it =
+shared_ptr<Annotation> Object::getAnnotation(const Frame *frame) const {
+  std::vector<weak_ptr<Annotation>>::const_iterator it =
       std::lower_bound(annotations.begin(), annotations.end(), *frame,
                        _CompareAnnotationPointerToFrame);
-  if (it != annotations.cend() && (*it)->getFrame() == frame) return *it;
-  return nullptr;
+  if (it != annotations.cend()) return it->lock();
+  return shared_ptr<Annotation>(nullptr);
 }
 
 bool Object::appearsInFrame(const Frame *frame) const {
   return getAnnotation(frame) != nullptr;
-
-  //    if(annotations.size() > 0)
-  //    {
-  //        Annotation *annotation = annotations[0];
-  //        Annotation *first = annotation->getFirst();
-  //        assert(first);
-  //        Annotation *last = annotation->getLast();
-  //        assert(last);
-  //        if(first->getFrame()->getFrameNumber() <= frame->getFrameNumber()
-  //                && last->getFrame()->getFrameNumber() >=
-  //                frame->getFrameNumber())
-  //            return true;
-  //        if(first->getFrame()->getFrameNumber() <= frame->getFrameNumber()
-  //                && !last->isFinished())
-  //            return true;
-  //    }
-  //    return false;
 }
 
-void Object::findClosestKeyFrames(const Frame *target_frame, Annotation *&left,
-                                  Annotation *&right) const {
-  std::vector<Annotation *>::const_iterator it =
+void Object::findClosestKeyFrames(const Frame *target_frame,
+                                  shared_ptr<Annotation>& left,
+                                  shared_ptr<Annotation>& right) const {
+  std::vector<weak_ptr<Annotation>>::const_iterator it =
       std::lower_bound(annotations.cbegin(), annotations.cend(), *target_frame,
                        _CompareAnnotationPointerToFrame);
 
-  std::vector<Annotation *>::const_iterator it_fwd = it;
-  while (it_fwd != annotations.cend() && (*it_fwd)->isInterpolated()) {
+  std::vector<weak_ptr<Annotation>>::const_iterator it_fwd = it;
+  while (it_fwd != annotations.cend() && it_fwd->lock()->isInterpolated()) {
     it_fwd++;
   }
-  right = *(it_fwd);
+  right = it_fwd->lock();
 
   while (it != annotations.cbegin()) {
     it--;
-    if (!(*it)->isInterpolated()) break;
+    if (!it->lock()->isInterpolated()) break;
   }
-  left = *(it);
-
+  left = it->lock();
   assert(right != left);
   assert(right == nullptr || right->isInterpolated() == false);
   assert(left->isInterpolated() == false);
 }
 
-bool Object::addAnnotationToSortedList(Annotation *a) {
-  if (annotations.empty()) {
-    annotations.push_back(a);
-    return true;
-  }
+bool Object::addAnnotationToSortedList(weak_ptr<Annotation> a) {
+  if (!isActive()) return false;
 
   // find the position for the lower_bound  element
-  std::vector<Annotation *>::iterator pos = std::lower_bound(
-      annotations.begin(), annotations.end(), a, _CompareAnnotationPointer);
+  std::vector<weak_ptr<Annotation>>::iterator pos = std::lower_bound(
+      annotations.begin(), annotations.end(), a.lock(), _CompareAnnotationPointer);
 
-  if (pos != annotations.end() && *a == **pos) return false;
+  //is this annotation already in the list?
+  if (pos != annotations.end() && a.lock() == pos->lock()) return false;
 
   // insert it before pos
-  std::vector<Annotation *>::iterator new_pos = annotations.insert(pos, a);
+  std::vector<weak_ptr<Annotation>>::iterator new_pos = annotations.insert(pos, a);
 
   if (new_pos != annotations.begin()) {
-    Annotation *prev = *std::prev(new_pos);
-    prev->setNext(a);
-    a->setPrevious(prev);
+    weak_ptr<Annotation> prev = *std::prev(new_pos);
+    prev.lock()->setNext(a);
+    a.lock()->setPrevious(prev.lock());
   }
 
   if (std::next(new_pos) != annotations.end()) {
-    Annotation *next = *std::next(new_pos);
-    next->setPrevious(a);
-    a->setNext(next);
+    weak_ptr<Annotation> next = *std::next(new_pos);
+    next.lock()->setPrevious(a.lock());
+    a.lock()->setNext(next.lock());
   }
 
   return true;
@@ -256,14 +207,16 @@ bool Object::addAnnotationToSortedList(Annotation *a) {
 
 void Object::setActive(bool is_active) {
   if (is_active) {
-    getLastAnnotation()->setNext(nullptr);
+    getLastAnnotation()->setNext(weak_ptr<Annotation>());
   } else {
-    getLastAnnotation()->setNext(getLastAnnotation());
+    getLastAnnotation()->setNext(getLastAnnotation()); //points to itself
   }
 }
 
 bool Object::isActive() const {
-  return getLastAnnotation()->next == getLastAnnotation();
+  if (annotations.empty()) return true;
+  assert(getLastAnnotation().get() != nullptr);
+  return getLastAnnotation()->getNext().get() != getLastAnnotation().get();
 }
 
 }  // of namespace AnnotatorLib

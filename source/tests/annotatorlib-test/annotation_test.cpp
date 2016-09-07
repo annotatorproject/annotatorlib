@@ -6,67 +6,59 @@
 #include <gmock/gmock.h>
 #include <string>
 
+using namespace AnnotatorLib;
+using namespace std;
+
 class annotation_test : public testing::Test {
  public:
 };
 
 TEST_F(annotation_test, genId) {
-  AnnotatorLib::Object obj;
-  AnnotatorLib::Frame frame1(1);
-  AnnotatorLib::Frame frame2(2);
-  AnnotatorLib::Annotation annotation1(&frame1, &obj,
-                                       AnnotatorLib::AnnotationType::RECTANGLE);
-  AnnotatorLib::Annotation annotation2(&frame2, &obj,
-                                       AnnotatorLib::AnnotationType::RECTANGLE);
-  std::cout << "Annotation 1 id:" << annotation1.getId() << std::endl;
-  std::cout << "Annotation 2 id:" << annotation2.getId() << std::endl;
 
-  ASSERT_LT(annotation1.getId(), annotation2.getId());
+  shared_ptr<Object> obj = make_shared<Object>();
+  shared_ptr<Annotation> annotation1 = Annotation::make_shared(make_shared<Frame>(1), obj, AnnotationType::RECTANGLE);
+  shared_ptr<Annotation> annotation2 = Annotation::make_shared(make_shared<Frame>(2), obj, AnnotationType::RECTANGLE);
+
+  cout << "shared_ptr<Annotation> 1 id:" << annotation1->getId() << endl;
+  cout << "shared_ptr<Annotation> 2 id:" << annotation2->getId() << endl;
+
+  ASSERT_LT(annotation1->getId(), annotation2->getId());
 }
 
 TEST_F(annotation_test, previousAndNext) {
 
+  Session session;
+
   // first object
-  AnnotatorLib::Object obj;
-  AnnotatorLib::Frame frame1(1);
-  AnnotatorLib::Frame frame2(2);
-  AnnotatorLib::Annotation annotation2(&frame2, &obj,
-                                       AnnotatorLib::AnnotationType::RECTANGLE);
-  AnnotatorLib::Annotation annotation1(&frame1, &obj,
-                                       AnnotatorLib::AnnotationType::RECTANGLE);
+  shared_ptr<Object> obj = make_shared<Object>();
+  shared_ptr<Annotation> annotation1 = Annotation::make_shared(make_shared<Frame>(1), obj, AnnotationType::RECTANGLE);
+  shared_ptr<Annotation> annotation2 = Annotation::make_shared(make_shared<Frame>(2), obj, AnnotationType::RECTANGLE);
 
-  ASSERT_EQ(annotation1.getNext(), &annotation2);
-  ASSERT_EQ(annotation2.getPrevious(), &annotation1);
+  ASSERT_EQ(annotation1->getNext().get(), annotation2.get());
+  ASSERT_EQ(annotation2->getPrevious(), annotation1);
 
-  ASSERT_EQ(annotation1.getPrevious(), nullptr);
-  ASSERT_EQ(annotation2.getNext(), nullptr);
+  ASSERT_EQ(annotation1->getPrevious().get(), nullptr);
+  ASSERT_EQ(annotation2->getNext().get(), nullptr);
 
   // second object
-  AnnotatorLib::Object obj2;
-  AnnotatorLib::Frame frame5(5);
-  AnnotatorLib::Annotation annotation5(&frame5, &obj2,
-                                       AnnotatorLib::AnnotationType::RECTANGLE);
+  shared_ptr<Object> obj2 = make_shared<Object>();
+  shared_ptr<Annotation> annotation5 = Annotation::make_shared(make_shared<Frame>(5), obj2, AnnotationType::RECTANGLE);
+  shared_ptr<Annotation> annotation10 = Annotation::make_shared(make_shared<Frame>(10), obj2, AnnotationType::RECTANGLE);
 
-  AnnotatorLib::Frame frame10(10);
-  AnnotatorLib::Annotation annotation10(
-      &frame10, &obj2, AnnotatorLib::AnnotationType::RECTANGLE);
+  ASSERT_EQ(annotation5->getNext(), annotation10);
+  ASSERT_EQ(annotation10->getPrevious(), annotation5);
+  ASSERT_EQ(annotation5->getPrevious(), nullptr);
+  ASSERT_EQ(annotation10->getNext(), nullptr);
 
-  ASSERT_EQ(annotation5.getNext(), &annotation10);
-  ASSERT_EQ(annotation10.getPrevious(), &annotation5);
-  ASSERT_EQ(annotation5.getPrevious(), nullptr);
-  ASSERT_EQ(annotation10.getNext(), nullptr);
+  shared_ptr<Annotation> annotation15 = Annotation::make_shared(make_shared<Frame>(15), obj2, AnnotationType::RECTANGLE);
 
-  AnnotatorLib::Frame frame15(15);
-  AnnotatorLib::Annotation annotation15(
-      &frame15, &obj2, AnnotatorLib::AnnotationType::RECTANGLE);
+  ASSERT_EQ(annotation5->getNext(), annotation10);
+  ASSERT_EQ(annotation15->getPrevious(), annotation10);
+  ASSERT_EQ(annotation5->getPrevious(), nullptr);
+  ASSERT_EQ(annotation15->getNext(), nullptr);
 
-  ASSERT_EQ(annotation5.getNext(), &annotation10);
-  ASSERT_EQ(annotation15.getPrevious(), &annotation10);
-  ASSERT_EQ(annotation5.getPrevious(), nullptr);
-  ASSERT_EQ(annotation15.getNext(), nullptr);
-
-  obj2.removeAnnotation(&annotation15);
-  ASSERT_EQ(annotation10.getNext(), nullptr);
-  ASSERT_EQ(annotation15.getNext(), nullptr);
-  ASSERT_EQ(annotation15.getPrevious(), nullptr);
+  obj2->removeAnnotation(annotation15);
+  ASSERT_EQ(annotation10->getNext(), nullptr);
+  ASSERT_EQ(annotation15->getNext(), nullptr);
+  ASSERT_EQ(annotation15->getPrevious(), nullptr);
 }

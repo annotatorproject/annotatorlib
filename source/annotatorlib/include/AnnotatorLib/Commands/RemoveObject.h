@@ -2,6 +2,9 @@
 #define REMOVEOBJECT
 
 #include <AnnotatorLib/Commands/Command.h>
+#include <memory>
+
+using std::shared_ptr;
 
 namespace AnnotatorLib {
 
@@ -13,7 +16,7 @@ namespace Commands {
 class ANNOTATORLIB_API RemoveObject : public Command {
  public:
   RemoveObject() = delete;
-  RemoveObject(Session *, Object *);
+  RemoveObject(Session * s, shared_ptr<Object> o);
   ~RemoveObject() {}
 
   bool execute();
@@ -21,8 +24,8 @@ class ANNOTATORLIB_API RemoveObject : public Command {
   bool undo();
 
  protected:
-  Object *object = nullptr;
-  Session *session = nullptr;
+  Session *session;
+  const shared_ptr<Object> object;
 };
 }
 }

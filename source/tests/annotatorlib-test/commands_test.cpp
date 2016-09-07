@@ -6,127 +6,138 @@
 #include <AnnotatorLib/Project.h>
 #include <gmock/gmock.h>
 #include <string>
+#include <memory>
+
+using std::shared_ptr;
+using namespace AnnotatorLib;
 
 class commands_test : public testing::Test {
  public:
 };
 
 TEST_F(commands_test, newAnnotation) {
-  AnnotatorLib::Session session;
-  ASSERT_EQ(session.getAnnotations().size(), 0);
+  Session* session = new Session();
+  ASSERT_EQ(session->getAnnotations().size(), 0);
 
-  AnnotatorLib::Frame* frame = new AnnotatorLib::Frame(1);
-  session.addFrame(frame);
-  AnnotatorLib::Class* c = new AnnotatorLib::Class("car");
-  session.addClass(c);
+  shared_ptr<Frame> frame = std::make_shared<Frame>(1);
+  shared_ptr<Class> c = std::make_shared<Class>("car");
 
-  AnnotatorLib::Commands::NewAnnotation* nA =
-      new AnnotatorLib::Commands::NewAnnotation(1001, c, frame, 10, 10, 5, 5,
-                                                &session, false);
-  session.execute(nA);
-  ASSERT_EQ(session.getAnnotations().size(), 1);
+  Commands::NewAnnotation* nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
 
-  session.undo();
-  ASSERT_EQ(session.getAnnotations().size(), 0);
+  session->execute(shared_ptr<Commands::Command>(nA));
+  ASSERT_EQ(session->getAnnotations().size(), 1);
 
-  session.redo();
-  ASSERT_EQ(session.getAnnotations().size(), 1);
+  session->undo();
+  ASSERT_EQ(session->getAnnotations().size(), 0);
+
+  //call redo 2 times
+  session->redo();
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  session->redo();
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+
+  //call undo 2 times
+  session->undo();
+  ASSERT_EQ(session->getAnnotations().size(), 0);
+  session->undo();
+  ASSERT_EQ(session->getAnnotations().size(), 0);
+
+  delete session;
 }
 
 TEST_F(commands_test, updateObject) {
-  AnnotatorLib::Session session;
+  Session* session = new Session();
+  auto frame = std::make_shared<Frame>(1);
+  auto c = std::make_shared<Class>("car");
 
-  AnnotatorLib::Frame* frame = new AnnotatorLib::Frame(1);
-  session.addFrame(frame);
-  AnnotatorLib::Class* c = new AnnotatorLib::Class("car");
-  session.addClass(c);
+  Commands::NewAnnotation* nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
 
-  AnnotatorLib::Commands::NewAnnotation* nA =
-      new AnnotatorLib::Commands::NewAnnotation(1001, c, frame, 10, 10, 5, 5,
-                                                &session, false);
+  session->execute(shared_ptr<Commands::Command>(nA));
 
-  session.execute(nA);
+  auto c_new = std::make_shared<Class>("person");
 
-  AnnotatorLib::Class* c_new = new AnnotatorLib::Class("person");
-  session.addClass(c_new);
+  Commands::UpdateObject* uO =
+      new Commands::UpdateObject(session->getObject(1001), c_new);
 
-  AnnotatorLib::Commands::UpdateObject* uO =
-      new AnnotatorLib::Commands::UpdateObject(session.getObject(1001), c_new);
+  session->execute(shared_ptr<Commands::Command>(uO));
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "person");
 
-  session.execute(uO);
-  ASSERT_EQ(session.getAnnotations().size(), 1);
-  ASSERT_EQ(session.getObjects().size(), 1);
-  ASSERT_EQ(session.getObject(1001)->getClass()->getName(), "person");
+  session->undo();
+  ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "car");
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getObjects().size(), 1);
 
-  session.undo();
-  ASSERT_EQ(session.getObject(1001)->getClass()->getName(), "car");
-  ASSERT_EQ(session.getAnnotations().size(), 1);
-  ASSERT_EQ(session.getObjects().size(), 1);
+  session->redo();
+  ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "person");
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getObjects().size(), 1);
 
-  session.redo();
-  ASSERT_EQ(session.getObject(1001)->getClass()->getName(), "person");
-  ASSERT_EQ(session.getAnnotations().size(), 1);
-  ASSERT_EQ(session.getObjects().size(), 1);
+  delete session;
 }
 
 TEST_F(commands_test, removeObject) {
-  AnnotatorLib::Session session;
+  Session* session = new Session();
 
-  AnnotatorLib::Frame* frame = new AnnotatorLib::Frame(1);
-  session.addFrame(frame);
-  AnnotatorLib::Class* c = new AnnotatorLib::Class("car");
-  session.addClass(c);
+  auto frame = std::make_shared<Frame>(1);
+  auto c = std::make_shared<Class>("car");
 
-  AnnotatorLib::Commands::NewAnnotation* nA =
-      new AnnotatorLib::Commands::NewAnnotation(1001, c, frame, 10, 10, 5, 5,
-                                                &session, false);
+  Commands::NewAnnotation* nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
 
-  session.execute(nA);
+  session->execute(shared_ptr<Commands::Command>(nA));
 
-  AnnotatorLib::Commands::RemoveObject* rO =
-      new AnnotatorLib::Commands::RemoveObject(&session,
-                                               session.getObject(1001));
+  Commands::RemoveObject* rO =
+      new Commands::RemoveObject(session, session->getObject(1001));
 
-  ASSERT_EQ(session.getAnnotations().size(), 1);
-  ASSERT_EQ(session.getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getObjects().size(), 1);
 
-  session.execute(rO);
-  ASSERT_EQ(session.getAnnotations().size(), 0);
-  ASSERT_EQ(session.getObjects().size(), 0);
+  session->execute(shared_ptr<Commands::Command>(rO));
+  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getObjects().size(), 0);
 
-  session.undo();
-  ASSERT_EQ(session.getAnnotations().size(), 1);
-  ASSERT_EQ(session.getObjects().size(), 1);
+  session->undo();
+  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getObjects().size(), 1);
 
-  session.redo();
-  ASSERT_EQ(session.getAnnotations().size(), 0);
-  ASSERT_EQ(session.getObjects().size(), 0);
+  session->redo();
+  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getObjects().size(), 0);
+
+  delete session;
 }
 
 TEST_F(commands_test, compressObject) {
-  AnnotatorLib::Session session;
-  AnnotatorLib::Object* obj = new AnnotatorLib::Object();
+  Session* session = new Session();
+  shared_ptr<Object> obj = std::make_shared<Object>();
 
   for (unsigned long i = 0; i < 5; ++i) {
-    AnnotatorLib::Frame* frame_i = new AnnotatorLib::Frame(i);
-    AnnotatorLib::Annotation* a_i = new AnnotatorLib::Annotation(frame_i, obj);
-    a_i->setPosition(i * 10, 40, 20, 20);
-  }
-  session.addObject(obj);
-
+    shared_ptr<Frame> frame_i = std::make_shared<Frame>(i);
+    session->addAnnotation(Annotation::make_shared(frame_i, obj));
+    session->getAnnotation(frame_i, obj)->setPosition(i * 10, 40, 20, 20);
+    ASSERT_EQ(session->getAnnotations().size(), i + 1);
+    ASSERT_EQ(session->getFrames().size(), i + 1);
+  }  
+  ASSERT_EQ(session->getFrames().size(), 5);
   ASSERT_EQ(obj->getAnnotations().size(), 5);
 
-  AnnotatorLib::Commands::CompressObject* cmd =
-      new AnnotatorLib::Commands::CompressObject(&session, obj);
-  session.execute(cmd);
+  Commands::CompressObject* cmd =
+      new Commands::CompressObject(session, obj);
+  session->execute(shared_ptr<Commands::Command>(cmd));
 
   ASSERT_EQ(obj->getAnnotations().size(), 2);
 
-  session.undo();
+  session->undo();
 
   ASSERT_EQ(obj->getAnnotations().size(), 5);
 
-  session.redo();
+  session->redo();
 
   ASSERT_EQ(obj->getAnnotations().size(), 2);
+
+  delete session;
 }

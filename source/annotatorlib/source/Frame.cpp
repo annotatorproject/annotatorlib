@@ -10,6 +10,7 @@
 
 // include associated header file
 #include "AnnotatorLib/Frame.h"
+#include "AnnotatorLib/Attribute.h"
 #include <assert.h>
 #include <algorithm>
 
@@ -18,8 +19,6 @@
 namespace AnnotatorLib {
 
 Frame::Frame(unsigned long frame_number) : frame_number(frame_number) {}
-
-Frame::~Frame() { annotations.clear(); }
 
 bool Frame::operator>(const Frame &right) {
   return frame_number > right.frame_number;
@@ -45,57 +44,38 @@ bool Frame::operator!=(const Frame &right) {
   return frame_number != right.frame_number;
 }
 
-std::vector<Annotation *> Frame::getAnnotations() const { return annotations; }
+std::unordered_map<unsigned long, weak_ptr<Annotation>> const& Frame::getAnnotations() const { return annotations; }
 
 bool Frame::hasAnnotations() const { return !annotations.empty(); }
 
-bool Frame::addAnnotation(Annotation *annotation) {
-  if (annotation != nullptr && annotation->getFrame() == this &&
-      std::find(annotations.begin(), annotations.end(), annotation) ==
-          annotations.end()) {
-    annotations.push_back(annotation);
+bool Frame::addAnnotation(const shared_ptr<Annotation> annotation) {
+  if (annotation != nullptr && annotation->getFrame().get() == this) {
+    annotations[annotation->getId()] = annotation;
     return true;
   }
   return false;
 }
 
-bool Frame::removeAnnotation(const Annotation *annotation) {
-  std::vector<Annotation *>::const_iterator position =
-      std::find(annotations.cbegin(), annotations.cend(), annotation);
-  if (position != annotations.cend()) {
-    annotations.erase(position);
-    return true;
-  }
-  return false;
+bool Frame::removeAnnotation(const shared_ptr<Annotation> annotation) {
+  if (annotation->getFrame().get() == this)
+    return false;
+  return removeAnnotation(annotation->getId());
 }
 
-Object *Frame::getObject(const Object *obj) const {
-  std::vector<Annotation *>::const_iterator position = std::find_if(
-      annotations.begin(), annotations.end(),
-      [obj](const Annotation *a) { return a->getObject() == obj; });
-  if (position != annotations.end()) {
-    return (*position)->getObject();
-  }
-  return nullptr;
+bool Frame::removeAnnotation(unsigned int id) {
+  return annotations.erase(id) > 0;
 }
 
-std::vector<Attribute *> Frame::getAttributes() const {
-  std::vector<Attribute *> attributes;
-
-  for (std::vector<Annotation *>::const_iterator it = annotations.begin();
-       it != annotations.end(); ++it) {
-    Annotation *annotation = *it;
-    for (Attribute *attribute : annotation->getAttributes()) {
-      if (attribute != nullptr) attributes.push_back(attribute);
-    }
-  }
-
-  // remove duplicates
-  std::sort(attributes.begin(), attributes.end());
-  attributes.erase(std::unique(attributes.begin(), attributes.end()),
-                   attributes.end());
-
+std::unordered_map<unsigned long, shared_ptr<Attribute>> const& Frame::getAttributes() const {
   return attributes;
+}
+
+bool Frame::addAttribute(const shared_ptr<Attribute> attr) {
+  return attributes.insert(std::make_pair(attr->getId(), attr)).second;
+}
+
+bool Frame::removeAttribute(const shared_ptr<Attribute> attr) {
+  return attributes.erase(attr->getId()) > 0;
 }
 
 unsigned long Frame::getFrameNumber() const { return frame_number; }

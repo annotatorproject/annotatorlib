@@ -25,7 +25,7 @@ using namespace std;
 namespace AnnotatorLib {
 namespace Saver {
 
-void XMLSaver::saveFrame(const AnnotatorLib::Frame *frame, const Session *session) {
+void XMLSaver::saveFrame(const Session *session, const shared_ptr<Frame> frame) {
   QString filename =
       QString::fromStdString(path) +
       QString("%1").arg(frame->getFrameNumber(), 8, 10, QChar('0')) + ".xml";
@@ -39,8 +39,8 @@ void XMLSaver::saveFrame(const AnnotatorLib::Frame *frame, const Session *sessio
     QDomElement root = document.createElement("OBJECTS");
     root.appendChild(meta(frame));
     for (auto& pair : session->getObjects()) {
-      if (pair.second->appearsInFrame(frame))
-        root.appendChild(fromObject(pair.second.get(), frame));
+      if (session->getAnnotation(frame, pair.second)) //appears in frame?
+        root.appendChild(fromObject(session, pair.second, frame));
     }
 
     document.appendChild(root);
@@ -53,18 +53,17 @@ void XMLSaver::saveAnnotation(Annotation annotation) {}
 
 void XMLSaver::setPath(std::string path) { this->path = path; }
 
-StorageType XMLSaver::getType() { return AnnotatorLib::StorageType::XML; }
+StorageType XMLSaver::getType() { return StorageType::XML; }
 
 void XMLSaver::saveSession(const Session *session) {
   for (auto& pair : session->getFrames()) {
-      Frame* frame = pair.second.get();
-      saveFrame(frame, session);
+      saveFrame(session, pair.second);
   }
 }
 
 bool XMLSaver::close() { return true; }
 
-QDomElement XMLSaver::meta(const Frame *frame) {
+QDomElement XMLSaver::meta(const shared_ptr<Frame> frame) {
   QDomElement element = document.createElement("META");
   QDomElement filename = document.createElement("FILENAME");
   QDomText filenameText =
@@ -74,7 +73,9 @@ QDomElement XMLSaver::meta(const Frame *frame) {
   return element;
 }
 
-QDomElement XMLSaver::fromObject(const AnnotatorLib::Object *object, const Frame *frame) {
+QDomElement XMLSaver::fromObject(const Session *session,
+                                 const shared_ptr<Object> object,
+                                 const shared_ptr<Frame> frame) {
   QDomElement element = document.createElement("OBJECT");
   // ID
   QDomElement id = document.createElement("ID");
@@ -90,14 +91,14 @@ QDomElement XMLSaver::fromObject(const AnnotatorLib::Object *object, const Frame
   obj_name.appendChild(document.createTextNode("#0000ff"));
   element.appendChild(obj_name);
 
-  AnnotatorLib::Annotation *annotation = object->getAnnotation(frame);
+  shared_ptr<Annotation> annotation = session->getAnnotation(frame, object);
 
   element.setAttribute(
       "StartFr",
-      QString::number(annotation->getFirst()->getFrame()->getFrameNumber()));
+      QString::number(object->getFirstAnnotation()->getFrame()->getFrameNumber()));
   element.setAttribute(
       "EndFr",
-      QString::number(annotation->getLast()->getFrame()->getFrameNumber()));
+      QString::number(object->getLastAnnotation()->getFrame()->getFrameNumber()));
 
   // START
   QDomElement start = document.createElement("START");

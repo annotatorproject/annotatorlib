@@ -14,11 +14,12 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-std::vector<Annotation*>  CompressObjectTrack::compressSession(Session* session, float max_diff) {
-  std::vector<Annotation*> removed_elements;
+std::vector<shared_ptr<Annotation>>  CompressObjectTrack::compressSession(Session* session,
+                                                                          float max_diff) {
+  std::vector<shared_ptr<Annotation>> removed_elements;
   for (auto it = session->getObjects().begin(); it != session->getObjects().end(); it++) {
       if (it->second->hasAnnotations()) {
-        std::vector<Annotation*> removed_elements_obj = compress(session, it->second.get(), max_diff);
+        std::vector<shared_ptr<Annotation>> removed_elements_obj = compress(session, it->second, max_diff);
         if (!removed_elements_obj.empty())
           removed_elements.insert( removed_elements.end(), removed_elements_obj.begin(), removed_elements_obj.end() );
         }
@@ -26,19 +27,19 @@ std::vector<Annotation*>  CompressObjectTrack::compressSession(Session* session,
   return removed_elements;
 }
 
-std::vector<Annotation*> CompressObjectTrack::compress(Session* session,
-                                                       Object* object,
-                                                       float max_diff) {
-  std::vector<Annotation*> removed_elements;
+std::vector<shared_ptr<Annotation>> CompressObjectTrack::compress(Session* session,
+                                                                  shared_ptr<Object> object,
+                                                                  float max_diff) {
+  std::vector<shared_ptr<Annotation>> removed_elements;
 
   if (object->getAnnotations().size() < 3) return removed_elements;
 
-  Annotation* curr = object->getFirstAnnotation()->getNext();  // get second
+  shared_ptr<Annotation> curr = object->getFirstAnnotation()->getNext();  // get second
   while (curr && curr->hasNext()) {
-    Annotation* a_new = InterpolateAnnotation::getInterpolation(
-        curr->getFrame(), curr->getPrevious(), curr->getNext());
+    shared_ptr<Annotation> a_new = InterpolateAnnotation::getInterpolation(
+          curr->getFrame(), curr->getPrevious(), curr->getNext());
 
-    Annotation* prev = curr;
+    shared_ptr<Annotation> prev = curr;
     curr = curr->getNext();
 
     // check if the interpolation is close enough to safely remove the
@@ -46,11 +47,9 @@ std::vector<Annotation*> CompressObjectTrack::compress(Session* session,
     float dist = std::sqrt(std::pow(a_new->getX() - prev->getX(), 2) +
                            std::pow(a_new->getY() - prev->getY(), 2));
     if (dist < max_diff) {
-      Commands::RemoveAnnotation cmd(session, prev);
-      cmd.execute();
-      removed_elements.push_back(prev);
+        removed_elements.push_back(session->removeAnnotation(prev->getId(), true));
     }
-    delete a_new;
+    a_new.reset();
   }
   return removed_elements;
 }

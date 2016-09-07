@@ -55,7 +55,13 @@ class ANNOTATORLIB_API AttributeValue {
  */
 class ANNOTATORLIB_API Attribute {
  public:
+
+  const unsigned long id;
+
   Attribute(unsigned long id, AttributeType type, std::string name);
+
+  ~Attribute() {}
+
   /**
    *
    * @return id
@@ -79,10 +85,6 @@ class ANNOTATORLIB_API Attribute {
    *
    */
   AttributeType type;
-  /**
-   *
-   */
-  unsigned long id;
 
   std::string name;
 

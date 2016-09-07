@@ -29,17 +29,18 @@ namespace Saver {
 class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveFrame( const AnnotatorLib::Frame *frame, const AnnotatorLib::Session *session);
+  void saveFrame( const Session *session, const shared_ptr<Frame> frame);
   void saveAnnotation(const Annotation annotation);
   void setPath(std::string path);
   StorageType getType();
-  void saveSession(const AnnotatorLib::Session *session);
+  void saveSession(const Session *session);
   bool close();
 
  protected:
-  QDomElement meta(const AnnotatorLib::Frame *frame);
-  QDomElement fromObject( const AnnotatorLib::Object *object,
-                          const AnnotatorLib::Frame *frame);
+  QDomElement meta(const shared_ptr<Frame> frame);
+  QDomElement fromObject( const Session *session,
+                          const shared_ptr<Object> object,
+                          const shared_ptr<Frame> frame);
 
   std::string path;
 

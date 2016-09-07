@@ -4,69 +4,46 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    unsigned long newObjectId, Class *newObjectClass,
-    AnnotatorLib::Frame *frame, float x, float y, float width, float height,
-    AnnotatorLib::Session *session, bool isLast = false) {
-  this->createNewObject = true;
-  this->newObjectId = newObjectId;
-  this->newObjectClass = newObjectClass;
-  this->frame = frame;
-  this->x = x;
-  this->y = y;
-  this->width = width;
-  this->height = height;
+    const unsigned long newObjectId,
+    const shared_ptr<Class> newObjectClass,
+    AnnotatorLib::Session *session,
+    shared_ptr<Frame> frame,
+    float x,
+    float y,
+    float width,
+    float height ) {
+
   this->session = session;
-  this->isFinished = isLast;
-  this->object = new AnnotatorLib::Object(newObjectId, newObjectClass);
-  this->annotation =
-      new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
+  this->annotation_ = Annotation::make_shared(frame, std::make_shared<Object>(newObjectId, newObjectClass));
+  this->annotation_->setPosition(x, y, width, height);
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    Object *object, AnnotatorLib::Frame *frame, float x, float y, float width,
-    float height, AnnotatorLib::Session *session, bool isFinished = false) {
-  this->createNewObject = false;
-  this->object = object;
-  this->frame = frame;
-  this->x = x;
-  this->y = y;
-  this->width = width;
-  this->height = height;
+    AnnotatorLib::Session *session,
+    shared_ptr<Object> object,
+    shared_ptr<Frame> frame,
+    float x, float y, float width, float height) {
+
   this->session = session;
-  this->isFinished = isFinished;
-  this->annotation =
-      new AnnotatorLib::Annotation(frame, object, AnnotationType::RECTANGLE);
+  this->annotation_ = Annotation::make_shared(frame, object);
+  this->annotation_->setPosition(x, y, width, height);
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
-  annotation->setPosition(x, y, width, height);
-  session->addAnnotation(annotation);  // adds annotation
-  session->addObject(object);          // adds object if it does not exist
-  session->addFrame(frame);            // adds frame if it does not exist
-  return true;
+  return session->addAnnotation(annotation_, true);  // adds annotation and register to them
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
-  session->removeAnnotation(annotation);  // remove annotation from session,
-                                          // (plus frame and object if empty)
-
-  //  if (createNewObject) session->removeObject(object);
-
-  //  if (next != nullptr && previous != nullptr) {
-  //    next->setPrevious(previous);
-  //    previous->setNext(next);
-  //  } else {
-  //    if (next != nullptr) {
-  //      next->setPrevious(nullptr);
-  //    }
-  //    if (previous != nullptr) {
-  //      previous->setNext(nullptr);
-  //    }
-  //  }
-  return true;
+  this->annotation_ = session->removeAnnotation(annotation_->getId(), true);  // remove annotation from session and unregister
+  // remove frame and object if empty
+  if (!this->annotation_->getObject()->hasAnnotations())
+    session->removeObject(this->annotation_->getObject()->getId(), false);
+  if (!this->annotation_->getObject()->hasAnnotations())
+    session->removeFrame(this->annotation_->getFrame()->getId(), false);
+  return !this->annotation_;
 }
 
 AnnotatorLib::Annotation *
 AnnotatorLib::Commands::NewAnnotation::getAnnotation() {
-  return annotation;
+  return annotation_.get();
 }

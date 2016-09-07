@@ -2,6 +2,9 @@
 #define REMOVEANNOTATION
 
 #include <AnnotatorLib/Commands/Command.h>
+#include <memory>
+
+using std::shared_ptr;
 
 namespace AnnotatorLib {
 
@@ -23,9 +26,8 @@ class ANNOTATORLIB_API RemoveAnnotation : public Command {
   Annotation *getAnnotation();
 
  protected:
-  Annotation *annotation = nullptr;
   Session *session = nullptr;
-  Frame *frame = nullptr;
+  shared_ptr<Annotation> annotation;
 };
 }
 }

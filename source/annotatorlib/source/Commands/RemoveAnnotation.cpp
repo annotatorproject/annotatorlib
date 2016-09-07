@@ -6,14 +6,13 @@
 
 AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
     AnnotatorLib::Session *session, AnnotatorLib::Annotation *annotation) {
-  this->annotation = annotation;
-  this->frame = annotation->getFrame();
+  this->annotation = shared_ptr<Annotation>(annotation);
   this->session = session;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
-  bool success = session->removeAnnotation(annotation);
-  return success;
+  this->annotation = session->removeAnnotation(annotation->getId());
+  return annotation.get();
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
@@ -23,5 +22,5 @@ bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
 
 AnnotatorLib::Annotation *
 AnnotatorLib::Commands::RemoveAnnotation::getAnnotation() {
-  return annotation;
+  return annotation.get();
 }

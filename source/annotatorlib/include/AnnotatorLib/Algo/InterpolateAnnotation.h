@@ -10,6 +10,8 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
+using std::shared_ptr;
+
 namespace AnnotatorLib {
 
 class Object;
@@ -43,9 +45,9 @@ class ANNOTATORLIB_API InterpolateAnnotation {
      * @param end
      * @return
      */
-  static AnnotatorLib::Annotation *getInterpolation(Frame *frame,
-                                                    Annotation *start,
-                                                    Annotation *end);
+  static shared_ptr<Annotation> getInterpolation(shared_ptr<Frame> frame,
+                                                    shared_ptr<Annotation> start,
+                                                    shared_ptr<Annotation> end);
 
   /**
    * @brief Get interpolation of certain object for certain frame.
@@ -57,22 +59,16 @@ class ANNOTATORLIB_API InterpolateAnnotation {
    * @param interpolationsOnly
    * @return
    */
-  static Annotation *getInterpolation(Frame *frame, Object *object,
+  static shared_ptr<Annotation> getInterpolation(const Session *session,
+                                      const shared_ptr<Frame> frame,
+                                      const shared_ptr<Object> object,
                                       bool interpolationsOnly = false);
 
-  static std::vector<Annotation *> getInterpolations(
-      Frame *frame, const Session *session, bool interpolationsOnly = false);
-
-
-  static std::vector<Annotation *> getInterpolations(
-      Frame *frame,
-      const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map,
-      bool interpolationsOnly);
-
-  static std::vector<Annotation *> getInterpolations(
-      Frame *frame,
-      const std::vector<Object *> objects,
+  static std::vector<shared_ptr<Annotation>> getInterpolations(
+      const Session *session,
+      shared_ptr<Frame> frame,
       bool interpolationsOnly = false);
+
 };
 }
 }

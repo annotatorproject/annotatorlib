@@ -8,52 +8,47 @@
  Annotation class body
  ************************************************************/
 
+#include <assert.h>
+#include <algorithm>
 // include associated header file
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
 
-#include <assert.h>
-#include <algorithm>
-// Derived includes directives
-
 namespace AnnotatorLib {
 
 ////////////////// statics /////////////////////
 
-static unsigned long lastId = 100000;
-
-unsigned long Annotation::genId() {
-  lastId += 5;
-  return lastId;
+unsigned long Annotation::genId(const std::shared_ptr<Frame> frame, const std::shared_ptr<Object> obj) {
+  //Cantor’s Pairing Function
+  return ( std::pow(frame->getId(),2)
+           + 3 * frame->getId()
+           + 2 * frame->getId() * obj->getId()
+           + obj->getId()
+           + std::pow(obj->getId(), 2) ) / 2 ;
 }
 
 //////////////// constructors ///////////////////
 
-Annotation::Annotation(unsigned long id, Frame *frame, Object *obj,
-                       AnnotationType type, bool isInterpolated)
-    : id(id),
-      frame(frame),
-      object(obj),
-      type(type),
-      interpolated(isInterpolated) {
-  assert(frame != nullptr);
-  assert(obj != nullptr);
 
-  if (lastId < id)
-    lastId = id;  //  avoid collisions when loading annotations from file
-  if (!this->isInterpolated()) registerAnnotation();
-}
+Annotation::Annotation( shared_ptr<Frame> frame,
+                        shared_ptr<Object> obj,
+                        AnnotationType type)
+    : Annotation(genId(frame, obj), frame, obj, type) {}
 
-Annotation::Annotation(Frame *frame, Object *obj, AnnotationType type)
-    : Annotation(genId(), frame, obj, type) {}
-
-Annotation::Annotation(Annotation *a, Frame *frame, bool isInterpolated)
-    : Annotation(genId(), frame, a->getObject(), a->getType(), isInterpolated) {
+Annotation::Annotation( shared_ptr<Annotation> a,
+                        shared_ptr<Frame> frame,
+                        bool isInterpolated)
+    : Annotation(genId(frame, a->getObject()), frame, a->getObject(), a->getType(), isInterpolated) {
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
 }
 
-Annotation::~Annotation() {}
+Annotation::Annotation(unsigned long id,
+           const shared_ptr<Frame>& frame,
+           const shared_ptr<Object>& obj,
+           const AnnotationType type,
+           bool isInterpolated)
+  : id(id), frame(frame), object(obj), type(type), interpolated(isInterpolated) { }
 
 //////////////// public methods ///////////////////
 
@@ -83,22 +78,20 @@ bool Annotation::operator!=(const Annotation &right) {
 
 unsigned long Annotation::getId() const { return id; }
 
-std::vector<Attribute *> Annotation::getAttributes() const {
+std::vector<shared_ptr<Attribute>> const& Annotation::getAttributes() const {
   return attributes;
 }
 
-bool Annotation::addAttribute(Attribute *attribute) {
-  if (attribute != nullptr &&
-      std::find(attributes.begin(), attributes.end(), attribute) ==
-          attributes.end()) {
+bool Annotation::addAttribute(shared_ptr<Attribute> attribute) {
+  if (attribute && std::find(attributes.begin(), attributes.end(), attribute) == attributes.end()) {
     attributes.push_back(attribute);
     return true;
   }
   return false;
 }
 
-bool Annotation::removeAttribute(Attribute *attribute) {
-  std::vector<Attribute *>::const_iterator position =
+bool Annotation::removeAttribute(shared_ptr<Attribute> attribute) {
+  std::vector<shared_ptr<Attribute>>::const_iterator position =
       std::find(attributes.begin(), attributes.end(), attribute);
   if (position != attributes.end()) {
     attributes.erase(position);
@@ -107,32 +100,11 @@ bool Annotation::removeAttribute(Attribute *attribute) {
   return false;
 }
 
-Frame *Annotation::getFrame() const { return frame; }
+shared_ptr<Frame> Annotation::getFrame() const { return frame; }
 
-// removed this setter function, since we don't want that the user can change
-// this afterwards
-// void Annotation::setFrame(Frame *frame) {
-//  if (this->frame != frame) {
-//    this->frame = frame;
-//    // if(frame != nullptr)
-//    //    frame->addAnnotation(this);
-//  }
-//}
-
-Object *Annotation::getObject() const { return object; }
-
-// removed this setter function, since we don't want that the user can change
-// this afterwards
-// void Annotation::setObject(Object *object) {
-//  if (this->object != object) {
-//    this->object = object;
-//    if (object != nullptr) object->addAnnotation(this);
-//  }
-//}
+shared_ptr<Object> Annotation::getObject() const { return object; }
 
 AnnotationType Annotation::getType() const { return this->type; }
-
-// void Annotation::setType(AnnotationType type) { this->type = type; }
 
 void Annotation::setCenterPosition(float x, float y, float hradius,
                                    float vradius) {
@@ -180,42 +152,41 @@ void Annotation::setVRadius(float vradius) {
   this->height = vradius * 2;
 }
 
-void Annotation::setNext(Annotation *next) {
-  assert(next == nullptr || *this->frame <= *next->frame);
+void Annotation::setNext(weak_ptr<Annotation> next) {
+  assert(!next.lock() || *this->frame <= *next.lock()->getFrame());
   this->next = next;
 }
 
-Annotation *Annotation::getNext() const { return next; }
+shared_ptr<Annotation> Annotation::getNext() const {
+  if ( next.expired()) return shared_ptr<Annotation>(nullptr);
+  return next.lock();
+}
 
-bool Annotation::hasNext() const { return (next != nullptr && next != this); }
+bool Annotation::hasNext() const { return (next.lock().get() != nullptr && next.lock().get() != this); }
 
-void Annotation::setPrevious(Annotation *previous) {
-  assert(previous == nullptr || *this->frame >= *previous->frame);
+void Annotation::setPrevious(weak_ptr<Annotation> previous) {
+  assert(!previous.lock() || *this->frame >= *previous.lock()->getFrame());
   this->previous = previous;
 }
 
-Annotation *Annotation::getPrevious() const { return previous; }
-
-Annotation *Annotation::getFirst() {
-  if (this->previous == nullptr) return this;
-  return previous->getFirst();
+shared_ptr<Annotation> Annotation::getPrevious() const {
+  if (previous.expired()) return shared_ptr<Annotation>(nullptr);
+  return previous.lock();
 }
 
-Annotation *Annotation::getLast() {
-  if (this->isLast()) return this;
-  return next->getLast();
+shared_ptr<Annotation> Annotation::getFirst() {
+  return object->getFirstAnnotation();
+}
+
+shared_ptr<Annotation> Annotation::getLast() {
+  return object->getLastAnnotation();
 }
 
 bool Annotation::isLast() const {
-  return this->next == nullptr || this->next == this;
+  return !this->next.lock() || this->next.lock().get() == this;
 }
 
-bool Annotation::isFirst() const { return this->previous == nullptr; }
-
-void Annotation::setInterpolated(bool interpolated) {
-  this->interpolated = interpolated;
-  registerAnnotation(!interpolated);
-}
+bool Annotation::isFirst() const { return !this->previous.lock(); }
 
 bool Annotation::isInterpolated() const { return interpolated; }
 
@@ -231,25 +202,22 @@ void Annotation::setPosition(float x, float y, float width, float height) {
   setHeight(height);
 }
 
-//////////////// private methods ///////////////////
+//////////////// private static methods ///////////////////
 
-void Annotation::registerAnnotation(bool r) {
+void Annotation::registerAnnotation(const shared_ptr<Annotation> a, bool r) {
   if (r)
-    registerAnnotation();
+    registerAnnotation(a);
   else
-    unregisterAnnotation();
+    unregisterAnnotation(a);
 }
 
-void Annotation::registerAnnotation() {
-  if (object) object->addAnnotation(this);
-  if (frame) frame->addAnnotation(this);
-  if (object && frame) is_registered = true;
+void Annotation::registerAnnotation(const shared_ptr<Annotation> a) {
+  a->getObject()->addAnnotation(a);
+  a->getFrame()->addAnnotation(a);
 }
 
-void Annotation::unregisterAnnotation() {
-  if (object) object->removeAnnotation(this);
-  if (frame) frame->removeAnnotation(this);
-  is_registered = false;
+void Annotation::unregisterAnnotation(const shared_ptr<Annotation> a) {
+  if (a->getObject()) a->getObject()->removeAnnotation(a); //remove annotation from object and frame
 }
 
 }  // of namespace AnnotatorLib

@@ -3,6 +3,10 @@
 
 #include <AnnotatorLib/Commands/Command.h>
 #include <vector>
+#include <memory>
+
+using std::shared_ptr;
+using std::vector;
 
 namespace AnnotatorLib {
 
@@ -17,17 +21,19 @@ class ANNOTATORLIB_API CompressSession : public Command {
 
   CompressSession(Session* session);
 
-  ~CompressSession() {}
+  ~CompressSession() {
+    removed_annotations.clear();
+  }
 
   bool execute();
 
   bool undo();
 
  protected:
-  Session* session = nullptr;
+  Session* session;
 
  private:
-  std::vector<Annotation*> removed_annotations;
+  vector<shared_ptr<Annotation>> removed_annotations;
 };
 }
 }

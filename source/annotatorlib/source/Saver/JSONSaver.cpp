@@ -120,7 +120,7 @@ QJsonObject JSONSaver::annotationToJson(const Annotation *annotation) {
 
   // insert list of attributes
   QJsonArray attributes;
-  for (Attribute *attribute : annotation->getAttributes()) {
+  for (shared_ptr<Attribute> attribute : annotation->getAttributes()) {
     attributes.append(QString::number(attribute->getId()));
   }
   json["attributes"] = attributes;
@@ -135,15 +135,15 @@ QJsonObject JSONSaver::frameToJson(const Frame *frame) {
 
   // insert list of attributes
   QJsonArray attributes;
-  for (Attribute *attribute : frame->getAttributes()) {
-    attributes.append(QString::number(attribute->getId()));
+  for (auto& pair : frame->getAttributes()) {
+    attributes.append(QString::number(pair.second->getId()));
   }
   json["attributes"] = attributes;
 
   // insert list of annotations
   QJsonArray annotations;
-  for (Annotation *annotation : frame->getAnnotations()) {
-    annotations.append(QString::number(annotation->getId()));
+  for (std::pair<unsigned long, weak_ptr<Annotation>> pair : frame->getAnnotations()) {
+    annotations.append(QString::number(pair.second.lock()->getId()));
   }
   json["annotations"] = annotations;
 
@@ -158,21 +158,21 @@ QJsonObject JSONSaver::objectToJson(const Object *object) {
 
   // insert list of attributes
   QJsonArray attributes;
-  for (Attribute *attribute : object->getAttributes()) {
+  for (shared_ptr<Attribute>& attribute : object->getAttributes()) {
     attributes.append(QString::number(attribute->getId()));
   }
   json["attributes"] = attributes;
 
   // insert list of annotations
   QJsonArray annotations;
-  for (Annotation *annotation : object->getAnnotations()) {
-    annotations.append(QString::number(annotation->getId()));
+  for (weak_ptr<Annotation> annotation : object->getAnnotations()) {
+    annotations.append(QString::number(annotation.lock()->getId()));
   }
   json["annotations"] = annotations;
 
   // insert list of frames
   QJsonArray frames;
-  for (Frame *frame : object->getFrames()) {
+  for (auto frame : object->getFrames()) {
     frames.append(QString::number(frame->getFrameNumber()));
   }
   json["frames"] = frames;

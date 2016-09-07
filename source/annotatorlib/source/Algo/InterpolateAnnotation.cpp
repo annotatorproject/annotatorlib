@@ -19,14 +19,14 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
-                                                    Annotation *prev,
-                                                    Annotation *next) {
-  if (prev == nullptr) return nullptr;
+shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(shared_ptr<Frame> frame,
+                                                    shared_ptr<Annotation> prev,
+                                                    shared_ptr<Annotation> next) {
+  if (!prev) return nullptr;
 
-  Annotation *annotation = new Annotation(prev, frame, true);
+  shared_ptr<Annotation> annotation = Annotation::make_shared(prev, frame, true);
 
-  if (next == nullptr) return annotation;
+  if (!next) return annotation;
 
   unsigned long startFrame = prev->getFrame()->getFrameNumber();
   unsigned long endFrame = next->getFrame()->getFrameNumber();
@@ -55,8 +55,9 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
   return annotation;
 }
 
-Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
-                                                    Object *object,
+shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const Session *session,
+                                                    const shared_ptr<Frame> frame,
+                                                    const shared_ptr<Object> object,
                                                     bool interpolationsOnly) {
   assert(frame);
   assert(object);
@@ -70,13 +71,14 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
     // is frame within the valid range of the object?
     if (*frame <= *object->getLastAnnotation()->getFrame() &&
         *frame >= *object->getFirstAnnotation()->getFrame()) {
-      Annotation *a = object->getAnnotation(frame);
 
-      if (a == nullptr) {
+      shared_ptr<Annotation> a = session->getAnnotation(frame, object);
+
+      if (!a) {
         // find the nearest neighbours (keyframes)
-        Annotation *left = nullptr;
-        Annotation *right = nullptr;
-        object->findClosestKeyFrames(frame, left, right);
+        shared_ptr<Annotation> left = nullptr;
+        shared_ptr<Annotation> right = nullptr;
+        object->findClosestKeyFrames(frame.get(), left, right);
         return getInterpolation(frame, left, right);
       } else if (!interpolationsOnly) {
         return a;
@@ -86,42 +88,22 @@ Annotation *InterpolateAnnotation::getInterpolation(Frame *frame,
   } else if (object->getLastAnnotation() &&
              *frame > *object->getLastAnnotation()->getFrame()) {
     // copy the previous annotation to the requested frame
-    Annotation *annotation =
-        new Annotation(object->getLastAnnotation(), frame, true);
-    return annotation;
+    return Annotation::make_shared(object->getLastAnnotation(), frame, true);
   }
 
-  return nullptr;
+  return shared_ptr<Annotation>(nullptr);
 }
 
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, const Session *session, bool interpolationsOnly) {
-  return getInterpolations(frame, session->getObjects(), interpolationsOnly);
-}
-
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map,
-    bool interpolationsOnly) {
-  std::vector<Annotation *> return_annotations;
+std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
+    const Session *session,
+    const shared_ptr<Frame> frame,
+    bool interpolationsOnly)
+{
+  const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map = session->getObjects();
+  std::vector<shared_ptr<Annotation>> return_annotations;
 
   for (auto& o : objects_map) {
-    Annotation *a = getInterpolation(frame, o.second.get(), interpolationsOnly);
-
-    if (a != nullptr) {
-      return_annotations.push_back(a);
-    }
-  }
-
-  return return_annotations;
-}
-
-std::vector<Annotation *> InterpolateAnnotation::getInterpolations(
-    Frame *frame, const std::vector<Object *> objects,
-    bool interpolationsOnly) {
-  std::vector<Annotation *> return_annotations;
-
-  for (Object *o : objects) {
-    Annotation *a = getInterpolation(frame, o, interpolationsOnly);
+    shared_ptr<Annotation> a = getInterpolation(session, frame, o.second, interpolationsOnly);
 
     if (a != nullptr) {
       return_annotations.push_back(a);

@@ -11,13 +11,15 @@
 
 #include <string>
 #include <vector>
-
+#include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
-
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Attribute.h"
 #include "AnnotatorLib/Frame.h"
+
+using std::weak_ptr;
+using std::shared_ptr;
 
 namespace AnnotatorLib {
 
@@ -31,35 +33,35 @@ class ANNOTATORLIB_API Object {
  public:
   const unsigned long id = 0;
 
-  Object();
-  Object(Class* c);
-  Object(unsigned long id, Class* c = nullptr);
-
-  ~Object();
-
   /**
-   *
    * @return id
    */
   static unsigned long genId();
+
+  Object();
+  Object(const shared_ptr<Class> c);
+  Object(unsigned long id,
+         const shared_ptr<Class> c = shared_ptr<Class>(nullptr));
+
+  ~Object() {}
 
   unsigned long getId() const;
 
   std::string getName() const;
   void setName(std::string name);
 
-  Class* getClass() const;
-  void setClass(Class* c);
+  shared_ptr<Class> getClass() const;
+  void setClass(shared_ptr<Class> c);
 
-  std::vector<Attribute*> getAttributes() const;
-  bool addAttribute(Attribute* attribute);
-  bool removeAttribute(Attribute* attribute);
+  std::vector<shared_ptr<Attribute>> getAttributes() const;
+  bool addAttribute(shared_ptr<Attribute> attribute);
+  bool removeAttribute(shared_ptr<Attribute> attribute);
 
-  Annotation* getFirstAnnotation() const;
-  Annotation* getLastAnnotation() const;
-  std::vector<Annotation*> getAnnotations() const;
-  bool addAnnotation(Annotation* annotation);
-  bool removeAnnotation(Annotation* annotation);
+  shared_ptr<Annotation> getFirstAnnotation() const;
+  shared_ptr<Annotation> getLastAnnotation() const;
+  std::vector<weak_ptr<Annotation>> const& getAnnotations() const;
+  bool addAnnotation(shared_ptr<Annotation> annotation);
+  bool removeAnnotation( shared_ptr<Annotation> annotation);
   bool hasAnnotations() const { return !annotations.empty(); }
 
   /**
@@ -67,13 +69,26 @@ class ANNOTATORLIB_API Object {
    * Attention: Heavy operation!
    * @return
    */
-  std::vector<Frame*> getFrames() const;
-  // bool addFrame(Frame* frame);
-  // bool removeFrame(Frame* frame);
+  std::vector<shared_ptr<Frame>> getFrames() const;
+  /**
+   * This method is deprecated.
+   * Use session getAnnoation(frame, object) and check for nullptr.
+   * @brief appearsInFrame
+   * @param frame
+   * @return
+   */
   bool appearsInFrame(const Frame* frame) const;
-  Annotation* getAnnotation(const Frame* frame) const;
-  void findClosestKeyFrames(const Frame* target_frame, Annotation*& left,
-                            Annotation*& right) const;
+  /**
+   * This method is deprecated.
+   * Use session getAnnoation(frame, object) instead.
+   * @brief getAnnotation
+   * @param frame
+   * @return
+   */
+  shared_ptr<Annotation> getAnnotation(const Frame* frame) const;
+  void findClosestKeyFrames(const Frame *target_frame,
+                        shared_ptr<Annotation>& left,
+                        shared_ptr<Annotation>& right) const;
 
   void setActive(bool active);
 
@@ -84,25 +99,15 @@ class ANNOTATORLIB_API Object {
    */
   bool isActive() const;
 
- private:
+ protected:
   std::string genName();
-  bool addAnnotationToSortedList(Annotation* a);
+  bool addAnnotationToSortedList(weak_ptr<Annotation> a);
 
   std::string name;
+  shared_ptr<Class> objectClass;
+  std::vector<shared_ptr<Attribute>> attributes;
+  std::vector<weak_ptr<Annotation>> annotations;
 
-  Class* objectClass = nullptr;
-  /**
-   *
-   */
-  std::vector<Attribute*> attributes;
-  /**
-   *
-   */
-  std::vector<Annotation*> annotations;
-  /**
-   *
-   */
-  // std::vector<Frame*> frames;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

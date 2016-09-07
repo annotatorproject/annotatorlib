@@ -1,7 +1,10 @@
 #ifndef UPDATEOBJECT_H
 #define UPDATEOBJECT_H
 
+#include <memory>
 #include <AnnotatorLib/Commands/Command.h>
+
+using std::shared_ptr;
 
 namespace AnnotatorLib {
 
@@ -15,7 +18,7 @@ class ANNOTATORLIB_API UpdateObject : public Command {
  public:
   UpdateObject() = delete;
 
-  UpdateObject(Object* obj, Class* c);
+  UpdateObject(shared_ptr<Object> obj, shared_ptr<Class> c);
 
   ~UpdateObject() {}
 
@@ -24,9 +27,9 @@ class ANNOTATORLIB_API UpdateObject : public Command {
   bool undo();
 
  protected:
-  Object* obj = nullptr;
-  Class* new_class = nullptr;
-  Class* old_class = nullptr;
+  shared_ptr<Object> obj;
+  shared_ptr<Class> new_class;
+  shared_ptr<Class> old_class;
 };
 }
 }

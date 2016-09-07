@@ -8,11 +8,9 @@
 /************************************************************
  Frame class header
  ************************************************************/
-#include <vector>
-
+#include <unordered_map>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
-
 #include "AnnotatorLib/Annotation.h"
 
 namespace AnnotatorLib {
@@ -27,10 +25,14 @@ class Attribute;
  * Representing a frame in a movie or an image.
  */
 class ANNOTATORLIB_API Frame {
+
+ friend class Annotation;
+ friend class Object;
+
  public:
   Frame() = delete;
   Frame(unsigned long frame_nmb);
-  ~Frame();
+  ~Frame() {}
 
   bool operator>(const Frame& right);
   bool operator>=(const Frame& right);
@@ -39,18 +41,13 @@ class ANNOTATORLIB_API Frame {
   bool operator==(const Frame& right);
   bool operator!=(const Frame& right);
 
-  std::vector<Annotation*> getAnnotations() const;
+  std::unordered_map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
   bool hasAnnotations() const;
-  bool addAnnotation(Annotation* annotation);
-  bool removeAnnotation(const Annotation* annotation);
-  /**
-   * @brief Checks if there is an annotation,
-   * which belongs to the given object.
-   * @param annotation
-   */
-  Object* getObject(const Object* obj) const;
+  bool addAnnotation(const shared_ptr<Annotation> annotation);
 
-  std::vector<Attribute*> getAttributes() const;
+  std::unordered_map<unsigned long, shared_ptr<Attribute>> const& getAttributes() const;
+  bool addAttribute(const shared_ptr<Attribute> attr);
+  bool removeAttribute(const shared_ptr<Attribute> attr);
 
   unsigned long getFrameNumber() const;
   unsigned long getId( ) const { return getFrameNumber(); }
@@ -58,13 +55,13 @@ class ANNOTATORLIB_API Frame {
   bool equals(Frame* other) const;
 
  protected:
-  /**
-   *
-   */
-  const unsigned long frame_number;
 
- private:
-  std::vector<Annotation*> annotations;
+  bool removeAnnotation(const shared_ptr<Annotation> annotation);
+  bool removeAnnotation(unsigned int id);
+
+  const unsigned long frame_number;
+  std::unordered_map<unsigned long, shared_ptr<Attribute>> attributes;
+  std::unordered_map<unsigned long, weak_ptr<Annotation>> annotations;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

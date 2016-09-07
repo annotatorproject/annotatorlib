@@ -37,19 +37,15 @@ class ANNOTATORLIB_API Session {
   virtual ~Session();
 
   // Attributes
-
-//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Attribute>>::const_iterator,
-//  std::unordered_map<unsigned long, std::shared_ptr<Attribute>>::const_iterator> getAttributesIterator() const;
-
   virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const { return attributes;}
   /**
    * @brief Add an attribute to the session.
    * @param c
    * @return
    */
-  virtual bool addAttribute(Attribute *attribute);
-  virtual bool removeAttribute(Attribute *attribute);
-  virtual Attribute *getAttribute(unsigned long id) const;
+  virtual bool addAttribute(const shared_ptr<Attribute> attribute);
+  virtual shared_ptr<Attribute> removeAttribute(Attribute *attribute);
+  virtual shared_ptr<Attribute> getAttribute(unsigned long id) const;
 
   // Annotations
 
@@ -64,9 +60,10 @@ class ANNOTATORLIB_API Session {
    * @param annotation
    * @return
    */
-  virtual bool addAnnotation(Annotation *annotation);
-  virtual bool removeAnnotation(Annotation *annotation, bool unregister = true);
-  virtual Annotation *getAnnotation(unsigned long id) const;
+  virtual bool addAnnotation(shared_ptr<Annotation> annotation, bool add_associated_objects = true);
+  virtual shared_ptr<Annotation> removeAnnotation(unsigned long id, bool unregister = true);
+  virtual shared_ptr<Annotation> getAnnotation(unsigned long id) const;
+  virtual shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame>, const shared_ptr<Object>) const;
 
   // Classes
   virtual std::unordered_map<std::string, std::shared_ptr<Class>> const& getClasses() const { return classes; }
@@ -76,20 +73,11 @@ class ANNOTATORLIB_API Session {
    * @param c
    * @return
    */
-  virtual bool addClass(Class *c);
-  virtual bool removeClass(Class *c);
-  virtual Class *getClass(std::string name) const;
+  virtual bool addClass(shared_ptr<Class> c);
+  virtual shared_ptr<Class> removeClass(Class *c);
+  virtual shared_ptr<Class> getClass(std::string name) const;
 
   // Frames
-
-//  /**
-//   * Get a read-only iterator (first: begin, second: end).
-//   * @brief getFramesIterator
-//   * @return
-//   */
-//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Frame>>::const_iterator,
-//  std::unordered_map<unsigned long, std::shared_ptr<Frame>>::const_iterator> getFramesIterator() const;
-
   virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const& getFrames() const { return frames; }
 
   /**
@@ -98,15 +86,15 @@ class ANNOTATORLIB_API Session {
    * @param frame
    * @return
    */
-  virtual bool addFrame(Frame *frame);
-  virtual bool removeFrame(Frame *frame, bool remove_annotations = true);
+  virtual bool addFrame(shared_ptr<Frame> frame, bool add_associated_objects = true);
+  virtual shared_ptr<Frame> removeFrame(unsigned long frame_nmb, bool remove_annotations = true);
   /**
    * @brief getFrame by given number.
    * If it does not exist we create it.
    * @param number
    * @return The Frame by given Frame Number
    */
-  virtual Frame *getFrame(unsigned long number);
+  virtual shared_ptr<Frame> getFrame(unsigned long number);
 
   /**
    * @brief Will add the given object and all associated annotations, plus
@@ -115,9 +103,9 @@ class ANNOTATORLIB_API Session {
    * @param object
    * @return
    */
-  virtual bool addObject(Object *object);
-  virtual bool removeObject(Object *object, bool remove_annotations = true);  
-  virtual Object *getObject(unsigned long id) const;
+  virtual bool addObject(shared_ptr<Object> object, bool add_associated_objects = true);
+  virtual shared_ptr<Object> removeObject(unsigned long id, bool remove_annotations = true);
+  virtual shared_ptr<Object> getObject(unsigned long id) const;
   virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const& getObjects() const { return objects; }
 
   /**
@@ -126,7 +114,7 @@ class ANNOTATORLIB_API Session {
    * @param command
    * @return
    */
-  virtual bool execute(AnnotatorLib::Commands::Command *command);
+  virtual bool execute(shared_ptr<AnnotatorLib::Commands::Command> command);
   virtual bool redo();
   virtual bool undo();
 

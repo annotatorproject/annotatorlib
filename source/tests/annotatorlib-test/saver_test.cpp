@@ -4,123 +4,96 @@
 #include <AnnotatorLib/Saver/SaverFactory.h>
 #include <AnnotatorLib/Session.h>
 #include <gmock/gmock.h>
-
+#include <memory>
 #include <string>
+
+using namespace AnnotatorLib;
+using std::shared_ptr;
 
 class saver_test : public testing::Test {
  public:
 };
 
-AnnotatorLib::Session initSession() {
-  AnnotatorLib::Session session;
-  AnnotatorLib::Frame *frame = new AnnotatorLib::Frame(1);
-  session.addFrame(frame);
+Session* initSession() {
+  Session* session = new Session();
+  shared_ptr<Frame> frame1 = std::make_shared<Frame> (1);
+  shared_ptr<Frame> frame4 = std::make_shared<Frame> (4);
+  shared_ptr<Frame> frame5 = std::make_shared<Frame> (5);
+  shared_ptr<Frame> frame15 = std::make_shared<Frame> (15);
 
-  AnnotatorLib::Frame *frame1 = new AnnotatorLib::Frame(4);
-  session.addFrame(frame1);
-
-  AnnotatorLib::Frame *frame2 = new AnnotatorLib::Frame(5);
-  session.addFrame(frame2);
-
-  AnnotatorLib::Frame *frame3 = new AnnotatorLib::Frame(15);
-  session.addFrame(frame3);
-
-  AnnotatorLib::Frame *frame4 = new AnnotatorLib::Frame(20);
-  session.addFrame(frame4);
-
-  AnnotatorLib::Attribute *attribute = new AnnotatorLib::Attribute(
-      AnnotatorLib::Attribute::genId(), AnnotatorLib::AttributeType::BOOLEAN,
+  shared_ptr<Attribute>  attribute = std::make_shared<Attribute>(
+      Attribute::genId(), AttributeType::BOOLEAN,
       "light");
-  AnnotatorLib::AttributeValue *defaultValue =
-      new AnnotatorLib::AttributeValue(false);
+  AttributeValue *defaultValue =
+      new AttributeValue(false);
   attribute->setDefaultValue(defaultValue);
-  session.addAttribute(attribute);
 
-  AnnotatorLib::Object *object =
-      new AnnotatorLib::Object(AnnotatorLib::Object::genId());
-  AnnotatorLib::Object *object2 =
-      new AnnotatorLib::Object(AnnotatorLib::Object::genId());
+  shared_ptr<Object> object1 = std::make_shared<Object> ();
+  shared_ptr<Object> object2 = std::make_shared<Object> ();
 
-  object->setName("testobject");
+  object1->setName("testobject");
   object2->setName("testobject2");
 
-  // object->addFrame(frame);
-
-  AnnotatorLib::Class *c = new AnnotatorLib::Class("testclass");
-  object->setClass(c);
+  shared_ptr<Class> c = std::make_shared<Class> ("testclass");
+  object1->setClass(c);
   object2->setClass(c);
-  session.addClass(c);
 
-  AnnotatorLib::Annotation *annotation = new AnnotatorLib::Annotation(
-      frame, object, AnnotatorLib::AnnotationType::RECTANGLE);
-  annotation->setPosition(100, 100, 100, 100);
-  annotation->addAttribute(attribute);
+  shared_ptr<Annotation> annotation1 = Annotation::make_shared (
+      frame1, object1, AnnotationType::RECTANGLE);
+  annotation1->setPosition(100, 100, 100, 100);
+  annotation1->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation2 = new AnnotatorLib::Annotation(
-      frame1, object2, AnnotatorLib::AnnotationType::RECTANGLE);
+  shared_ptr<Annotation> annotation2 = Annotation::make_shared (
+      frame4, object2, AnnotationType::RECTANGLE);
   annotation2->setPosition(200, 200, 200, 200);
   annotation2->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation3 = new AnnotatorLib::Annotation(
-      frame2, object2, AnnotatorLib::AnnotationType::RECTANGLE);
+  shared_ptr<Annotation> annotation3 = Annotation::make_shared (
+      frame5, object2, AnnotationType::RECTANGLE);
   annotation3->setPosition(300, 300, 300, 300);
   annotation3->addAttribute(attribute);
 
-  AnnotatorLib::Annotation *annotation4 = new AnnotatorLib::Annotation(
-      frame3, object2, AnnotatorLib::AnnotationType::ELLIPSE);
+  shared_ptr<Annotation> annotation4 = Annotation::make_shared (
+      frame15, object2, AnnotationType::ELLIPSE);
   annotation4->setPosition(400, 400, 400, 400);
   annotation4->addAttribute(attribute);
 
-  annotation2->setNext(annotation3);
-  annotation3->setPrevious(annotation2);
-  annotation3->setNext(annotation4);
-  annotation4->setPrevious(annotation3);
+  session->addAnnotation(shared_ptr<Annotation>(annotation1));
+  session->addAnnotation(shared_ptr<Annotation>(annotation2));
+  session->addAnnotation(shared_ptr<Annotation>(annotation3));
+  session->addAnnotation(shared_ptr<Annotation>(annotation4));
+  session->addAttribute(shared_ptr<Attribute>(attribute));
 
-  object->addAnnotation(annotation);
-  object2->addAnnotation(annotation2);
-  object2->addAnnotation(annotation3);
-  object2->addAnnotation(annotation4);
-
-  session.addObject(object);
-  session.addObject(object2);
-
-  session.addAnnotation(annotation);
-  session.addAnnotation(annotation2);
-  session.addAnnotation(annotation3);
-  session.addAnnotation(annotation4);
-  session.addAttribute(attribute);
   return session;
 }
 
 TEST_F(saver_test, saveJson) {
-  AnnotatorLib::Session session = initSession();
-  AnnotatorLib::Saver::AbstractSaver *saver =
-      AnnotatorLib::Saver::SaverFactory::createSaver("json");
+  Session* session = initSession();
+  Saver::AbstractSaver *saver =
+      Saver::SaverFactory::createSaver("json");
   saver->setPath("savertest.json");
-
-  saver->saveSession(&session);
+  saver->saveSession(session);
 
   saver->close();
   delete saver;
+  delete session;
 }
 
 TEST_F(saver_test, saveXML) {
-  AnnotatorLib::Session session = initSession();
-  AnnotatorLib::Saver::AbstractSaver *saver =
-      AnnotatorLib::Saver::SaverFactory::createSaver("xml");
+  Session* session = initSession();
+  Saver::AbstractSaver *saver =
+      Saver::SaverFactory::createSaver("xml");
   saver->setPath("xml/");
-
-  saver->saveSession(&session);
-
+  saver->saveSession(session);
   saver->close();
   delete saver;
 }
 
 #ifdef WITH_SQLITE3
 TEST_F(saver_test, saveSQLite) {
-  AnnotatorLib::Session session = initSession();
-  AnnotatorLib::Saver::AbstractSaver *saver =
-      AnnotatorLib::Saver::SaverFactory::createSaver("sqlite");
+  Session session = initSession();
+  Saver::AbstractSaver *saver =
+      Saver::SaverFactory::createSaver("sqlite");
   saver->setPath("savertest.sqlite");
 
   saver->saveSession(&session);

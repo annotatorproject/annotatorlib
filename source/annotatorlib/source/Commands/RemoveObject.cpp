@@ -3,15 +3,14 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveObject::RemoveObject(
-    AnnotatorLib::Session *session, AnnotatorLib::Object *obj)
-    : object(obj), session(session) {}
+    AnnotatorLib::Session *session, shared_ptr<Object> obj)
+    : session(session), object(obj) { }
 
 bool AnnotatorLib::Commands::RemoveObject::execute() {
-  bool success = session->removeObject(object);
-  return success;
+  shared_ptr<Object> removed_obj = session->removeObject(object->getId(), true);
+  return removed_obj.get() == object.get();
 }
 
 bool AnnotatorLib::Commands::RemoveObject::undo() {
-  this->session->addObject(this->object);
-  return true;
+  return this->session->addObject(this->object);
 }

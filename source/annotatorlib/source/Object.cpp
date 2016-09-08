@@ -20,7 +20,7 @@
 namespace AnnotatorLib {
 
 // statics
-static unsigned long lastId = 10000;
+static unsigned long lastId = 100;
 static unsigned long lastNamePostfix = 1;
 
 Object::Object() : Object(genId(), shared_ptr<Class>(nullptr)) { name = genName(); }

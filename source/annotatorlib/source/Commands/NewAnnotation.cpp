@@ -43,7 +43,7 @@ bool AnnotatorLib::Commands::NewAnnotation::undo() {
   return !this->annotation_;
 }
 
-AnnotatorLib::Annotation *
+shared_ptr<AnnotatorLib::Annotation>
 AnnotatorLib::Commands::NewAnnotation::getAnnotation() {
-  return annotation_.get();
+  return annotation_;
 }

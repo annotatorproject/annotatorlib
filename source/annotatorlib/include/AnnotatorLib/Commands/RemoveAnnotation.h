@@ -16,7 +16,7 @@ namespace Commands {
 
 class ANNOTATORLIB_API RemoveAnnotation : public Command {
  public:
-  RemoveAnnotation(Session *, Annotation *);
+  RemoveAnnotation(Session * s, shared_ptr<Annotation> a);
   ~RemoveAnnotation() {}
 
   bool execute();

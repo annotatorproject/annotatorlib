@@ -4,7 +4,7 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::UpdateAnnotation::UpdateAnnotation(
-    AnnotatorLib::Annotation *annotation, float x, float y, float width,
+    shared_ptr<Annotation> annotation, float x, float y, float width,
     float height) {
   this->x = x;
   this->y = y;
@@ -27,7 +27,7 @@ bool AnnotatorLib::Commands::UpdateAnnotation::undo() {
   return true;
 }
 
-AnnotatorLib::Annotation *
+shared_ptr<AnnotatorLib::Annotation>
 AnnotatorLib::Commands::UpdateAnnotation::getAnnotation() {
   return annotation;
 }

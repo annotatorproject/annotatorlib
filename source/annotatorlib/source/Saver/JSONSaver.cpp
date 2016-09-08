@@ -154,7 +154,10 @@ QJsonObject JSONSaver::objectToJson(const Object *object) {
   QJsonObject json;
   json["id"] = QString::number(object->getId());
   json["name"] = QString::fromStdString(object->getName());
-  json["class"] = QString::number(object->getClass()->getId());
+  if(object->getClass())
+    json["class"] = QString::number(object->getClass()->getId());
+  else
+    json["class"] = QString("no_class");
 
   // insert list of attributes
   QJsonArray attributes;

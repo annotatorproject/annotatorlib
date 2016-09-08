@@ -5,8 +5,8 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
-    AnnotatorLib::Session *session, AnnotatorLib::Annotation *annotation) {
-  this->annotation = shared_ptr<Annotation>(annotation);
+    AnnotatorLib::Session *session, shared_ptr<Annotation> annotation) {
+  this->annotation = annotation;
   this->session = session;
 }
 

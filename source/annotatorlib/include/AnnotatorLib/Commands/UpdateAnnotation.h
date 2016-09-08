@@ -12,7 +12,7 @@ namespace Commands {
 
 class ANNOTATORLIB_API UpdateAnnotation : public Command {
  public:
-  UpdateAnnotation(Annotation *annotation, float x, float y, float width,
+  UpdateAnnotation(shared_ptr<Annotation> annotation, float x, float y, float width,
                    float height);
 
   ~UpdateAnnotation() {}
@@ -21,10 +21,10 @@ class ANNOTATORLIB_API UpdateAnnotation : public Command {
 
   bool undo();
 
-  Annotation *getAnnotation();
+  shared_ptr<Annotation> getAnnotation();
 
  protected:
-  Annotation *annotation = nullptr;
+  shared_ptr<Annotation> annotation;
   float x;
   float y;
   float width;

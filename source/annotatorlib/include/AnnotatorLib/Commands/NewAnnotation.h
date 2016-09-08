@@ -41,7 +41,7 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
 
   bool undo();
 
-  Annotation *getAnnotation();
+  shared_ptr<Annotation> getAnnotation();
 
  protected:
   Session *session;

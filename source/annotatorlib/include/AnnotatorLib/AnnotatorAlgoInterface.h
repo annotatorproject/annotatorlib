@@ -10,6 +10,7 @@
  ************************************************************/
 #include <opencv2/core/core.hpp>
 #include <vector>
+#include <memory>
 
 #include <AnnotatorLib/annotatorlib_api.h>
 #include "AnnotatorLib/Commands/Command.h"
@@ -21,6 +22,8 @@ class Frame;
 class Object;
 class Session;
 }
+
+using std::shared_ptr;
 
 namespace AnnotatorAlgo {
 
@@ -34,23 +37,23 @@ class ANNOTATORLIB_API AnnotatorAlgoInterface {
    *
    * @param image
    */
-  virtual bool setFrame(AnnotatorLib::Frame *frame, cv::Mat image) = 0;
+  virtual bool setFrame(shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) = 0;
 
   /**
    *
    * @param object
    */
-  virtual void setObject(AnnotatorLib::Object /*in*/ *object) = 0;
+  virtual void setObject(shared_ptr<AnnotatorLib::Object> object) = 0;
 
-  virtual AnnotatorLib::Object *getObject() = 0;
+  virtual shared_ptr<AnnotatorLib::Object> getObject() = 0;
 
   /**
    * @brief setLastAnnotation
    * @param annotation
    */
-  virtual void setLastAnnotation(AnnotatorLib::Annotation *annotation) = 0;
+  virtual void setLastAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) = 0;
 
-  virtual std::vector<AnnotatorLib::Commands::Command *> getCommands() = 0;
+  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>> getCommands() = 0;
 
   virtual void setSession(AnnotatorLib::Session *session) = 0;
 };

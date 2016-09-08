@@ -43,6 +43,17 @@ TEST_F(commands_test, newAnnotation) {
   session->undo();
   ASSERT_EQ(session->getAnnotations().size(), 0);
 
+  for (int i = 0; i < 5; ++i) {
+      session->execute(std::make_shared<Commands::NewAnnotation>(1001 + i, c, session, frame, 10, 10, 5, 5));
+      ASSERT_EQ(session->getAnnotations().size(), i + 1);
+      ASSERT_EQ(session->getObjects().size(), i + 1);
+  }
+  for (int i = 4; i >= 0; --i) {
+      session->undo();
+      ASSERT_EQ(session->getAnnotations().size(), i);
+      ASSERT_EQ(session->getObjects().size(), i);
+  }
+
   delete session;
 }
 

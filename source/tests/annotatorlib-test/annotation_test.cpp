@@ -54,11 +54,34 @@ TEST_F(annotation_test, previousAndNext) {
 
   ASSERT_EQ(annotation5->getNext(), annotation10);
   ASSERT_EQ(annotation15->getPrevious(), annotation10);
-  ASSERT_EQ(annotation5->getPrevious(), nullptr);
-  ASSERT_EQ(annotation15->getNext(), nullptr);
+  ASSERT_EQ(annotation5->getPrevious().get(), nullptr);
+  ASSERT_EQ(annotation15->getNext().get(), nullptr);
 
   obj2->removeAnnotation(annotation15);
-  ASSERT_EQ(annotation10->getNext(), nullptr);
-  ASSERT_EQ(annotation15->getNext(), nullptr);
-  ASSERT_EQ(annotation15->getPrevious(), nullptr);
+  ASSERT_EQ(annotation10->getNext().get(), nullptr);
+  ASSERT_EQ(annotation15->getNext().get(), nullptr);
+  ASSERT_EQ(annotation15->getPrevious().get(), nullptr);
+}
+
+TEST_F(annotation_test, annotationLifeTime) {
+
+  shared_ptr<Object> obj = make_shared<Object>();
+  shared_ptr<Frame> frame1 = make_shared<Frame>(1);
+  shared_ptr<Frame> frame2 = make_shared<Frame>(2);
+  ASSERT_EQ(obj->getAnnotations().size(), 0);
+  ASSERT_EQ(frame1->getAnnotations().size(), 0);
+  shared_ptr<Annotation> annotation1 = Annotation::make_shared(frame1, obj, AnnotationType::RECTANGLE);
+  ASSERT_EQ(obj->getAnnotations().size(), 1);
+  ASSERT_EQ(frame1->getAnnotations().size(), 1);
+  ASSERT_EQ(frame2->getAnnotations().size(), 0);
+  if (true) {
+    shared_ptr<Annotation> annotation2 = Annotation::make_shared(frame2, obj, AnnotationType::RECTANGLE);
+    ASSERT_EQ(obj->getAnnotations().size(), 2);
+    ASSERT_EQ(frame1->getAnnotations().size(), 1);
+    ASSERT_EQ(frame2->getAnnotations().size(), 1);
+    annotation2.reset();
+  }
+  ASSERT_EQ(obj->getAnnotations().size(), 1);
+  ASSERT_EQ(frame1->getAnnotations().size(), 1);
+  ASSERT_EQ(frame2->getAnnotations().size(), 0);
 }

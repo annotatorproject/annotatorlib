@@ -5,6 +5,9 @@
 #include <AnnotatorLib/Project.h>
 #include <gmock/gmock.h>
 #include <string>
+#include <algorithm>    // std::generate
+#include <vector>       // std::vector
+#include <cstdlib>      // std::rand, std::srand
 
 using namespace AnnotatorLib;
 using namespace std;
@@ -63,6 +66,38 @@ TEST_F(annotation_test, previousAndNext) {
   ASSERT_EQ(annotation15->getPrevious().get(), nullptr);
 }
 
+TEST_F(annotation_test, checkOrder) {
+
+  shared_ptr<Object> obj = make_shared<Object>();
+
+  std::vector<unsigned long> unique_nmbs (200);
+  std::vector<shared_ptr<Annotation>> unique_annotations;
+  random_device rnd_device;
+  mt19937 mersenne_engine(rnd_device());
+  uniform_int_distribution<int> dist(0, 1000);
+  auto gen = std::bind(dist, mersenne_engine);
+  std::generate(unique_nmbs.begin(), unique_nmbs.end(), gen);
+  sort( unique_nmbs.begin(), unique_nmbs.end() );
+  unique_nmbs.erase( unique( unique_nmbs.begin(), unique_nmbs.end() ), unique_nmbs.end() );
+  unique_nmbs.shrink_to_fit();
+  for (unsigned long nmb : unique_nmbs) {
+    shared_ptr<Annotation> a = Annotation::make_shared(make_shared<Frame>(nmb), obj);
+    unique_annotations.push_back(a);
+  }
+  shared_ptr<Annotation> prev;
+  for (auto& pair : obj->getAnnotations()) {
+      shared_ptr<Annotation> a = pair.second.lock();
+      if (a != obj->getFirstAnnotation()) {
+        ASSERT_LT(*prev.get(), *a.get());
+        ASSERT_LT(*prev->getFrame().get(), *a->getFrame().get());
+        ASSERT_LT(prev->getFrame()->getId(), a->getFrame()->getId());
+        ASSERT_EQ(a->getPrevious(), prev);
+        ASSERT_EQ(prev->getNext(), a);
+      }
+      prev = a;
+  }
+}
+
 TEST_F(annotation_test, annotationLifeTime) {
 
   shared_ptr<Object> obj = make_shared<Object>();
@@ -81,7 +116,7 @@ TEST_F(annotation_test, annotationLifeTime) {
     ASSERT_EQ(frame2->getAnnotations().size(), 1);
     annotation2.reset();
   }
-  ASSERT_EQ(obj->getAnnotations().size(), 1);
+  ASSERT_EQ(obj->getAnnotations().size(), 1);     //was annotation2 automatically unregistered?
   ASSERT_EQ(frame1->getAnnotations().size(), 1);
-  ASSERT_EQ(frame2->getAnnotations().size(), 0);
+  ASSERT_EQ(frame2->getAnnotations().size(), 0);  //was annotation2 automatically unregistered?
 }

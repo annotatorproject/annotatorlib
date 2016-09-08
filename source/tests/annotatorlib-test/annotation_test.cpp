@@ -2,6 +2,7 @@
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Project.h>
 #include <gmock/gmock.h>
 #include <string>
@@ -33,7 +34,7 @@ TEST_F(annotation_test, previousAndNext) {
   Session session;
 
   // first object
-  shared_ptr<Object> obj = make_shared<Object>();
+  shared_ptr<Object> obj = make_shared<Object>(std::make_shared<Class>("dog"));
   shared_ptr<Annotation> annotation1 = Annotation::make_shared(make_shared<Frame>(1), obj, AnnotationType::RECTANGLE);
   shared_ptr<Annotation> annotation2 = Annotation::make_shared(make_shared<Frame>(2), obj, AnnotationType::RECTANGLE);
 
@@ -119,4 +120,20 @@ TEST_F(annotation_test, annotationLifeTime) {
   ASSERT_EQ(obj->getAnnotations().size(), 1);     //was annotation2 automatically unregistered?
   ASSERT_EQ(frame1->getAnnotations().size(), 1);
   ASSERT_EQ(frame2->getAnnotations().size(), 0);  //was annotation2 automatically unregistered?
+}
+
+TEST_F(annotation_test, classTest) {
+
+  // first object
+  shared_ptr<Object> obj = make_shared<Object>(std::make_shared<Class>("dog"));
+  shared_ptr<Annotation> annotation1 = Annotation::make_shared(make_shared<Frame>(1), obj, AnnotationType::RECTANGLE);
+
+  ASSERT_EQ(obj->getClass()->getName(), "dog");
+  ASSERT_EQ(annotation1->getObject()->getClass()->getName(), "dog");
+
+  obj->setClass(std::make_shared<Class>("cat"));
+
+  ASSERT_EQ(obj->getClass()->getName(), "cat");
+  ASSERT_EQ(annotation1->getObject()->getClass()->getName(), "cat");
+
 }

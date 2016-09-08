@@ -28,6 +28,7 @@ void Session::clearAll() {
   this->classes.clear();
   this->attributes.clear();
   this->commands.clear();
+  commandIndex = 0;
 }
 
 template<typename K, typename T>

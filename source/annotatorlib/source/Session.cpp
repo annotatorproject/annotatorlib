@@ -145,8 +145,8 @@ bool Session::addObject(shared_ptr<Object> object, bool add_associated_objects) 
   auto result = objects.insert(std::make_pair(object->getId(), std::move(object)));
   if (result.second && add_associated_objects && result.first->second->hasAnnotations()) {
     // will add all annotations
-    for (weak_ptr<Annotation> a : result.first->second->getAnnotations()) {
-      addAnnotation(shared_ptr<Annotation>(a), false);
+    for (auto& pair : result.first->second->getAnnotations()) {
+      addAnnotation(pair.second.lock(), false);
     }
   }
   if (result.second && add_associated_objects && result.first->second->getClass())
@@ -158,8 +158,8 @@ shared_ptr<Object> Session::removeObject(unsigned long id, bool remove_annotatio
   shared_ptr<Object> got = find_smart_pointer<unsigned long, Object>(objects, id);
   if(got) {
     if (remove_annotations) {
-      for (auto a : got->getAnnotations()) {
-        removeAnnotation(a.lock()->getId(), false);  // will remove annotations
+      for (auto& pair : got->getAnnotations()) {
+        removeAnnotation(pair.second.lock()->getId(), false);  // will remove annotations
       }
     }
     objects.erase (id);

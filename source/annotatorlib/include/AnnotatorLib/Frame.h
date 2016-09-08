@@ -26,7 +26,7 @@ class Attribute;
  */
 class ANNOTATORLIB_API Frame {
 
- friend class Annotation;
+ friend class Annotation; //private access for register/unregister
  friend class Object;
 
  public:

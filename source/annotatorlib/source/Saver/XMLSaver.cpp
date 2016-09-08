@@ -105,7 +105,7 @@ QDomElement XMLSaver::fromObject(const Session *session,
   // END
   QDomElement end = document.createElement("END");
 
-  if (annotation->isInterpolated()) {
+  if (annotation->isTemporary()) {
     start.appendChild(document.createTextNode(QString::number(
         annotation->getPrevious()->getFrame()->getFrameNumber())));
   } else {

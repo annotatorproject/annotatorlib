@@ -59,7 +59,7 @@ class ANNOTATORLIB_API Annotation {
 
   /////////////////////////
 
-  virtual ~Annotation() {
+  ~Annotation() {
     if (registered) {
       setRegistered(false);
     }

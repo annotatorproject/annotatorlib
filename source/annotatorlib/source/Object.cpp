@@ -81,137 +81,115 @@ bool Object::removeAttribute(shared_ptr<Attribute> attribute) {
 shared_ptr<Annotation> Object::getFirstAnnotation() const {
   if (annotations.size() == 0) return nullptr;
   // anntations are sorted by frame-number, thus we directly return the first
-  return annotations[0].lock();
+  return annotations.begin()->second.lock();
 }
 
 shared_ptr<Annotation> Object::getLastAnnotation() const {
   if (annotations.size() == 0) return shared_ptr<Annotation>(nullptr);
   // anntations are sorted by frame-number, thus we directly return the last
-  return annotations[annotations.size() - 1].lock();
+  return std::prev(annotations.end())->second.lock();
 }
 
-std::vector<weak_ptr<Annotation>> const& Object::getAnnotations() const { return annotations; }
+std::map<unsigned long, weak_ptr<Annotation>> const& Object::getAnnotations() const { return annotations; }
 
 bool Object::addAnnotation(shared_ptr<Annotation> annotation) {
-    assert(!annotation->isTemporary());
-    return addAnnotationToSortedList(annotation);
+  if (!isActive()) return false;
+  assert(!annotation->isTemporary());
+
+  std::pair<std::map<unsigned long, weak_ptr<Annotation>>::iterator, bool> result = annotations.insert(
+        std::make_pair(annotation->getFrame()->getFrameNumber(), annotation));
+
+  if (result.second) {
+      if (result.first != annotations.begin() && annotations.size() > 1) {
+        shared_ptr<Annotation> prev = std::prev(result.first)->second.lock();
+        prev->setNext(annotation);
+        annotation->setPrevious(prev);
+      }
+      if (result.first != std::prev(annotations.end()) && annotations.size() > 1) {
+        shared_ptr<Annotation> next = std::next(result.first)->second.lock();
+        next->setPrevious(annotation);
+        annotation->setNext(next);
+      }
+  }
+
+  return result.second;
 }
 
 bool Object::addAnnotation(weak_ptr<Annotation> annotation) {
-    assert(!annotation.lock()->isTemporary());
-    return addAnnotationToSortedList(annotation);
+    if (!isActive()) return false;
+    if (annotation.expired()) return false;
+    return addAnnotation(annotation.lock());
 }
 
-static struct _CompareAnnotationPointer {
-  bool operator()(const weak_ptr<Annotation> left, const shared_ptr<Annotation> right) {
-    return *left.lock()->getFrame() < *right->getFrame();
-  }
-} _CompareAnnotationPointer;
-
-static struct _CompareAnnotationPointerToFrame {
-  bool operator()(const weak_ptr<Annotation> left, const Frame right) {
-    return *left.lock().get()->getFrame() < right;
-  }
-} _CompareAnnotationPointerToFrame;
-
-bool Object::removeAnnotation( weak_ptr<Annotation> annotation) {
-  removeAnnotation(annotation.lock());
-}
-
-bool Object::removeAnnotation( shared_ptr<Annotation> annotation) {
-  // binary search for annotation
-  if (annotation && !annotations.empty()) {
-    std::vector<weak_ptr<Annotation>>::iterator it =
-        std::lower_bound(annotations.begin(), annotations.end(), annotation,
-                         _CompareAnnotationPointer);
-    if (it != annotations.end() && !it->expired() && annotation == it->lock()) {
-      Frame *frame = annotation->getFrame().get();
-      if (frame) {
-        frame->removeAnnotation(annotation);
+bool Object::removeAnnotation( unsigned int frame_nmb) {
+  auto it = annotations.find(frame_nmb);
+  if ( it != annotations.end()) {
+      if (it != annotations.begin() && it != std::prev(annotations.end())) {
+        shared_ptr<Annotation> prev = std::prev(it)->second.lock();
+        shared_ptr<Annotation> next = std::next(it)->second.lock();
+        prev->setNext(next);
+        next->setPrevious(prev);
+      } else {
+        if (it == annotations.begin() && annotations.size() > 1) {
+          shared_ptr<Annotation> next = std::next(it)->second.lock();
+          next->setPrevious(weak_ptr<Annotation>());
+        }
+        if (it == std::prev(annotations.end()) && annotations.size() > 1) {
+          shared_ptr<Annotation> prev = std::prev(it)->second.lock();
+          prev->setNext(weak_ptr<Annotation>());
+        }
       }
-      if (annotation->getPrevious())
-        annotation->getPrevious()->setNext(annotation->getNext());
-      if (annotation->getNext())
-        annotation->getNext()->setPrevious(annotation->getPrevious());
-
-      annotation->setNext(weak_ptr<Annotation>());
-      annotation->setPrevious(weak_ptr<Annotation>());
-      annotations.erase(it);
-      return true;
-    }
+      if (!it->second.expired()) {
+          it->second.lock()->setNext(shared_ptr<Annotation>(nullptr));
+          it->second.lock()->setPrevious(shared_ptr<Annotation>(nullptr));
+      }
+      return annotations.erase(it)->first;
   }
   return false;
 }
 
+bool Object::removeAnnotation( shared_ptr<Annotation> annotation) {
+  return removeAnnotation(annotation->getFrame()->getFrameNumber());
+}
+
 std::vector<shared_ptr<Frame>> Object::getFrames() const {
   std::vector<shared_ptr<Frame>> frames;
-  for (auto& a : annotations) {
-    frames.push_back(a.lock()->getFrame());
+  for (auto& pair : annotations) {
+    frames.push_back(pair.second.lock()->getFrame());
   }
   return frames;
 }
 
-shared_ptr<Annotation> Object::getAnnotation(const Frame *frame) const {
-  std::vector<weak_ptr<Annotation>>::const_iterator it =
-      std::lower_bound(annotations.begin(), annotations.end(), *frame,
-                       _CompareAnnotationPointerToFrame);
-  if (it != annotations.cend()) return it->lock();
+shared_ptr<Annotation> Object::getAnnotation(const shared_ptr<Frame> frame) const {
+  auto it = annotations.find(frame->getFrameNumber());
+  if ( it != annotations.end()) return it->second.lock();
   return shared_ptr<Annotation>(nullptr);
 }
 
-bool Object::appearsInFrame(const Frame *frame) const {
-  return getAnnotation(frame) != nullptr;
+bool Object::appearsInFrame(const shared_ptr<Frame> frame) const {
+  return getAnnotation(frame).get() != nullptr;
 }
 
 void Object::findClosestKeyFrames(const Frame *target_frame,
                                   shared_ptr<Annotation>& left,
                                   shared_ptr<Annotation>& right) const {
-  std::vector<weak_ptr<Annotation>>::const_iterator it =
-      std::lower_bound(annotations.cbegin(), annotations.cend(), *target_frame,
-                       _CompareAnnotationPointerToFrame);
+  std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it =
+      annotations.lower_bound(target_frame->getFrameNumber());
 
-  std::vector<weak_ptr<Annotation>>::const_iterator it_fwd = it;
-  while (it_fwd != annotations.cend() && it_fwd->lock()->isTemporary()) {
+  std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it_fwd= it;
+  while (it_fwd != annotations.cend() && it_fwd->second.lock()->isTemporary()) {
     it_fwd++;
   }
-  right = it_fwd->lock();
+  right = it_fwd->second.lock();
 
   while (it != annotations.cbegin()) {
     it--;
-    if (!it->lock()->isTemporary()) break;
+    if (!it->second.lock()->isTemporary()) break;
   }
-  left = it->lock();
+  left = it->second.lock();
   assert(right != left);
   assert(right == nullptr || right->isTemporary() == false);
   assert(left->isTemporary() == false);
-}
-
-bool Object::addAnnotationToSortedList(weak_ptr<Annotation> a) {
-  if (!isActive()) return false;
-
-  // find the position for the lower_bound  element
-  std::vector<weak_ptr<Annotation>>::iterator pos = std::lower_bound(
-      annotations.begin(), annotations.end(), a.lock(), _CompareAnnotationPointer);
-
-  //is this annotation already in the list?
-  if (pos != annotations.end() && a.lock() == pos->lock()) return false;
-
-  // insert it before pos
-  std::vector<weak_ptr<Annotation>>::iterator new_pos = annotations.insert(pos, a);
-
-  if (new_pos != annotations.begin()) {
-    weak_ptr<Annotation> prev = *std::prev(new_pos);
-    prev.lock()->setNext(a);
-    a.lock()->setPrevious(prev.lock());
-  }
-
-  if (std::next(new_pos) != annotations.end()) {
-    weak_ptr<Annotation> next = *std::next(new_pos);
-    next.lock()->setPrevious(a.lock());
-    a.lock()->setNext(next.lock());
-  }
-
-  return true;
 }
 
 void Object::setActive(bool is_active) {

@@ -10,6 +10,7 @@
  ************************************************************/
 
 #include <string>
+#include <map>
 #include <vector>
 #include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
@@ -30,6 +31,9 @@ class Class;
  * @brief The Object class that represents an object of a specific class.
  */
 class ANNOTATORLIB_API Object {
+
+friend class Annotation; //private access for register/unregister
+
  public:
   const unsigned long id = 0;
 
@@ -59,11 +63,9 @@ class ANNOTATORLIB_API Object {
 
   shared_ptr<Annotation> getFirstAnnotation() const;
   shared_ptr<Annotation> getLastAnnotation() const;
-  std::vector<weak_ptr<Annotation>> const& getAnnotations() const;
+  std::map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
   bool addAnnotation(shared_ptr<Annotation> annotation);
-  bool addAnnotation(weak_ptr<Annotation> annotation);
   bool removeAnnotation( shared_ptr<Annotation> annotation);
-  bool removeAnnotation( weak_ptr<Annotation> annotation);
   bool hasAnnotations() const { return !annotations.empty(); }
 
   /**
@@ -79,7 +81,7 @@ class ANNOTATORLIB_API Object {
    * @param frame
    * @return
    */
-  bool appearsInFrame(const Frame* frame) const;
+  bool appearsInFrame(const shared_ptr<Frame> frame) const;
   /**
    * This method is deprecated.
    * Use session getAnnoation(frame, object) instead.
@@ -87,7 +89,7 @@ class ANNOTATORLIB_API Object {
    * @param frame
    * @return
    */
-  shared_ptr<Annotation> getAnnotation(const Frame* frame) const;
+  shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame> frame) const;
   void findClosestKeyFrames(const Frame *target_frame,
                         shared_ptr<Annotation>& left,
                         shared_ptr<Annotation>& right) const;
@@ -103,12 +105,13 @@ class ANNOTATORLIB_API Object {
 
  protected:
   std::string genName();
-  bool addAnnotationToSortedList(weak_ptr<Annotation> a);
+  bool addAnnotation(weak_ptr<Annotation> annotation);
+  bool removeAnnotation( unsigned int frame_nmb);
 
   std::string name;
   shared_ptr<Class> objectClass;
   std::vector<shared_ptr<Attribute>> attributes;
-  std::vector<weak_ptr<Annotation>> annotations;
+  std::map<unsigned long, weak_ptr<Annotation>> annotations;
 
 };
 /************************************************************/

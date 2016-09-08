@@ -204,8 +204,8 @@ bool Annotation::setRegistered(bool do_register)  {
     this->getFrame()->addAnnotation(self_);
   }
   if (!do_register && registered) {
-    this->getObject()->removeAnnotation(self_);
-    this->getFrame()->removeAnnotation(self_);
+    this->getObject()->removeAnnotation(frame->getFrameNumber());
+    this->getFrame()->removeAnnotation(id);
   }
   registered = do_register;
   return true;

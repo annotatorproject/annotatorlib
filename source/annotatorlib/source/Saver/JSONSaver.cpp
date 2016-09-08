@@ -165,8 +165,8 @@ QJsonObject JSONSaver::objectToJson(const Object *object) {
 
   // insert list of annotations
   QJsonArray annotations;
-  for (weak_ptr<Annotation> annotation : object->getAnnotations()) {
-    annotations.append(QString::number(annotation.lock()->getId()));
+  for (auto& pair : object->getAnnotations()) {
+    annotations.append(QString::number(pair.second.lock()->getId()));
   }
   json["annotations"] = annotations;
 

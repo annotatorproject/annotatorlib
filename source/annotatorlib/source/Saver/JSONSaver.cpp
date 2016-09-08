@@ -50,43 +50,42 @@ QJsonObject JSONSaver::sessionToJson(const Session *session) {
   // insert list of objects
   QJsonArray objects;
   for (auto& pair : session->getObjects()) {
-    if (pair.second->hasAnnotations()) objects.append(objectToJson(pair.second.get()));
+    if (pair.second->hasAnnotations()) objects.append(objectToJson(pair.second));
   }
   json["objects"] = objects;
 
   // insert list of attributes
   QJsonArray attributes;
   for (auto& pair : session->getAttributes()) {
-    attributes.append(attributeToJson(pair.second.get()));
+    attributes.append(attributeToJson(pair.second));
   }
   json["attributes"] = attributes;
 
   // insert list of annotations
   QJsonArray annotations;
   for (auto& pair : session->getAnnotations()) {
-    annotations.append(annotationToJson(pair.second.get()));
+    annotations.append(annotationToJson(pair.second));
   }
   json["annotations"] = annotations;
 
   // insert list of classes
   QJsonArray classes;
   for (auto& pair : session->getClasses()) {
-    classes.append(classToJson(pair.second.get()));
+    classes.append(classToJson(pair.second));
   }
   json["classes"] = classes;
 
   // insert list of frames
   QJsonArray frames;
   for (auto& pair : session->getFrames()) {
-      Frame* frame = pair.second.get();
-      if (frame->hasAnnotations()) frames.append(frameToJson(frame));
+      if (pair.second->hasAnnotations()) frames.append(frameToJson(pair.second));
   }
   json["frames"] = frames;
 
   return json;
 }
 
-QJsonObject JSONSaver::attributeToJson(const Attribute *attribute) {
+QJsonObject JSONSaver::attributeToJson(const shared_ptr<AnnotatorLib::Attribute> attribute) {
   QJsonObject json;
   json["id"] = QString::number(attribute->getId());
   json["name"] = QString::fromStdString(attribute->getName());
@@ -97,7 +96,7 @@ QJsonObject JSONSaver::attributeToJson(const Attribute *attribute) {
   return json;
 }
 
-QJsonObject JSONSaver::annotationToJson(const Annotation *annotation) {
+QJsonObject JSONSaver::annotationToJson(const shared_ptr<AnnotatorLib::Annotation> annotation) {
   QJsonObject json;
   json["id"] = QString::number(annotation->getId());
   json["object"] = QString::number(annotation->getObject()->getId());
@@ -128,7 +127,7 @@ QJsonObject JSONSaver::annotationToJson(const Annotation *annotation) {
   return json;
 }
 
-QJsonObject JSONSaver::frameToJson(const Frame *frame) {
+QJsonObject JSONSaver::frameToJson(const shared_ptr<AnnotatorLib::Frame> frame) {
   QJsonObject json;
 
   json["number"] = QString::number(frame->getFrameNumber());
@@ -150,7 +149,7 @@ QJsonObject JSONSaver::frameToJson(const Frame *frame) {
   return json;
 }
 
-QJsonObject JSONSaver::objectToJson(const Object *object) {
+QJsonObject JSONSaver::objectToJson(const shared_ptr<Object> object) {
   QJsonObject json;
   json["id"] = QString::number(object->getId());
   json["name"] = QString::fromStdString(object->getName());
@@ -183,7 +182,7 @@ QJsonObject JSONSaver::objectToJson(const Object *object) {
   return json;
 }
 
-QJsonObject JSONSaver::classToJson( const Class *c) {
+QJsonObject JSONSaver::classToJson( const shared_ptr<AnnotatorLib::Class> c) {
   QJsonObject json;
   json["id"] = QString::number(c->getId());
   json["name"] = QString::fromStdString(c->getName());

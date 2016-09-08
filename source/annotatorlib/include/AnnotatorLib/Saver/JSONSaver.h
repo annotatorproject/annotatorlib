@@ -35,11 +35,11 @@ class ANNOTATORLIB_API JSONSaver : public AbstractSaver {
  protected:
   std::string path;
   QJsonObject sessionToJson(const AnnotatorLib::Session* session);
-  QJsonObject attributeToJson(const AnnotatorLib::Attribute* attribute);
-  QJsonObject annotationToJson(const AnnotatorLib::Annotation* annotation);
-  QJsonObject frameToJson(const AnnotatorLib::Frame* frame);
-  QJsonObject objectToJson(const AnnotatorLib::Object* object);
-  QJsonObject classToJson(const AnnotatorLib::Class* c);
+  QJsonObject attributeToJson(const shared_ptr<AnnotatorLib::Attribute>  attribute);
+  QJsonObject annotationToJson(const shared_ptr<AnnotatorLib::Annotation> annotation);
+  QJsonObject frameToJson(const shared_ptr<AnnotatorLib::Frame>  frame);
+  QJsonObject objectToJson(const shared_ptr<AnnotatorLib::Object> object);
+  QJsonObject classToJson(const shared_ptr<AnnotatorLib::Class>  c);
 
   QJsonObject session;
   void save();

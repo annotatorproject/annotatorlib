@@ -104,8 +104,10 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session) {
     Object *o = new Object(id);
     o->setName(name.toStdString());
 
-    if (object.contains("class"))
-      o->setClass(session->getClass(name.toStdString()));
+    if (object.contains("class")) {
+      unsigned long class_id = object["class"].toString().toLong();
+      o->setClass(session->getClass(class_id)); //TODO: get Class by Name (this is more efficient)
+    }
 
     QJsonArray attributes = object.value("attributes").toArray();
     for (QJsonValue attribute : attributes) {

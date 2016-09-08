@@ -17,7 +17,11 @@ namespace AnnotatorLib {
 Session::Session() {}
 
 Session::~Session() {
-  // delete all  
+  clearAll();
+}
+
+void Session::clearAll() {
+  // clear all
   this->objects.clear();
   this->frames.clear();
   this->annotations.clear();
@@ -105,6 +109,13 @@ shared_ptr<Class> Session::removeClass(Class *c) {
 
 shared_ptr<Class> Session::getClass(std::string name) const {
   return find_smart_pointer<std::string, Class>(classes, name);
+}
+
+shared_ptr<Class> Session::getClass(unsigned long id) const {
+  for (auto& pair : classes) {
+    if (pair.second->getId() == id) return pair.second;
+  }
+  return shared_ptr<Class>(nullptr);
 }
 
 bool Session::addFrame(shared_ptr<Frame> frame, bool add_associated_objects) {

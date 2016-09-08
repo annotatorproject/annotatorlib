@@ -36,6 +36,8 @@ class ANNOTATORLIB_API Session {
   Session();
   virtual ~Session();
 
+  virtual void clearAll();
+
   // Attributes
   virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const { return attributes;}
   /**
@@ -75,7 +77,22 @@ class ANNOTATORLIB_API Session {
    */
   virtual bool addClass(shared_ptr<Class> c);
   virtual shared_ptr<Class> removeClass(Class *c);
+  /**
+   * Get class by name.
+   * complexity: O(1)
+   * @brief getClass
+   * @param name
+   * @return
+   */
   virtual shared_ptr<Class> getClass(std::string name) const;
+  /**
+   * Deprecated! Use getClass(string name) instead!
+   * complexity: O(N)
+   * @brief Session::getClass
+   * @param id
+   * @return
+   */
+  virtual shared_ptr<Class> getClass(unsigned long id) const;
 
   // Frames
   virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const& getFrames() const { return frames; }

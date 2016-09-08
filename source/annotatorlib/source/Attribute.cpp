@@ -19,7 +19,7 @@
 namespace AnnotatorLib {
 
 // static attributes (if any)
-static long lastId = 100000;
+static unsigned long lastId = 100000;
 
 /**
  * @brief Attribute::Attribute

@@ -73,12 +73,12 @@ class ANNOTATORLIB_API Annotation {
    * @param right
    * @return
    */
-  bool operator>(const Annotation &right);
-  bool operator>=(const Annotation &right);
-  bool operator<(const Annotation &right);
-  bool operator<=(const Annotation &right);
-  bool operator==(const Annotation &right);
-  bool operator!=(const Annotation &right);
+  bool operator>(const Annotation &right) const;
+  bool operator>=(const Annotation &right) const;
+  bool operator<(const Annotation &right) const;
+  bool operator<=(const Annotation &right) const;
+  bool operator==(const Annotation &right) const;
+  bool operator!=(const Annotation &right) const;
 
   ////////METHODS//////////
 

@@ -34,12 +34,12 @@ class ANNOTATORLIB_API Frame {
   Frame(unsigned long frame_nmb);
   ~Frame() {}
 
-  bool operator>(const Frame& right);
-  bool operator>=(const Frame& right);
-  bool operator<(const Frame& right);
-  bool operator<=(const Frame& right);
-  bool operator==(const Frame& right);
-  bool operator!=(const Frame& right);
+  bool operator>(const Frame& right) const;
+  bool operator>=(const Frame& right) const;
+  bool operator<(const Frame& right) const;
+  bool operator<=(const Frame& right) const;
+  bool operator==(const Frame& right) const;
+  bool operator!=(const Frame& right) const;
 
   std::unordered_map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
   bool hasAnnotations() const;

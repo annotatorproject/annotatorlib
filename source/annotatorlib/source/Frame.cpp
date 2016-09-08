@@ -20,27 +20,27 @@ namespace AnnotatorLib {
 
 Frame::Frame(unsigned long frame_number) : frame_number(frame_number) {}
 
-bool Frame::operator>(const Frame &right) {
+bool Frame::operator>(const Frame &right) const {
   return frame_number > right.frame_number;
 }
 
-bool Frame::operator<(const Frame &right) {
+bool Frame::operator<(const Frame &right) const {
   return frame_number < right.frame_number;
 }
 
-bool Frame::operator<=(const Frame &right) {
+bool Frame::operator<=(const Frame &right) const {
   return frame_number <= right.frame_number;
 }
 
-bool Frame::operator>=(const Frame &right) {
+bool Frame::operator>=(const Frame &right) const {
   return frame_number >= right.frame_number;
 }
 
-bool Frame::operator==(const Frame &right) {
+bool Frame::operator==(const Frame &right) const {
   return frame_number == right.frame_number;
 }
 
-bool Frame::operator!=(const Frame &right) {
+bool Frame::operator!=(const Frame &right) const {
   return frame_number != right.frame_number;
 }
 

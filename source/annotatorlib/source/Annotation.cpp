@@ -52,27 +52,27 @@ Annotation::Annotation(unsigned long id,
 
 //////////////// public methods ///////////////////
 
-bool Annotation::operator>(const Annotation &right) {
+bool Annotation::operator>(const Annotation &right) const {
   return *this->frame > *right.frame;
 }
 
-bool Annotation::operator<(const Annotation &right) {
+bool Annotation::operator<(const Annotation &right) const {
   return *this->frame < *right.frame;
 }
 
-bool Annotation::operator<=(const Annotation &right) {
+bool Annotation::operator<=(const Annotation &right) const {
   return *this->frame <= *right.frame;
 }
 
-bool Annotation::operator>=(const Annotation &right) {
+bool Annotation::operator>=(const Annotation &right) const {
   return *this->frame >= *right.frame;
 }
 
-bool Annotation::operator==(const Annotation &right) {
+bool Annotation::operator==(const Annotation &right) const {
   return *this->frame == *right.frame;
 }
 
-bool Annotation::operator!=(const Annotation &right) {
+bool Annotation::operator!=(const Annotation &right) const {
   return *this->frame != *right.frame;
 }
 

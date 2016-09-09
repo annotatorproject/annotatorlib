@@ -8,13 +8,13 @@
 /************************************************************
  AnnotatorAlgoInterface class header
  ************************************************************/
+#include <memory>
 #include <opencv2/core/core.hpp>
 #include <vector>
-#include <memory>
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include "AnnotatorLib/Commands/Command.h"
 #include "AnnotatorLib/Image.h"
+#include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
 class Annotation;
@@ -32,12 +32,13 @@ namespace AnnotatorAlgo {
  *
  */
 class ANNOTATORLIB_API AnnotatorAlgoInterface {
- public:
+public:
   /**
    *
    * @param image
    */
-  virtual bool setFrame(shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) = 0;
+  virtual bool setFrame(shared_ptr<AnnotatorLib::Frame> frame,
+                        cv::Mat image) = 0;
 
   /**
    *
@@ -51,11 +52,30 @@ class ANNOTATORLIB_API AnnotatorAlgoInterface {
    * @brief setLastAnnotation
    * @param annotation
    */
-  virtual void setLastAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) = 0;
+  virtual void
+  setLastAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) = 0;
 
-  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>> getCommands() = 0;
+  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
+  getCommands() = 0;
 
-  virtual void setSession(AnnotatorLib::Session *session) = 0;
+  virtual void setSession(AnnotatorLib::Session *session) {
+    this->session = session;
+  }
+  virtual AnnotatorLib::Session *getSession() { return session; }
+
+  /**
+ * @brief calculate
+ * calculates an annotation for the given frame of an object using given image.
+ * @param object
+ * @param frame
+ * @param image
+ */
+  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
+  calculate(shared_ptr<AnnotatorLib::Object> object,
+            shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) = 0;
+
+protected:
+  AnnotatorLib::Session *session = nullptr;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -63,7 +83,7 @@ class ANNOTATORLIB_API AnnotatorAlgoInterface {
 
 /* Inline functions                                         */
 
-}  // of namespace AnnotatorAlgo
+} // of namespace AnnotatorAlgo
 
 /************************************************************
  End of AnnotatorAlgoInterface class header

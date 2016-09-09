@@ -12,15 +12,15 @@
 #include <opencv2/core/core.hpp>
 #include <vector>
 
-#include "AnnotatorLib/Commands/Command.h"
-#include "AnnotatorLib/Image.h"
+#include <AnnotatorLib/Commands/Command.h>
+#include <AnnotatorLib/Image.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
 class Annotation;
 class Frame;
 class Object;
-class Session;
+class Project;
 }
 
 using std::shared_ptr;
@@ -58,10 +58,10 @@ public:
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   getCommands() = 0;
 
-  virtual void setSession(AnnotatorLib::Session *session) {
-    this->session = session;
+  virtual void setProject(AnnotatorLib::Project *project) {
+    this->project = project;
   }
-  virtual AnnotatorLib::Session *getSession() { return session; }
+  virtual AnnotatorLib::Project *getProject() { return project; }
 
   /**
  * @brief calculate
@@ -75,7 +75,7 @@ public:
             shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) = 0;
 
 protected:
-  AnnotatorLib::Session *session = nullptr;
+  AnnotatorLib::Project *project = nullptr;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

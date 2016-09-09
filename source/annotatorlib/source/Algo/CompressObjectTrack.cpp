@@ -46,7 +46,9 @@ std::vector<shared_ptr<Annotation>> CompressObjectTrack::compress(Session* sessi
     // annotation
     float dist = std::sqrt(std::pow(a_new->getX() - prev->getX(), 2) +
                            std::pow(a_new->getY() - prev->getY(), 2));
-    if (dist < max_diff) {
+    float dist_size = std::sqrt(std::pow(a_new->getWidth() - prev->getWidth(), 2) +
+                           std::pow(a_new->getHeight() - prev->getHeight(), 2));
+    if (dist < max_diff && dist_size < max_diff) {
         removed_elements.push_back(session->removeAnnotation(prev->getId(), true));
     }
     a_new.reset();

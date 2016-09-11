@@ -9,6 +9,7 @@
 #include <algorithm>    // std::generate
 #include <vector>       // std::vector
 #include <cstdlib>      // std::rand, std::srand
+#include <random>       // std::random_device
 
 using namespace AnnotatorLib;
 using namespace std;

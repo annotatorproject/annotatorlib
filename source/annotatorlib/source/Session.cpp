@@ -20,13 +20,18 @@ Session::~Session() {
   clearAll();
 }
 
-void Session::clearAll() {
-  // clear all
+void Session::clearData() {
+  // clear data
   this->objects.clear();
   this->frames.clear();
   this->annotations.clear();
   this->classes.clear();
   this->attributes.clear();
+}
+
+void Session::clearAll() {
+  // clear all
+  clearData();
   this->commands.clear();
   commandIndex = 0;
 }

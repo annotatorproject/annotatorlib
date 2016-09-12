@@ -36,6 +36,7 @@ class ANNOTATORLIB_API Session {
   Session();
   virtual ~Session();
 
+  virtual void clearData();
   virtual void clearAll();
 
   // Attributes

@@ -7,7 +7,7 @@ AnnotatorLib::Commands::CleanSession::CleanSession(
 }
 
 bool AnnotatorLib::Commands::CleanSession::execute() {
-  session->clearAll();
+  session->clearData();
   return true;
 }
 

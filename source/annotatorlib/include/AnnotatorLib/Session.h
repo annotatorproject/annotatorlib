@@ -131,9 +131,9 @@ class ANNOTATORLIB_API Session {
    * @param command
    * @return
    */
-  virtual bool execute(shared_ptr<AnnotatorLib::Commands::Command> command);
-  virtual bool redo();
-  virtual bool undo();
+  virtual shared_ptr<Commands::Command> execute(shared_ptr<AnnotatorLib::Commands::Command> command);
+  virtual shared_ptr<Commands::Command> redo();
+  virtual shared_ptr<Commands::Command> undo();
 
  private:
   std::unordered_map<unsigned long, std::shared_ptr<Frame>> frames;

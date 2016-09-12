@@ -183,30 +183,34 @@ shared_ptr<Object> Session::getObject(unsigned long id) const {
   return find_smart_pointer<unsigned long, Object>(objects, id);
 }
 
-bool Session::execute(shared_ptr<Commands::Command> command) {
+shared_ptr<Commands::Command> Session::execute(shared_ptr<Commands::Command> command) {
   if (command.get() == nullptr) return false;
   commands.erase(commands.begin() + commandIndex, commands.end());
   commands.push_back(std::move(command));
   commandIndex++;
-  return commands[commandIndex - 1]->execute(); //execute new command
+  bool success = commands[commandIndex - 1]->execute(); //execute new command
+  if (success) return command;
+  return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
 }
 
-bool Session::redo() {
+shared_ptr<Commands::Command> Session::redo() {
   if (commands.size() > commandIndex) {
     shared_ptr<AnnotatorLib::Commands::Command> command = commands.at(commandIndex);
     commandIndex++;
-    return command->execute();
+    bool success = command->execute();
+    if (success) return command;
   }
-  return false;
+  return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
 }
 
-bool Session::undo() {
+shared_ptr<Commands::Command> Session::undo() {
   if (commandIndex > 0) {
     commandIndex--;
-    AnnotatorLib::Commands::Command *command = commands.at(commandIndex).get();
-    return command->undo();
+    shared_ptr<AnnotatorLib::Commands::Command> command = commands.at(commandIndex);
+    bool success = command->undo();
+    if (success) return command;
   }
-  return false;
+  return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
 }
 
 // static attributes (if any)

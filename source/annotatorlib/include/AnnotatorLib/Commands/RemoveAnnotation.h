@@ -23,7 +23,7 @@ class ANNOTATORLIB_API RemoveAnnotation : public Command {
 
   bool undo();
 
-  Annotation *getAnnotation();
+  shared_ptr<AnnotatorLib::Annotation> getAnnotation();
 
  protected:
   Session *session = nullptr;

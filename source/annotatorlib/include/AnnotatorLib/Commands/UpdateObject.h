@@ -22,6 +22,8 @@ class ANNOTATORLIB_API UpdateObject : public Command {
 
   ~UpdateObject() {}
 
+  shared_ptr<Object> getObject() { return obj; }
+
   bool execute();
 
   bool undo();

@@ -20,7 +20,7 @@ bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
   return true;
 }
 
-AnnotatorLib::Annotation *
+shared_ptr<AnnotatorLib::Annotation>
 AnnotatorLib::Commands::RemoveAnnotation::getAnnotation() {
-  return annotation.get();
+  return annotation;
 }

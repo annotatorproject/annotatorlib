@@ -5,7 +5,7 @@
 
 # Generate version-header
 string(TOUPPER ${META_PROJECT_NAME} META_PROJECT_NAME_UPPER)
-configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/${META_PROJECT_NAME}/${META_PROJECT_NAME}-version.h)
+configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/AnnotatorLib/${META_PROJECT_NAME}-version.h)
 
 
 # 

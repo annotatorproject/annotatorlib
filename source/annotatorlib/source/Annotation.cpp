@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <algorithm>
+#include <cmath>
 // include associated header file
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"

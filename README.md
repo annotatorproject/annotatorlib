@@ -1,8 +1,11 @@
-# Annotator Library [ ![Build Status] [travis-image] ] [travis] [ ![Documentation] [codedocs-image] ] [codedocs] [ ![Gitter] [gitter-image] ] [gitter]
+# Annotator Library [ ![Build Status] [travis-image] ] [travis] [_![Coverage_Status] [coveralls-image] ] [coveralls]  [ ![Documentation] [codedocs-image] ] [codedocs] [_![Gitter] [gitter-image] ] [gitter]
 
 
 [travis-image]: https://travis-ci.org/lasmue/annotatorlib.png?branch=master
 [travis]: http://travis-ci.org/lasmue/annotatorlib
+
+[coveralls-image]: https://img.shields.io/coveralls/lasmue/annotatorlib.svg?label=Coverage
+[coveralls]: https://coveralls.io/github/lasmue/annotatorlib
 
 [codedocs-image]: https://codedocs.xyz/lasmue/annotatorlib.svg
 [codedocs]: https://codedocs.xyz/lasmue/annotatorlib/

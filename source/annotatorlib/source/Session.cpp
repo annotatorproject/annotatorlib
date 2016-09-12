@@ -72,7 +72,7 @@ bool Session::addAnnotation(shared_ptr<Annotation> annotation, bool add_associat
         addFrame( shared_ptr<Frame>(result.first->second->getFrame()), false);
       }
   }
-    return result.second;
+  return result.second;
 }
 
 shared_ptr<Annotation> Session::removeAnnotation(unsigned long id, bool unregister) {
@@ -184,12 +184,14 @@ shared_ptr<Object> Session::getObject(unsigned long id) const {
 }
 
 shared_ptr<Commands::Command> Session::execute(shared_ptr<Commands::Command> command) {
-  if (command.get() == nullptr) return false;
+  if (!command)
+    return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
   commands.erase(commands.begin() + commandIndex, commands.end());
   commands.push_back(std::move(command));
   commandIndex++;
   bool success = commands[commandIndex - 1]->execute(); //execute new command
-  if (success) return command;
+  if (success)
+    return commands[commandIndex - 1];
   return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
 }
 

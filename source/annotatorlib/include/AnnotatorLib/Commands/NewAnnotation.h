@@ -42,10 +42,13 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
   bool undo();
 
   shared_ptr<Annotation> getAnnotation();
+  bool newObjectCreated() { return createdNewObject; }
 
  protected:
   Session *session;
   shared_ptr<Annotation> annotation_;
+  const bool createNewObject;
+  bool createdNewObject = false;
 };
 }
 }

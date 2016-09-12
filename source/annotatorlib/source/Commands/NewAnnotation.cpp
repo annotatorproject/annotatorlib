@@ -11,7 +11,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     float x,
     float y,
     float width,
-    float height ) {
+    float height ) : createNewObject(true) {
 
   this->session = session;
   this->annotation_ = Annotation::make_shared(frame, std::make_shared<Object>(newObjectId, newObjectClass));
@@ -22,7 +22,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     AnnotatorLib::Session *session,
     shared_ptr<Object> object,
     shared_ptr<Frame> frame,
-    float x, float y, float width, float height) {
+    float x, float y, float width, float height) : createNewObject(false) {
 
   this->session = session;
   this->annotation_ = Annotation::make_shared(frame, object);
@@ -30,7 +30,9 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
-  return session->addAnnotation(annotation_, true);  // adds annotation and register to them
+  bool success = session->addAnnotation(annotation_, true);  // adds annotation and register to them
+  if (createNewObject && success)
+    createdNewObject = true;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {

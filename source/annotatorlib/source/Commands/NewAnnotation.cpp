@@ -33,6 +33,7 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
   bool success = session->addAnnotation(annotation_, true);  // adds annotation and register to them
   if (createNewObject && success)
     createdNewObject = true;
+  return success;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {

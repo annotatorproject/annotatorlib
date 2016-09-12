@@ -29,6 +29,8 @@ class ANNOTATORLIB_API CompressObject : public Command {
 
   bool undo();
 
+  shared_ptr<Object> getObject() { return obj; }
+
  protected:
   shared_ptr<Object> obj;
   Session* session;

@@ -17,11 +17,14 @@ class ANNOTATORLIB_API RemoveObject : public Command {
  public:
   RemoveObject() = delete;
   RemoveObject(Session * s, shared_ptr<Object> o);
+  RemoveObject(const RemoveObject &other) = delete;
   ~RemoveObject() {}
 
   bool execute();
 
   bool undo();
+
+  shared_ptr<Object> getObject() { return object;}
 
  protected:
   Session *session;

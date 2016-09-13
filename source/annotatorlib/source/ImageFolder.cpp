@@ -29,7 +29,14 @@ ImageFolder::ImageFolder(std::string path) {
 
 ImageSetType ImageFolder::getType() { return ImageSetType::IMAGEFOLDER; }
 
-Image ImageFolder::getImage(unsigned intframe) { return Image(); }
+Image ImageFolder::getImage(unsigned intframe) {
+    Image img;
+    try {
+      img = cv::imread((images.begin() + intframe - 1)->string(), CV_LOAD_IMAGE_COLOR);
+    } catch (std::exception &e) {
+    }
+    return img;
+}
 
 bool ImageFolder::gotoPosition(long position) {
   if (images.size() < position) return false;

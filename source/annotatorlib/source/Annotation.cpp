@@ -8,8 +8,8 @@
  Annotation class body
  ************************************************************/
 
-#include <assert.h>
 #include <algorithm>
+#include <assert.h>
 #include <cmath>
 // include associated header file
 #include "AnnotatorLib/Annotation.h"
@@ -20,36 +20,33 @@ namespace AnnotatorLib {
 
 ////////////////// statics /////////////////////
 
-unsigned long Annotation::genId(const std::shared_ptr<Frame> frame, const std::shared_ptr<Object> obj) {
-  //Cantor’s Pairing Function
-  return ( std::pow(frame->getId(),2)
-           + 3 * frame->getId()
-           + 2 * frame->getId() * obj->getId()
-           + obj->getId()
-           + std::pow(obj->getId(), 2) ) / 2 ;
+unsigned long Annotation::genId(const std::shared_ptr<Frame> frame,
+                                const std::shared_ptr<Object> obj) {
+  // Cantor’s Pairing Function
+  return (std::pow(frame->getId(), 2) + 3 * frame->getId() +
+          2 * frame->getId() * obj->getId() + obj->getId() +
+          std::pow(obj->getId(), 2)) /
+         2;
 }
 
 //////////////// constructors ///////////////////
 
-
-Annotation::Annotation( shared_ptr<Frame> frame,
-                        shared_ptr<Object> obj,
-                        AnnotationType type)
+Annotation::Annotation(shared_ptr<Frame> frame, shared_ptr<Object> obj,
+                       AnnotationType type)
     : Annotation(genId(frame, obj), frame, obj, type) {}
 
-Annotation::Annotation( shared_ptr<Annotation> a,
-                        shared_ptr<Frame> frame,
-                        bool isInterpolated)
-    : Annotation(genId(frame, a->getObject()), frame, a->getObject(), a->getType(), isInterpolated) {
+Annotation::Annotation(shared_ptr<Annotation> a, shared_ptr<Frame> frame,
+                       bool isInterpolated)
+    : Annotation(genId(frame, a->getObject()), frame, a->getObject(),
+                 a->getType(), isInterpolated) {
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
 }
 
-Annotation::Annotation(unsigned long id,
-           const shared_ptr<Frame>& frame,
-           const shared_ptr<Object>& obj,
-           const AnnotationType type,
-           bool isInterpolated)
-  : id(id), frame(frame), object(obj), type(type), is_temporary(isInterpolated) { }
+Annotation::Annotation(unsigned long id, const shared_ptr<Frame> &frame,
+                       const shared_ptr<Object> &obj, const AnnotationType type,
+                       bool isInterpolated)
+    : id(id), frame(frame), object(obj), type(type),
+      is_temporary(isInterpolated) {}
 
 //////////////// public methods ///////////////////
 
@@ -79,12 +76,14 @@ bool Annotation::operator!=(const Annotation &right) const {
 
 unsigned long Annotation::getId() const { return id; }
 
-std::vector<shared_ptr<Attribute>> const& Annotation::getAttributes() const {
+std::vector<shared_ptr<Attribute>> const &Annotation::getAttributes() const {
   return attributes;
 }
 
 bool Annotation::addAttribute(shared_ptr<Attribute> attribute) {
-  if (attribute && std::find(attributes.begin(), attributes.end(), attribute) == attributes.end()) {
+  if (attribute &&
+      std::find(attributes.begin(), attributes.end(), attribute) ==
+          attributes.end()) {
     attributes.push_back(attribute);
     return true;
   }
@@ -141,7 +140,8 @@ float Annotation::getHRadius() const { return width / 2; }
 
 void Annotation::setHRadius(float hradius) {
   assert(hradius > 0);
-  if (hradius < 0) hradius *= -1;
+  if (hradius < 0)
+    hradius *= -1;
   this->width = hradius * 2;
 }
 
@@ -149,13 +149,12 @@ float Annotation::getVRadius() const { return height / 2; }
 
 void Annotation::setVRadius(float vradius) {
   assert(vradius > 0);
-  if (vradius < 0) vradius *= -1;
+  if (vradius < 0)
+    vradius *= -1;
   this->height = vradius * 2;
 }
 
-void Annotation::setSelf(weak_ptr<Annotation> self) {
-  this->self_ = self;
-}
+void Annotation::setSelf(weak_ptr<Annotation> self) { this->self_ = self; }
 
 void Annotation::setNext(weak_ptr<Annotation> next) {
   assert(!next.lock() || *this->frame <= *next.lock()->getFrame());
@@ -163,11 +162,14 @@ void Annotation::setNext(weak_ptr<Annotation> next) {
 }
 
 shared_ptr<Annotation> Annotation::getNext() const {
-  if ( next.expired()) return shared_ptr<Annotation>(nullptr);
+  if (next.expired())
+    return shared_ptr<Annotation>(nullptr);
   return next.lock();
 }
 
-bool Annotation::hasNext() const { return (next.lock().get() != nullptr && next.lock().get() != this); }
+bool Annotation::hasNext() const {
+  return (next.lock().get() != nullptr && next.lock().get() != this);
+}
 
 void Annotation::setPrevious(weak_ptr<Annotation> previous) {
   assert(!previous.lock() || *this->frame >= *previous.lock()->getFrame());
@@ -175,7 +177,8 @@ void Annotation::setPrevious(weak_ptr<Annotation> previous) {
 }
 
 shared_ptr<Annotation> Annotation::getPrevious() const {
-  if (previous.expired()) return shared_ptr<Annotation>(nullptr);
+  if (previous.expired())
+    return shared_ptr<Annotation>(nullptr);
   return previous.lock();
 }
 
@@ -197,7 +200,7 @@ bool Annotation::isTemporary() const { return is_temporary; }
 
 bool Annotation::isRegistered() const { return registered; }
 
-bool Annotation::setRegistered(bool do_register)  {
+bool Annotation::setRegistered(bool do_register) {
   if (isTemporary())
     return false;
   if (do_register && !registered) {
@@ -238,7 +241,7 @@ void Annotation::unregisterAnnotation(const shared_ptr<Annotation> a) {
   a->setRegistered(false);
 }
 
-}  // of namespace AnnotatorLib
+} // of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class body

@@ -217,7 +217,6 @@ void Object::findClosestKeyFrames(const shared_ptr<Frame> target_frame,
   }
   if(left->getFrame()->getFrameNumber() > target_frame->getFrameNumber())
       left = nullptr;
-  assert(right != left);
   assert(right == nullptr || right->isTemporary() == false);
   assert(left == nullptr || left->isTemporary() == false);
 }

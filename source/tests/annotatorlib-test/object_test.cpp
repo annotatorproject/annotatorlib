@@ -46,4 +46,7 @@ TEST_F(object_test, findClosestKeyFrames) {
     ASSERT_EQ(prevA, annotation7);
     ASSERT_TRUE(nextA.get() == nullptr);
 
+    obj->findClosestKeyFrames(make_shared<Frame>(3), prevA, nextA);
+    ASSERT_EQ(prevA, nextA);
+    ASSERT_EQ(prevA, annotation3);
 }

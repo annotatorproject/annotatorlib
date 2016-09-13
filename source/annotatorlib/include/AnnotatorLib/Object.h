@@ -90,7 +90,7 @@ friend class Annotation; //private access for register/unregister
    * @return
    */
   shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame> frame) const;
-  void findClosestKeyFrames(const Frame *target_frame,
+  void findClosestKeyFrames(const shared_ptr<Frame> target_frame,
                         shared_ptr<Annotation>& left,
                         shared_ptr<Annotation>& right) const;
 

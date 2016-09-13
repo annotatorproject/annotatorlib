@@ -78,7 +78,7 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const Session *se
         // find the nearest neighbours (keyframes)
         shared_ptr<Annotation> left = nullptr;
         shared_ptr<Annotation> right = nullptr;
-        object->findClosestKeyFrames(frame.get(), left, right);
+        object->findClosestKeyFrames(frame, left, right);
         return getInterpolation(frame, left, right);
       } else if (!interpolationsOnly) {
         return a;

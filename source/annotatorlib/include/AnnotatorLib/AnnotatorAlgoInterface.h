@@ -72,7 +72,7 @@ public:
  */
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame, cv::Mat image) = 0;
+            shared_ptr<AnnotatorLib::Frame> frame) = 0;
 
 protected:
   AnnotatorLib::Project *project = nullptr;

@@ -83,7 +83,8 @@ script:
  - make -j4
 
 after_success:
-  - coveralls --root "../source" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
+  - cd ..
+  - coveralls --root "." -E "cmake-3.6.0" -E "opencv-3.1.0" -E "build" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
 
 notifications:
   webhooks:

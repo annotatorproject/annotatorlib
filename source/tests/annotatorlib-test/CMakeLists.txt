@@ -18,6 +18,7 @@ set(sources
     attribute_test.cpp
     commands_test.cpp
     imageset_test.cpp
+    object_test.cpp
     project_test.cpp
     saver_test.cpp
     session_test.cpp

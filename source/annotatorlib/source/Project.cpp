@@ -39,15 +39,20 @@ Project::Project(std::string name, ImageSetType imageSetType,
 
 Project::~Project() { delete session; }
 
-Session *Project::getSession() { return session; }
+Session *Project::getSession() const { return session; }
 
-Storage::AbstractStorage *Project::getStorage() {
+Storage::AbstractStorage *Project::getStorage() const {
   return (AnnotatorLib::Storage::AbstractStorage *)session;
 }
 
-std::string Project::getName() { return name; }
+std::string Project::getName() const { return name; }
 
-ImageSet *Project::getImageSet() { return imageSet; }
+unsigned long Project::getDuration() const
+{
+  return this->total_duration_sec;
+}
+
+ImageSet *Project::getImageSet() const { return imageSet; }
 
 Project *Project::load(std::string path) {
   Project *project = new Project();
@@ -85,6 +90,7 @@ void Project::load() {
       this->imageSetType, imageSetPath);
 
   loadStorage(root, this->storageType, this->storagePath);
+  loadProjectStatistics(root);
   loadSession();
 }
 
@@ -104,6 +110,12 @@ void Project::loadStorage(QDomElement &root, StorageType &type,
   storagePath = element.attribute("path").toStdString();
 }
 
+void Project::loadProjectStatistics(QDomElement &root) {
+  QDomElement element = root.firstChildElement("Statistics");
+  if (!element.isNull())
+    this->total_duration_sec = element.attribute("duration").toULong();
+}
+
 void Project::loadRoot(QDomDocument &doc, QDomElement &root,
                        std::string &name) {
   root = doc.documentElement();
@@ -116,21 +128,14 @@ void Project::loadSession() {
   storage->setPath(this->storagePath);
   storage->open();
   this->session = (Session *)storage;
+  this->time_point_startup = std::chrono::system_clock::now();
 }
 
-/**
- *
- * @param project
- * @param path
- */
 void Project::save(Project *project, std::string path) {
   project->path = path;
   project->save();
 }
 
-/**
- *
- */
 void Project::save() {
   QFile file(QString::fromStdString(this->path));
 
@@ -181,6 +186,7 @@ QDomElement Project::saveRoot(QDomDocument &doc) {
   QDomElement root = doc.createElement(QString::fromStdString(this->name));
   root.appendChild(saveStorage(doc));
   root.appendChild(saveImageSet(doc));
+  root.appendChild(saveProjectStatistics(doc));
 
   return root;
 }
@@ -189,6 +195,17 @@ void Project::saveSession() {
   AnnotatorLib::Storage::AbstractStorage *storage =
       (AnnotatorLib::Storage::AbstractStorage *)session;
   storage->flush();
+}
+
+QDomElement Project::saveProjectStatistics(QDomDocument &doc)
+{
+  QDomElement element = doc.createElement("Statistics");
+
+  int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now() - time_point_startup).count();
+  element.setAttribute(
+      "duration", QString::number(total_duration_sec + elapsed_seconds));
+  return element;
 }
 
 Project *Project::create(std::string name, ImageSetType imageSetType,
@@ -214,7 +231,7 @@ Project *Project::create(std::string name, std::string imageSetType,
   return create(name, iType, imageSetPath, sType, storagePath);
 }
 
-bool Project::equals(Project *other) {
+bool Project::equals(Project *other) const {
   if (this == other) return true;
   if (this->name != other->name) return false;
   if (this->path != other->path) return false;
@@ -225,11 +242,11 @@ bool Project::equals(Project *other) {
   return true;
 }
 
-std::string Project::getImageSetPath() { return this->imageSet->getPath(); }
+std::string Project::getImageSetPath() const { return this->imageSet->getPath(); }
 
 void Project::setPath(std::string path) { this->path = path; }
 
-std::string Project::getPath() { return path; }
+std::string Project::getPath() const { return path; }
 
 }  // of namespace AnnotatorLib
 

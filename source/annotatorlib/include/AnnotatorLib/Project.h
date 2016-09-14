@@ -11,6 +11,9 @@
 
 #include <string>
 
+#include <chrono>
+#include <ctime>
+
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
@@ -31,52 +34,34 @@ class AbstractStorage;
  *
  */
 class ANNOTATORLIB_API Project {
- protected:
-  Project();
 
-  Project(std::string name, ImageSetType imageSetType, std::string imageSetPath,
-          StorageType storageType, std::string storagePath);
+public:
 
   /**
-   *
+   * @brief create
+   * @param name
+   * @param imageSetType
+   * @param imageSetPath
+   * @param storageType
+   * @param storagePath
+   * @return
    */
-  std::string name = "";
-  /**
-   *
-   */
-  std::string path = "";
-  /**
-   *
-   */
-  ImageSetType imageSetType = ImageSetType::UNKNOWN;
-  /**
-   *
-   */
-  ImageSet *imageSet = nullptr;
-  /**
-   *
-   */
+  static Project *create(std::string name, ImageSetType imageSetType,
+                         std::string imageSetPath, StorageType storageType,
+                         std::string storagePath);
 
-  StorageType storageType = StorageType::UNKNOWN;
   /**
-   * @brief storagePath
+   * @brief create
+   * @param name
+   * @param imageSetType
+   * @param imageSetPath
+   * @param storageType
+   * @param storagePath
+   * @return
    */
-  std::string storagePath = "";
-  /**
-   *
-   */
-  Session *session = nullptr;
-
- public:
-  ~Project();
-
-  Session *getSession();
-
-  AnnotatorLib::Storage::AbstractStorage *getStorage();
-
-  std::string getName();
-
-  ImageSet *getImageSet();
+  static Project *create(std::string name, std::string imageSetType,
+                         std::string imageSetPath, std::string storageType,
+                         std::string storagePath);
 
   /**
    *
@@ -85,20 +70,28 @@ class ANNOTATORLIB_API Project {
    */
   static Project *load(std::string path);
 
+  ///////////////////////////////////////////////
+
+  ~Project();
+
+  Session *getSession() const;
+
+  AnnotatorLib::Storage::AbstractStorage *getStorage() const;
+
+  std::string getName() const;
+
   /**
-   *
+   * @brief Get the total spended time of this project in seconds.
+   * @return
+   */
+  unsigned long getDuration() const;
+
+  ImageSet *getImageSet() const;
+
+  /**
+   * @brief load
    */
   void load();
-
-  void loadImageSet(QDomElement &root, ImageSetType &type,
-                    std::string &imageSetPath);
-
-  void loadStorage(QDomElement &root, StorageType &type,
-                   std::string &storagePath);
-
-  void loadRoot(QDomDocument &doc, QDomElement &root, std::string &name);
-
-  void loadSession();
 
   /**
    *
@@ -108,9 +101,59 @@ class ANNOTATORLIB_API Project {
   static void save(Project *project, std::string path);
 
   /**
-   *
+   * @brief save
    */
   void save();
+
+  /**
+   * @brief equals
+   * @param other
+   * @return
+   */
+  bool equals(Project *other) const;
+  /**
+   * @brief getImageSetPath
+   * @return
+   */
+  std::string getImageSetPath() const;
+  /**
+   * @brief setPath
+   * @param path
+   */
+  void setPath(std::string path);
+
+  /**
+   * @brief getPath
+   * @return
+   */
+  std::string getPath() const;
+
+ protected:
+
+  Project();
+
+  Project(std::string name, ImageSetType imageSetType, std::string imageSetPath,
+          StorageType storageType, std::string storagePath);
+
+  /**
+   * @brief loadSession
+   */
+  void loadSession();
+
+  void loadImageSet(QDomElement &root, ImageSetType &type,
+                    std::string &imageSetPath);
+
+  void loadStorage(QDomElement &root, StorageType &type,
+                   std::string &storagePath);
+
+  void loadRoot(QDomDocument &doc, QDomElement &root, std::string &name);
+
+  void loadProjectStatistics(QDomElement &root);
+
+  /**
+   * @brief saveSession
+   */
+  void saveSession();
 
   QDomElement saveImageSet(QDomDocument &doc);
 
@@ -118,23 +161,28 @@ class ANNOTATORLIB_API Project {
 
   QDomElement saveRoot(QDomDocument &doc);
 
-  void saveSession();
+  QDomElement saveProjectStatistics(QDomDocument &doc);
 
-  static Project *create(std::string name, ImageSetType imageSetType,
-                         std::string imageSetPath, StorageType storageType,
-                         std::string storagePath);
+  ///////////////////////////////////////////////
 
-  static Project *create(std::string name, std::string imageSetType,
-                         std::string imageSetPath, std::string storageType,
-                         std::string storagePath);
+  std::string name = "";
 
-  bool equals(Project *other);
+  std::string path = "";
 
-  std::string getImageSetPath();
+  unsigned long total_duration_sec = 0;
 
-  void setPath(std::string path);
+  ImageSetType imageSetType = ImageSetType::UNKNOWN;
 
-  std::string getPath();
+  ImageSet *imageSet = nullptr;
+
+  StorageType storageType = StorageType::UNKNOWN;
+
+  std::string storagePath = "";
+
+  Session *session = nullptr;
+
+  std::chrono::time_point<std::chrono::system_clock> time_point_startup;
+
 };
 /************************************************************/
 /* External declarations (package visibility)               */

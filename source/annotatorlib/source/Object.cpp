@@ -8,12 +8,13 @@
  Object class body
  ************************************************************/
 
-// include associated header file
+#include <algorithm>
+#include <assert.h>
+#include <boost/lexical_cast.hpp>
+
 #include "AnnotatorLib/Object.h"
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Class.h"
-#include <algorithm>
-#include <assert.h>
 
 // Derived includes directives
 
@@ -21,7 +22,7 @@ namespace AnnotatorLib {
 
 // statics
 static unsigned long lastId = 100;
-static unsigned long lastNamePostfix = 1;
+static unsigned long namePostfixNmb= 0;
 
 Object::Object() : Object(genId(), shared_ptr<Class>(nullptr)) {
   name = genName();
@@ -45,14 +46,29 @@ unsigned long Object::getId() const { return id; }
 
 std::string Object::getName() const { return name; }
 
-void Object::setName(std::string name) { this->name = name; }
+void Object::setName(std::string name) {
+
+  // avoid postfix collisions when setting a name
+  std::string name_postfix = name.substr(name.find('_') + 1);
+  if (!name_postfix.empty()) {
+    unsigned long nmb;
+    try
+    {
+      nmb = boost::lexical_cast<unsigned long>(name_postfix);
+    }
+    catch(boost::bad_lexical_cast& e)
+    { }
+    namePostfixNmb = std::max(nmb, namePostfixNmb );
+  }
+  this->name = name;
+}
 
 std::string Object::genName() {
   std::string prefix = "unnamed_obj_";
   const shared_ptr<Class> c = getClass();
   if (c)
     prefix = c->getName() + "_";
-  return prefix + std::to_string(lastNamePostfix++);
+  return prefix + std::to_string(++namePostfixNmb);
 }
 
 shared_ptr<Class> Object::getClass() const { return objectClass; }

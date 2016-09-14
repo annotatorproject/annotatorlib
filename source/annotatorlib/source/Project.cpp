@@ -47,8 +47,12 @@ Storage::AbstractStorage *Project::getStorage() const {
 
 std::string Project::getName() const { return name; }
 
-unsigned long Project::getDuration() const
+unsigned long Project::getDuration()
 {
+  int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now() - time_point_start).count();
+  total_duration_sec += elapsed_seconds;
+  this->time_point_start = std::chrono::system_clock::now(); //reset
   return this->total_duration_sec;
 }
 
@@ -128,7 +132,7 @@ void Project::loadSession() {
   storage->setPath(this->storagePath);
   storage->open();
   this->session = (Session *)storage;
-  this->time_point_startup = std::chrono::system_clock::now();
+  this->time_point_start = std::chrono::system_clock::now();
 }
 
 void Project::save(Project *project, std::string path) {
@@ -200,11 +204,8 @@ void Project::saveSession() {
 QDomElement Project::saveProjectStatistics(QDomDocument &doc)
 {
   QDomElement element = doc.createElement("Statistics");
-
-  int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now() - time_point_startup).count();
   element.setAttribute(
-      "duration", QString::number(total_duration_sec + elapsed_seconds));
+      "duration", QString::number(getDuration()));
   return element;
 }
 

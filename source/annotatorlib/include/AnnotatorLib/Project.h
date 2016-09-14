@@ -84,7 +84,7 @@ public:
    * @brief Get the total spended time of this project in seconds.
    * @return
    */
-  unsigned long getDuration() const;
+  unsigned long getDuration();
 
   ImageSet *getImageSet() const;
 
@@ -181,8 +181,7 @@ public:
 
   Session *session = nullptr;
 
-  std::chrono::time_point<std::chrono::system_clock> time_point_startup;
-
+  std::chrono::time_point<std::chrono::system_clock> time_point_start;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

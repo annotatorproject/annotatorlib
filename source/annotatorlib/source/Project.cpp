@@ -249,6 +249,16 @@ void Project::setPath(std::string path) { this->path = path; }
 
 std::string Project::getPath() const { return path; }
 
+void Project::setActive(bool b)
+{
+  active = b;
+}
+
+bool Project::isActive() const
+{
+  return active;
+}
+
 }  // of namespace AnnotatorLib
 
 /************************************************************

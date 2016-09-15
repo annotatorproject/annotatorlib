@@ -128,6 +128,10 @@ public:
    */
   std::string getPath() const;
 
+  void setActive(bool b);
+
+  bool isActive() const;
+
  protected:
 
   Project();
@@ -182,6 +186,8 @@ public:
   Session *session = nullptr;
 
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
+
+  bool active = true;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

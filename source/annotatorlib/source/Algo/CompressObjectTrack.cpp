@@ -14,7 +14,7 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-std::vector<shared_ptr<Annotation>>  CompressObjectTrack::compressSession(Session* session,
+std::vector<shared_ptr<Annotation>>  CompressObjectTrack::compressSession(std::shared_ptr<Session> session,
                                                                           float max_diff) {
   std::vector<shared_ptr<Annotation>> removed_elements;
   for (auto it = session->getObjects().begin(); it != session->getObjects().end(); it++) {
@@ -27,7 +27,7 @@ std::vector<shared_ptr<Annotation>>  CompressObjectTrack::compressSession(Sessio
   return removed_elements;
 }
 
-std::vector<shared_ptr<Annotation>> CompressObjectTrack::compress(Session* session,
+std::vector<shared_ptr<Annotation>> CompressObjectTrack::compress(std::shared_ptr<Session> session,
                                                                   shared_ptr<Object> object,
                                                                   float max_diff) {
   std::vector<shared_ptr<Annotation>> removed_elements;

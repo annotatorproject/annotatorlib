@@ -23,11 +23,11 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
 
   NewAnnotation(const unsigned long newObjectId,
                 const shared_ptr<Class> newObjectClass,
-                Session *session,
+                std::shared_ptr<Session> session,
                 shared_ptr<Frame> frame,
                 float x, float y, float width, float height);
 
-  NewAnnotation(Session *session,
+  NewAnnotation(std::shared_ptr<Session> session,
                 shared_ptr<Object> object_,
                 shared_ptr<Frame> frame_,
                 float x, float y,
@@ -45,7 +45,7 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
   bool newObjectCreated() { return createdNewObject; }
 
  protected:
-  Session *session;
+  std::shared_ptr<Session> session;
   shared_ptr<Annotation> annotation_;
   const bool createNewObject;
   bool createdNewObject = false;

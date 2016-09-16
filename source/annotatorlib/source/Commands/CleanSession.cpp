@@ -1,8 +1,6 @@
 #include <AnnotatorLib/Commands/CleanSession.h>
-#include <AnnotatorLib/Session.h>
 
-AnnotatorLib::Commands::CleanSession::CleanSession(
-    AnnotatorLib::Session* session) {
+AnnotatorLib::Commands::CleanSession::CleanSession( std::shared_ptr<Session> session) {
   this->session = session;
 }
 

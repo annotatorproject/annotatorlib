@@ -19,7 +19,7 @@ class ANNOTATORLIB_API CompressSession : public Command {
  public:
   CompressSession() = delete;
 
-  CompressSession(Session* session);
+  CompressSession(std::shared_ptr<Session> session);
 
   ~CompressSession() {
     removed_annotations.clear();
@@ -30,7 +30,7 @@ class ANNOTATORLIB_API CompressSession : public Command {
   bool undo();
 
  protected:
-  Session* session;
+  std::shared_ptr<Session> session;
 
  private:
   vector<shared_ptr<Annotation>> removed_annotations;

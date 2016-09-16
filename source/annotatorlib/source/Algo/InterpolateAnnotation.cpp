@@ -55,7 +55,7 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(shared_ptr<Frame>
   return annotation;
 }
 
-shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const Session *session,
+shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const std::shared_ptr<Session> session,
                                                     const shared_ptr<Frame> frame,
                                                     const shared_ptr<Object> object,
                                                     bool interpolationsOnly) {
@@ -95,7 +95,7 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const Session *se
 }
 
 std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
-    const Session *session,
+    const std::shared_ptr<Session> session,
     const shared_ptr<Frame> frame,
     bool interpolationsOnly)
 {

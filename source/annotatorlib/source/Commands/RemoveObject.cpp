@@ -3,7 +3,7 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::RemoveObject::RemoveObject(
-    AnnotatorLib::Session *session, shared_ptr<Object> obj)
+    std::shared_ptr<Session> session, shared_ptr<Object> obj)
     : session(session), object(obj) { }
 
 bool AnnotatorLib::Commands::RemoveObject::execute() {

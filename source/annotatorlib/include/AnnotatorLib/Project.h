@@ -75,7 +75,7 @@ public:
 
   ~Project();
 
-  Session *getSession() const;
+  std::shared_ptr<AnnotatorLib::Session>getSession() const;
 
   AnnotatorLib::Storage::AbstractStorage *getStorage() const;
 
@@ -211,7 +211,7 @@ public:
 
   std::string storagePath = "";
 
-  Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session>session = nullptr;
 
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
 

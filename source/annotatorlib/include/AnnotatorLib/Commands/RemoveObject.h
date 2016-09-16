@@ -16,7 +16,7 @@ namespace Commands {
 class ANNOTATORLIB_API RemoveObject : public Command {
  public:
   RemoveObject() = delete;
-  RemoveObject(Session * s, shared_ptr<Object> o);
+  RemoveObject(std::shared_ptr<Session> s, shared_ptr<Object> o);
   RemoveObject(const RemoveObject &other) = delete;
   ~RemoveObject() {}
 
@@ -27,7 +27,7 @@ class ANNOTATORLIB_API RemoveObject : public Command {
   shared_ptr<Object> getObject() { return object;}
 
  protected:
-  Session *session;
+  std::shared_ptr<Session> session;
   const shared_ptr<Object> object;
 };
 }

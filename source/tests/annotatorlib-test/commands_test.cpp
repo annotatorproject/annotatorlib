@@ -16,7 +16,7 @@ class commands_test : public testing::Test {
 };
 
 TEST_F(commands_test, newAnnotation) {
-  Session* session = new Session();
+  std::shared_ptr<Session> session = std::make_shared<Session>();
   ASSERT_EQ(session->getAnnotations().size(), 0);
 
   shared_ptr<Frame> frame = std::make_shared<Frame>(1);
@@ -53,12 +53,10 @@ TEST_F(commands_test, newAnnotation) {
       ASSERT_EQ(session->getAnnotations().size(), i);
       ASSERT_EQ(session->getObjects().size(), i);
   }
-
-  delete session;
 }
 
 TEST_F(commands_test, updateObject) {
-  Session* session = new Session();
+  std::shared_ptr<Session> session = std::make_shared<Session>();
   auto frame = std::make_shared<Frame>(1);
   auto c = std::make_shared<Class>("car");
 
@@ -87,11 +85,10 @@ TEST_F(commands_test, updateObject) {
   ASSERT_EQ(session->getAnnotations().size(), 1);
   ASSERT_EQ(session->getObjects().size(), 1);
 
-  delete session;
 }
 
 TEST_F(commands_test, removeObject) {
-  Session* session = new Session();
+  std::shared_ptr<Session> session = std::make_shared<Session>() ;
 
   auto frame = std::make_shared<Frame>(1);
   auto c = std::make_shared<Class>("car");
@@ -119,11 +116,10 @@ TEST_F(commands_test, removeObject) {
   ASSERT_EQ(session->getAnnotations().size(), 0);
   ASSERT_EQ(session->getObjects().size(), 0);
 
-  delete session;
 }
 
 TEST_F(commands_test, compressObject) {
-  Session* session = new Session();
+  std::shared_ptr<Session> session = std::make_shared<Session>();
   shared_ptr<Object> obj = std::make_shared<Object>();
 
   for (unsigned long i = 0; i < 5; ++i) {
@@ -150,5 +146,4 @@ TEST_F(commands_test, compressObject) {
 
   ASSERT_EQ(obj->getAnnotations().size(), 2);
 
-  delete session;
 }

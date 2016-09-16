@@ -6,7 +6,7 @@
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     const unsigned long newObjectId,
     const shared_ptr<Class> newObjectClass,
-    AnnotatorLib::Session *session,
+    std::shared_ptr<Session> session,
     shared_ptr<Frame> frame,
     float x,
     float y,
@@ -19,7 +19,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    AnnotatorLib::Session *session,
+    std::shared_ptr<Session> session,
     shared_ptr<Object> object,
     shared_ptr<Frame> frame,
     float x, float y, float width, float height) : createNewObject(false) {

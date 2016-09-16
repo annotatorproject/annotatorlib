@@ -4,7 +4,7 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::CompressObject::CompressObject(
-    AnnotatorLib::Session* session, shared_ptr<Object> obj) {
+    std::shared_ptr<Session> session, shared_ptr<Object> obj) {
   this->obj = obj;
   this->session = session;
 }

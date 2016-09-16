@@ -59,13 +59,13 @@ class ANNOTATORLIB_API InterpolateAnnotation {
    * @param interpolationsOnly
    * @return
    */
-  static shared_ptr<Annotation> getInterpolation(const Session *session,
+  static shared_ptr<Annotation> getInterpolation(const std::shared_ptr<Session> session,
                                       const shared_ptr<Frame> frame,
                                       const shared_ptr<Object> object,
                                       bool interpolationsOnly = false);
 
   static std::vector<shared_ptr<Annotation>> getInterpolations(
-      const Session *session,
+      const std::shared_ptr<Session> session,
       shared_ptr<Frame> frame,
       bool interpolationsOnly = false);
 

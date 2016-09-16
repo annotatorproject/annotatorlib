@@ -19,7 +19,7 @@ TEST_F(project_test, saveProject) {
         "testname", "video", "video.mpg", "json", "test.json");
     project->setPath(path);
     project->load();
-    Session *session = project->getSession();
+    std::shared_ptr<Session>session = project->getSession();
     shared_ptr<Object> object = std::make_shared<Object>();
     object->setName("testobject");
     session->addObject(shared_ptr<Object>(object));
@@ -62,7 +62,7 @@ TEST_F(project_test, saveLoadProject) {
         "testname", "video", "video.mpg", "json", "test.json");
     project->setPath(path);
     project->load();
-    Session *session = project->getSession();
+    std::shared_ptr<AnnotatorLib::Session>session = project->getSession();
     session->addObject(shared_ptr<Object>(std::make_shared<Object>()));
 
     Project::save(project, path);

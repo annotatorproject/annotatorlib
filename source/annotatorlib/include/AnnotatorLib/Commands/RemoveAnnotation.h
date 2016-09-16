@@ -16,7 +16,7 @@ namespace Commands {
 
 class ANNOTATORLIB_API RemoveAnnotation : public Command {
  public:
-  RemoveAnnotation(Session * s, shared_ptr<Annotation> a);
+  RemoveAnnotation(std::shared_ptr<AnnotatorLib::Session> s, shared_ptr<Annotation> a);
   ~RemoveAnnotation() {}
 
   bool execute();
@@ -26,7 +26,7 @@ class ANNOTATORLIB_API RemoveAnnotation : public Command {
   shared_ptr<AnnotatorLib::Annotation> getAnnotation();
 
  protected:
-  Session *session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
   shared_ptr<Annotation> annotation;
 };
 }

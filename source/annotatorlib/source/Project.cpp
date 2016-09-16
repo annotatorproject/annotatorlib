@@ -37,12 +37,12 @@ Project::Project(std::string name, ImageSetType imageSetType,
       AnnotatorLib::ImageSetFactory::createImageSet(imageSetType, imageSetPath);
 }
 
-Project::~Project() { delete session; }
+Project::~Project() {}
 
-Session *Project::getSession() const { return session; }
+std::shared_ptr<AnnotatorLib::Session> Project::getSession() const { return session; }
 
 Storage::AbstractStorage *Project::getStorage() const {
-  return (AnnotatorLib::Storage::AbstractStorage *)session;
+  return (AnnotatorLib::Storage::AbstractStorage *)session.get();
 }
 
 std::string Project::getName() const { return name; }
@@ -143,7 +143,7 @@ void Project::loadSession() {
       AnnotatorLib::Storage::StorageFactory::createStorage(this->storageType);
   storage->setPath(this->storagePath);
   storage->open();
-  this->session = (Session *)storage;
+  this->session = (std::shared_ptr<AnnotatorLib::Session>)storage;
   this->time_point_start = std::chrono::system_clock::now();
 }
 
@@ -210,7 +210,7 @@ QDomElement Project::saveRoot(QDomDocument &doc) {
 
 void Project::saveSession() {
   AnnotatorLib::Storage::AbstractStorage *storage =
-      (AnnotatorLib::Storage::AbstractStorage *)session;
+      (AnnotatorLib::Storage::AbstractStorage *)session.get();
   storage->flush();
 }
 

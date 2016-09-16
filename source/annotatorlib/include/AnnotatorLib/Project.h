@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <memory>
 
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
@@ -46,7 +47,7 @@ public:
    * @param storagePath
    * @return
    */
-  static Project *create(std::string name, ImageSetType imageSetType,
+  static std::shared_ptr<AnnotatorLib::Project> create(std::string name, ImageSetType imageSetType,
                          std::string imageSetPath, StorageType storageType,
                          std::string storagePath);
 
@@ -59,7 +60,7 @@ public:
    * @param storagePath
    * @return
    */
-  static Project *create(std::string name, std::string imageSetType,
+  static std::shared_ptr<AnnotatorLib::Project> create(std::string name, std::string imageSetType,
                          std::string imageSetPath, std::string storageType,
                          std::string storagePath);
 
@@ -68,7 +69,7 @@ public:
    * @param path
    * @return project
    */
-  static Project *load(std::string path);
+  static std::shared_ptr<AnnotatorLib::Project> load(std::string path);
 
   ///////////////////////////////////////////////
 
@@ -98,7 +99,7 @@ public:
    * @param project
    * @param path
    */
-  static void save(Project *project, std::string path);
+  static void save(std::shared_ptr<AnnotatorLib::Project> project, std::string path);
 
   /**
    * @brief save
@@ -111,6 +112,12 @@ public:
    * @return
    */
   bool equals(Project *other) const;
+  /**
+   * @brief equals
+   * @param other
+   * @return
+   */
+  bool equals(shared_ptr<Project> other) const;
   /**
    * @brief getImageSetPath
    * @return

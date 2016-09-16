@@ -62,8 +62,8 @@ unsigned long Project::getDuration()
 
 ImageSet *Project::getImageSet() const { return imageSet; }
 
-Project *Project::load(std::string path) {
-  Project *project = new Project();
+std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
+  std::shared_ptr<AnnotatorLib::Project> project = std::shared_ptr<AnnotatorLib::Project>(new Project());
   project->path = path;
   project->load();
 
@@ -147,7 +147,7 @@ void Project::loadSession() {
   this->time_point_start = std::chrono::system_clock::now();
 }
 
-void Project::save(Project *project, std::string path) {
+void Project::save(std::shared_ptr<AnnotatorLib::Project> project, std::string path) {
   project->path = path;
   project->save();
 }
@@ -231,7 +231,7 @@ QDomElement Project::saveProjectSettings(QDomDocument &doc)
 }
 
 
-Project *Project::create(std::string name, ImageSetType imageSetType,
+std::shared_ptr<AnnotatorLib::Project> Project::create(std::string name, ImageSetType imageSetType,
                          std::string imageSetPath, StorageType storageType,
                          std::string storagePath) {
   if (name == "") throw std::runtime_error("Project name is empty");
@@ -239,11 +239,10 @@ Project *Project::create(std::string name, ImageSetType imageSetType,
     throw std::runtime_error("ImageSetType is unknown");
   if (storageType == StorageType::UNKNOWN)
     throw std::runtime_error("StorageType is unknown");
-  return new Project(name, imageSetType, imageSetPath, storageType,
-                     storagePath);
+  return std::shared_ptr<AnnotatorLib::Project>(new Project(name, imageSetType, imageSetPath, storageType, storagePath));
 }
 
-Project *Project::create(std::string name, std::string imageSetType,
+std::shared_ptr<AnnotatorLib::Project> Project::create(std::string name, std::string imageSetType,
                          std::string imageSetPath, std::string storageType,
                          std::string storagePath) {
   AnnotatorLib::ImageSetType iType =
@@ -263,6 +262,10 @@ bool Project::equals(Project *other) const {
   if (this->imageSetType != other->imageSetType) return false;
   if (!this->imageSet->equals(other->imageSet)) return false;
   return true;
+}
+
+bool Project::equals(shared_ptr<Project> other) const {
+  return this->equals(other.get());
 }
 
 std::string Project::getImageSetPath() const { return this->imageSet->getPath(); }

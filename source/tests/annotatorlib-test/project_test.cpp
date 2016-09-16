@@ -15,7 +15,7 @@ class project_test : public testing::Test {
 TEST_F(project_test, saveProject) {
   try {
     std::string path = "test.xml";
-    Project *project = Project::create(
+    std::shared_ptr<AnnotatorLib::Project> project = Project::create(
         "testname", "video", "video.mpg", "json", "test.json");
     project->setPath(path);
     project->load();
@@ -42,7 +42,6 @@ TEST_F(project_test, saveProject) {
     session->addAnnotation(shared_ptr<Annotation>(annotation));
 
     Project::save(project, path);
-    delete project;
   } catch (std::exception &e) {
     e.what();
   }
@@ -50,8 +49,7 @@ TEST_F(project_test, saveProject) {
 
 TEST_F(project_test, loadProject) {
   try {
-    Project *project = Project::load("test.xml");
-    delete project;
+    Project::load("test.xml");
   } catch (std::exception &e) {
     e.what();
   }
@@ -60,7 +58,7 @@ TEST_F(project_test, loadProject) {
 TEST_F(project_test, saveLoadProject) {
   try {
     std::string path = "testsaveload.xml";
-    Project *project = Project::create(
+    std::shared_ptr<AnnotatorLib::Project> project = Project::create(
         "testname", "video", "video.mpg", "json", "test.json");
     project->setPath(path);
     project->load();
@@ -69,33 +67,31 @@ TEST_F(project_test, saveLoadProject) {
 
     Project::save(project, path);
 
-    Project *projectLoaded =
+    std::shared_ptr<AnnotatorLib::Project> projectLoaded =
         Project::load("testsaveload.xml");
 
     ASSERT_EQ(projectLoaded->getName(), "testname");
     ASSERT_TRUE(project->equals(projectLoaded));
 
-    delete project;
-    delete projectLoaded;
   } catch (std::exception &e) {
     e.what();
   }
 }
 
 TEST_F(project_test, equals) {
-  Project *project = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project = Project::create(
       "testname", "video", "video.mpg", "json", "test.json");
-  Project *project1 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project1 = Project::create(
       "testname_", "video", "video.mpg", "json", "test.json");
-  Project *project2 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project2 = Project::create(
       "testname", "images", "video.mpg", "json", "test.json");
-  Project *project3 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project3 = Project::create(
       "testname", "video", "video_.mpg", "json", "test.json");
-  Project *project4 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project4 = Project::create(
       "testname", "video", "video.mpg", "xml", "test.json");
-  Project *project5 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project5 = Project::create(
       "testname", "video", "video.mpg", "json", "test_.json");
-  Project *project6 = Project::create(
+  std::shared_ptr<AnnotatorLib::Project> project6 = Project::create(
       "testname", "video", "video.mpg", "json", "test.json");
 
   ASSERT_FALSE(project->equals(project1));
@@ -106,11 +102,4 @@ TEST_F(project_test, equals) {
 
   ASSERT_TRUE(project->equals(project6));
 
-  delete project;
-  delete project1;
-  delete project2;
-  delete project3;
-  delete project4;
-  delete project5;
-  delete project6;
 }

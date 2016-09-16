@@ -58,10 +58,10 @@ public:
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   getCommands() = 0;
 
-  virtual void setProject(AnnotatorLib::Project *project) {
+  virtual void setProject(std::shared_ptr<AnnotatorLib::Project> project) {
     this->project = project;
   }
-  virtual AnnotatorLib::Project *getProject() { return project; }
+  virtual std::shared_ptr<AnnotatorLib::Project> getProject() { return project; }
 
   /**
  * @brief calculate
@@ -75,7 +75,7 @@ public:
             shared_ptr<AnnotatorLib::Frame> frame) = 0;
 
 protected:
-  AnnotatorLib::Project *project = nullptr;
+  std::shared_ptr<AnnotatorLib::Project> project = nullptr;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

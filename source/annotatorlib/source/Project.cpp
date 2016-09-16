@@ -53,6 +53,7 @@ unsigned long Project::updateDuration()
         std::chrono::system_clock::now() - time_point_start).count() : 0;
   total_duration_sec += elapsed_seconds;
   this->time_point_start = std::chrono::system_clock::now(); //reset
+  return total_duration_sec;
 }
 
 unsigned long Project::getDuration()

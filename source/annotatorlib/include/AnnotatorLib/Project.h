@@ -191,7 +191,7 @@ public:
   /**
    * Updates the total duration by the elapsed time since last update if project is active.
    * @brief updateDuration
-   * @return
+   * @return current duration in seconds
    */
   unsigned long updateDuration();
 

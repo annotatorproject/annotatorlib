@@ -128,8 +128,18 @@ public:
    */
   std::string getPath() const;
 
+  /**
+   * Set a flag that project is active or locked.
+   * Enables/Disables the timer also for updating the total labeling duration.
+   * @brief setActive
+   * @param b
+   */
   void setActive(bool b);
 
+  /**
+   * @brief isActive
+   * @return
+   */
   bool isActive() const;
 
  protected:
@@ -167,6 +177,13 @@ public:
 
   QDomElement saveProjectStatistics(QDomDocument &doc);
 
+  /**
+   * Updates the total duration by the elapsed time since last update if project is active.
+   * @brief updateDuration
+   * @return
+   */
+  unsigned long updateDuration();
+
   ///////////////////////////////////////////////
 
   std::string name = "";
@@ -188,6 +205,7 @@ public:
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
 
   bool active = true;
+
 };
 /************************************************************/
 /* External declarations (package visibility)               */

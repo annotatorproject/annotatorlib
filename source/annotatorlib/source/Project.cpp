@@ -47,13 +47,17 @@ Storage::AbstractStorage *Project::getStorage() const {
 
 std::string Project::getName() const { return name; }
 
-unsigned long Project::getDuration()
+unsigned long Project::updateDuration()
 {
-  int elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now() - time_point_start).count();
+  int elapsed_seconds = active ? std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now() - time_point_start).count() : 0;
   total_duration_sec += elapsed_seconds;
   this->time_point_start = std::chrono::system_clock::now(); //reset
-  return this->total_duration_sec;
+}
+
+unsigned long Project::getDuration()
+{
+  return updateDuration();
 }
 
 ImageSet *Project::getImageSet() const { return imageSet; }
@@ -251,6 +255,7 @@ std::string Project::getPath() const { return path; }
 
 void Project::setActive(bool b)
 {
+  updateDuration();
   active = b;
 }
 

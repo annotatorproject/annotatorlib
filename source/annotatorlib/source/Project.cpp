@@ -133,7 +133,7 @@ void Project::loadRoot(QDomDocument &doc, QDomElement &root,
 
 void Project::loadProjectSettings(QDomElement &root)
 {
-  QDomElement element = root.firstChildElement("Statistics");
+  QDomElement element = root.firstChildElement("Settings");
   if (!element.isNull())
     this->active = element.attribute("active").toStdString() == "1";
 }

@@ -99,6 +99,7 @@ void Project::load() {
 
   loadStorage(root, this->storageType, this->storagePath);
   loadProjectStatistics(root);
+  loadProjectSettings(root);
   loadSession();
 }
 
@@ -128,6 +129,13 @@ void Project::loadRoot(QDomDocument &doc, QDomElement &root,
                        std::string &name) {
   root = doc.documentElement();
   name = root.tagName().toStdString();
+}
+
+void Project::loadProjectSettings(QDomElement &root)
+{
+  QDomElement element = root.firstChildElement("Statistics");
+  if (!element.isNull())
+    this->active = element.attribute("active").toStdString() == "1";
 }
 
 void Project::loadSession() {
@@ -195,6 +203,7 @@ QDomElement Project::saveRoot(QDomDocument &doc) {
   root.appendChild(saveStorage(doc));
   root.appendChild(saveImageSet(doc));
   root.appendChild(saveProjectStatistics(doc));
+  root.appendChild(saveProjectSettings(doc));
 
   return root;
 }
@@ -212,6 +221,15 @@ QDomElement Project::saveProjectStatistics(QDomDocument &doc)
       "duration", QString::number(getDuration()));
   return element;
 }
+
+QDomElement Project::saveProjectSettings(QDomDocument &doc)
+{
+  QDomElement element = doc.createElement("Settings");
+  element.setAttribute(
+      "active", QString(active ? "1" : "0"));
+  return element;
+}
+
 
 Project *Project::create(std::string name, ImageSetType imageSetType,
                          std::string imageSetPath, StorageType storageType,

@@ -162,6 +162,8 @@ public:
 
   void loadRoot(QDomDocument &doc, QDomElement &root, std::string &name);
 
+  void loadProjectSettings(QDomElement &root);
+
   void loadProjectStatistics(QDomElement &root);
 
   /**
@@ -176,6 +178,8 @@ public:
   QDomElement saveRoot(QDomDocument &doc);
 
   QDomElement saveProjectStatistics(QDomDocument &doc);
+
+  QDomElement saveProjectSettings(QDomDocument &doc);
 
   /**
    * Updates the total duration by the elapsed time since last update if project is active.

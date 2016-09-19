@@ -46,7 +46,7 @@ public:
    */
   virtual void setObject(shared_ptr<AnnotatorLib::Object> object) = 0;
 
-  virtual shared_ptr<AnnotatorLib::Object> getObject() = 0;
+  virtual shared_ptr<AnnotatorLib::Object> getObject() const = 0;
 
   /**
    * @brief setLastAnnotation
@@ -61,7 +61,7 @@ public:
   virtual void setProject(std::shared_ptr<AnnotatorLib::Project> project) {
     this->project = project;
   }
-  virtual std::shared_ptr<AnnotatorLib::Project> getProject() { return project; }
+  virtual std::shared_ptr<AnnotatorLib::Project> getProject() const { return project; }
 
   /**
  * @brief calculate

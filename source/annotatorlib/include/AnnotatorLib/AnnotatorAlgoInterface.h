@@ -72,7 +72,8 @@ public:
  */
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame) = 0;
+            shared_ptr<AnnotatorLib::Frame> frame,
+            bool execute_commands = true) = 0;
 
 protected:
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;

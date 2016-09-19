@@ -34,6 +34,16 @@ namespace AnnotatorAlgo {
 class ANNOTATORLIB_API AnnotatorAlgoInterface {
 public:
   /**
+   * @brief isRunning
+   * @return
+   */
+  virtual bool isRunning() const;
+  /**
+   * @brief stop
+   * @return
+   */
+  virtual bool stop();
+  /**
    *
    * @param image
    */

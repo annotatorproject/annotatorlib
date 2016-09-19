@@ -26,8 +26,8 @@ namespace Algo {
 class ANNOTATORLIB_API CompressObjectTrack {
  public:
   static std::vector<shared_ptr<Annotation>> compress(std::shared_ptr<Session> session, shared_ptr<Object> object,
-                                           float max_diff = 3);
-  static std::vector<shared_ptr<Annotation>> compressSession(std::shared_ptr<Session> session, float max_diff = 3);
+                                           float max_diff = 4);
+  static std::vector<shared_ptr<Annotation>> compressSession(std::shared_ptr<Session> session, float max_diff = 4);
 };
 }
 }

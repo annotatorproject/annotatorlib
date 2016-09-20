@@ -7,6 +7,7 @@
 set(target annotatorlib-test)
 message(STATUS "Test ${target}")
 
+include(CodeCoverage)
 
 # 
 # Sources
@@ -69,8 +70,10 @@ target_link_libraries(${target}
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorlib
     libgmock
+	gcov
 )
 
+setup_target_for_coverage(${META_PROJECT_NAME}_coverage ${target} coverage)
 
 # 
 # Compile definitions

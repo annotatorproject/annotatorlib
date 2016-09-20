@@ -84,9 +84,8 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 # 
 # Compiler settings and options
 # 
-
-include(cmake/CompileOptions.cmake)
 include(cmake/3rdParty.cmake)
+include(cmake/CompileOptions.cmake)
 
 include(cmake/Clang-Format.cmake)
 include(cmake/Clang-Tidy.cmake)

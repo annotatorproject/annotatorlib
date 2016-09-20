@@ -35,6 +35,7 @@ addons:
    - libjasper-dev
    - libdc1394-22-dev
    - libboost-all-dev
+   - lcov
 
 install:
  - sudo pip install cpp-coveralls
@@ -78,11 +79,12 @@ before_script:
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DOPTION_BUILD_TESTS=1 -DCMAKE_BUILD_TYPE=Coverage ..
 script:
  - make -j4
 
 after_success:
+  - make annotatorlib_coverage
   - cd ..
   - coveralls --root "." -E ".*/cmake-3.6.0/.*" -E ".*/opencv-3.1.0/.*" -E ".*/build/.*" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
 

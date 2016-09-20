@@ -166,7 +166,7 @@ class ANNOTATORLIB_API Annotation {
   std::vector<shared_ptr<Attribute>> attributes;
   weak_ptr<Annotation> next;
   weak_ptr<Annotation> previous;
-  bool registered;
+  bool registered = false;
 
   // top, left corner, width, height
   float x = 0;

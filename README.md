@@ -1,4 +1,4 @@
-# Annotator Library [ ![Build Status] [travis-image] ] [travis] [_![Coverage_Status] [coveralls-image] ] [coveralls]  [ ![Documentation] [codedocs-image] ] [codedocs] [_![Gitter] [gitter-image] ] [gitter]
+# Annotator Library [![Build Status] [travis-image] ] [travis] [![Coverage_Status] [coveralls-image] ] [coveralls]  [![Documentation] [codedocs-image] ] [codedocs] [![Gitter] [gitter-image] ] [gitter]
 
 
 [travis-image]: https://travis-ci.org/lasmue/annotatorlib.png?branch=master
@@ -33,3 +33,15 @@ cd build
 cmake ..
 make
 ```
+
+## Build coverage
+```sh
+git clone https://github.com/lasmue/annotatorlib
+git submodule update --init --recursive
+cd annotatorlib
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Coverage ..
+make annotatorlib_coverage
+```
+

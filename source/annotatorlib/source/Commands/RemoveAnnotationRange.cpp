@@ -25,6 +25,7 @@ bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
       if (annotation) {
         RemoveAnnotation command(session, annotation);
         removeCommands.push_back(command);
+        command.execute();
       }
     }
   }

@@ -10,6 +10,7 @@ namespace AnnotatorLib {
 
 class Session;
 class Object;
+class Annotation;
 
 namespace Commands {
 
@@ -27,6 +28,7 @@ class ANNOTATORLIB_API RemoveObject : public Command {
   shared_ptr<Object> getObject() { return object;}
 
  protected:
+  std::vector<std::weak_ptr<Annotation>> annotations;
   std::shared_ptr<Session> session;
   const shared_ptr<Object> object;
 };

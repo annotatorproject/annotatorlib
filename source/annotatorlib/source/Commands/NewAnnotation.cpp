@@ -4,40 +4,51 @@
 #include <AnnotatorLib/Session.h>
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    const unsigned long newObjectId,
-    const shared_ptr<Class> newObjectClass,
-    std::shared_ptr<Session> session,
-    shared_ptr<Frame> frame,
-    float x,
-    float y,
-    float width,
-    float height ) : createNewObject(true) {
+    const unsigned long newObjectId, const shared_ptr<Class> newObjectClass,
+    std::shared_ptr<Session> session, shared_ptr<Frame> frame, float x, float y,
+    float width, float height)
+    : createNewObject(true), newObjectId(newObjectId),
+      newObjectClass(newObjectClass) {
 
   this->session = session;
-  this->annotation_ = Annotation::make_shared(frame, std::make_shared<Object>(newObjectId, newObjectClass));
-  this->annotation_->setPosition(x, y, width, height);
+  this->frame = frame;
+  this->x = x;
+  this->y = y;
+  this->width = width;
+  this->height = height;
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
-    std::shared_ptr<Session> session,
-    shared_ptr<Object> object,
-    shared_ptr<Frame> frame,
-    float x, float y, float width, float height) : createNewObject(false) {
+    std::shared_ptr<Session> session, shared_ptr<Object> object,
+    shared_ptr<Frame> frame, float x, float y, float width, float height)
+    : createNewObject(false), newObjectId(0), newObjectClass(0) {
 
   this->session = session;
-  this->annotation_ = Annotation::make_shared(frame, object);
-  this->annotation_->setPosition(x, y, width, height);
+  this->object = object;
+  this->frame = frame;
+  this->x = x;
+  this->y = y;
+  this->width = width;
+  this->height = height;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
-  bool success = session->addAnnotation(annotation_, true);  // adds annotation and register to them
+  if (createNewObject)
+    object = std::make_shared<Object>(newObjectId, newObjectClass);
+
+  this->annotation_ = Annotation::make_shared(frame, object);
+  this->annotation_->setPosition(x, y, width, height);
+  bool success = session->addAnnotation(
+      annotation_, true); // adds annotation and register to them
   if (createNewObject && success)
     createdNewObject = true;
   return success;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
-  this->annotation_ = session->removeAnnotation(annotation_->getId(), true);  // remove annotation from session and unregister
+  this->annotation_ = session->removeAnnotation(
+      annotation_->getId(),
+      true); // remove annotation from session and unregister
   // remove frame and object if empty
   if (!this->annotation_->getObject()->hasAnnotations())
     session->removeObject(this->annotation_->getObject()->getId(), false);

@@ -45,7 +45,12 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
   bool newObjectCreated() { return createdNewObject; }
 
  protected:
-  std::shared_ptr<Session> session;
+  float x, y, width, height;
+  shared_ptr<Session> session;
+  shared_ptr<Object> object;
+  shared_ptr<Frame> frame;
+  const unsigned long newObjectId;
+  const shared_ptr<Class> newObjectClass;
   shared_ptr<Annotation> annotation_;
   const bool createNewObject;
   bool createdNewObject = false;

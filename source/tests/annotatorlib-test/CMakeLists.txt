@@ -7,8 +7,6 @@
 set(target annotatorlib-test)
 message(STATUS "Test ${target}")
 
-include(CodeCoverage)
-
 # 
 # Sources
 # 
@@ -64,17 +62,20 @@ target_include_directories(${target}
 # 
 # Libraries
 # 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Coverage")
+include(CodeCoverage)
+set(libgcov "gcov")
+
+setup_target_for_coverage(${META_PROJECT_NAME}_coverage ${target} coverage)
+endif()
 
 target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorlib
     libgmock
-	gcov
+    ${libgcov}
 )
-
-setup_target_for_coverage(${META_PROJECT_NAME}_coverage ${target} coverage)
-
 # 
 # Compile definitions
 # 

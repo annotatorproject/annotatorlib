@@ -40,7 +40,7 @@ class ANNOTATORLIB_API RemoveAnnotationRange : public Command {
   shared_ptr<AnnotatorLib::Frame> getFrame2();
 
  protected:
-  std::vector<RemoveAnnotation> removeCommands;
+  std::vector<shared_ptr<Annotation>> removedAnnotations;
   std::shared_ptr<AnnotatorLib::Frame> frame1, frame2;
   std::shared_ptr<AnnotatorLib::Object> object;
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;

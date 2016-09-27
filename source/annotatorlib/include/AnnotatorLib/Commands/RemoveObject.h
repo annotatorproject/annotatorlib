@@ -28,7 +28,7 @@ class ANNOTATORLIB_API RemoveObject : public Command {
   shared_ptr<Object> getObject() { return object;}
 
  protected:
-  std::vector<std::weak_ptr<Annotation>> annotations;
+  std::vector<std::shared_ptr<Annotation>> removedAnnotations;
   std::shared_ptr<Session> session;
   const shared_ptr<Object> object;
 };

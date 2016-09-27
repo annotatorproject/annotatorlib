@@ -7,18 +7,18 @@ AnnotatorLib::Commands::RemoveObject::RemoveObject(
     : session(session), object(obj) { }
 
 bool AnnotatorLib::Commands::RemoveObject::execute() {
-  shared_ptr<Object> removed_obj = session->removeObject(object->getId(), false);
-  for (auto& pair : removed_obj->getAnnotations()) {
-      session->removeAnnotation(pair.second.lock()->getId());
-      annotations.push_back(pair.second);
+
+  for (auto& pair : object->getAnnotations()) {
+      removedAnnotations.push_back(pair.second.lock());
   }
+  shared_ptr<Object> removed_obj = session->removeObject(object->getId());
   return removed_obj == object;
 }
 
 bool AnnotatorLib::Commands::RemoveObject::undo() {
 
-  for (auto& annotation : annotations) {
-      session->addAnnotation(annotation.lock(), false);
+  for (auto& annotation : removedAnnotations) {
+      session->addAnnotation(annotation, false);
   }  
   return this->session->addObject(this->object);
 }

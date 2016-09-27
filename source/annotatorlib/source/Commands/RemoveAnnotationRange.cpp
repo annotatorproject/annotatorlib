@@ -16,16 +16,14 @@ AnnotatorLib::Commands::RemoveAnnotationRange::RemoveAnnotationRange(
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
-  removeCommands.clear();
+  removedAnnotations.clear();
   for (unsigned long i = frame1->getFrameNumber();
        i <= frame2->getFrameNumber(); ++i) {
     std::shared_ptr<AnnotatorLib::Frame> frame = session->getFrame(i);
     if (frame) {
-      std::shared_ptr<AnnotatorLib::Annotation> annotation = object->getAnnotation(frame);
+      std::shared_ptr<AnnotatorLib::Annotation> annotation = session->getAnnotation(frame, object);
       if (annotation) {
-        RemoveAnnotation command(session, annotation);
-        removeCommands.push_back(command);
-        command.execute();
+          removedAnnotations.push_back(session->removeAnnotation(annotation->getId(), true));
       }
     }
   }
@@ -33,8 +31,8 @@ bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
 
 bool AnnotatorLib::Commands::RemoveAnnotationRange::undo() {
   bool success = true;
-  for (RemoveAnnotation c : removeCommands) {
-    success = success && c.undo();
+  for (std::shared_ptr<AnnotatorLib::Annotation> annotation : removedAnnotations) {
+      session->addAnnotation(annotation, true);
   }
   return success;
 }

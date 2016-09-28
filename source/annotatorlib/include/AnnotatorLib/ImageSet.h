@@ -29,7 +29,7 @@ class ANNOTATORLIB_API ImageSet {
    * @param frame
    * @return image
    */
-  virtual Image getImage(unsigned int /*in*/ frame) = 0;
+  virtual Image getImage(unsigned long /*in*/ frame) = 0;
 
   virtual bool gotoPosition(unsigned long position) = 0;
 

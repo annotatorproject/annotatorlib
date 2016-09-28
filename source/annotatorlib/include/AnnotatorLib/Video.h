@@ -42,7 +42,7 @@ class ANNOTATORLIB_API Video : public ImageSet {
    * @param frame
    * @return image
    */
-  virtual Image getImage(unsigned int /*in*/ frame) override;
+  virtual Image getImage(unsigned long /*in*/ frame) override;
 
   bool gotoPosition(unsigned long position) override;
 

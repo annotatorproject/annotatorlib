@@ -23,7 +23,7 @@ Camera::Camera(std::string path) {
 
 ImageSetType Camera::getType() { return ImageSetType::CAMERA; }
 
-Image Camera::getImage(unsigned intframe) { return next(); }
+Image Camera::getImage(unsigned long frame) { return next(); }
 
 bool Camera::gotoPosition(unsigned long position) { return true; }
 

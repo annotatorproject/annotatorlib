@@ -158,7 +158,7 @@ shared_ptr<Frame> Session::getFrame(unsigned long number) {
 }
 
 bool Session::addObject(shared_ptr<Object> object, bool add_associated_objects) {
-  if (object) return false;
+  if (!object) return false;
   auto result = objects.insert(std::make_pair(object->getId(), std::move(object)));
   if (result.second && add_associated_objects && result.first->second->hasAnnotations()) {
     // will add all annotations

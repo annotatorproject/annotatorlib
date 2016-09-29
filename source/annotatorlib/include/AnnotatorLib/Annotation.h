@@ -49,6 +49,8 @@ class ANNOTATORLIB_API Annotation {
     if (!a->isTemporary()) {
         a->setRegistered(true);
     }
+    if (a->isTemporary())
+      a->setConfidenceScore(0.0);
     return a;
   }
 
@@ -126,6 +128,9 @@ class ANNOTATORLIB_API Annotation {
   float getVRadius() const;
   void setVRadius(float vradius);
 
+  double getConfidenceScore() const;
+  void setConfidenceScore(double conf);
+
   shared_ptr<Annotation> getNext() const;
   bool hasNext() const;
   shared_ptr<Annotation> getPrevious() const;
@@ -181,6 +186,8 @@ class ANNOTATORLIB_API Annotation {
   float y = 0;
   float width = 0;
   float height = 0;
+
+  double confidence = 1.0;
 
   weak_ptr<Annotation> self_;
 

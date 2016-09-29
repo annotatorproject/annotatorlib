@@ -151,6 +151,16 @@ void Annotation::setVRadius(float vradius) {
   this->height = vradius * 2;
 }
 
+double Annotation::getConfidenceScore() const
+{
+  return confidence;
+}
+
+void Annotation::setConfidenceScore(double conf)
+{
+  confidence = conf;
+}
+
 void Annotation::setSelf(weak_ptr<Annotation> self) { this->self_ = self; }
 
 void Annotation::setNext(weak_ptr<Annotation> next) {

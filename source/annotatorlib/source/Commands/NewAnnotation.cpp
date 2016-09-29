@@ -6,7 +6,7 @@
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     const unsigned long newObjectId, const shared_ptr<Class> newObjectClass,
     std::shared_ptr<Session> session, shared_ptr<Frame> frame, float x, float y,
-    float width, float height)
+    float width, float height, double confidence)
     : createNewObject(true), newObjectId(newObjectId),
       newObjectClass(newObjectClass) {
 
@@ -16,11 +16,12 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->y = y;
   this->width = width;
   this->height = height;
+  this->confidence = confidence;
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     std::shared_ptr<Session> session, shared_ptr<Object> object,
-    shared_ptr<Frame> frame, float x, float y, float width, float height)
+    shared_ptr<Frame> frame, float x, float y, float width, float height, double confidence)
     : createNewObject(false), newObjectId(0), newObjectClass(0) {
 
   this->session = session;
@@ -30,6 +31,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->y = y;
   this->width = width;
   this->height = height;
+  this->confidence = confidence;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::execute() {
@@ -38,6 +40,7 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
 
   this->annotation_ = Annotation::make_shared(frame, object);
   this->annotation_->setPosition(x, y, width, height);
+  this->annotation_->setConfidenceScore(confidence);
   bool success = session->addAnnotation(
       annotation_, true); // adds annotation and register to them
   if (createNewObject && success)

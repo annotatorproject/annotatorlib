@@ -25,13 +25,15 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
                 const shared_ptr<Class> newObjectClass,
                 std::shared_ptr<Session> session,
                 shared_ptr<Frame> frame,
-                float x, float y, float width, float height);
+                float x, float y, float width, float height,
+                double confidence = 1.0);
 
   NewAnnotation(std::shared_ptr<Session> session,
                 shared_ptr<Object> object_,
                 shared_ptr<Frame> frame_,
                 float x, float y,
-                float width, float height);
+                float width, float height,
+                double confidence = 1.0);
 
   NewAnnotation(const NewAnnotation &other) = delete;
 
@@ -46,6 +48,7 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
 
  protected:
   float x, y, width, height;
+  double confidence;
   shared_ptr<Session> session;
   shared_ptr<Object> object;
   shared_ptr<Frame> frame;

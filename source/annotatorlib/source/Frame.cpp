@@ -93,6 +93,10 @@ bool Frame::removeAttribute(const shared_ptr<Attribute> attr) {
 
 unsigned long Frame::getFrameNumber() const { return frame_number; }
 
+unsigned long Frame::getId() const {
+  return getFrameNumber();
+}
+
 bool Frame::equals(Frame *other) const {
   if (this == other) return true;
   if (this->frame_number != other->frame_number) return false;
@@ -102,7 +106,7 @@ bool Frame::equals(Frame *other) const {
 
 // static attributes (if any)
 
-}  // of namespace AnnotatorLib
+}  // End of namespace AnnotatorLib
 
 /************************************************************
  End of Frame class body

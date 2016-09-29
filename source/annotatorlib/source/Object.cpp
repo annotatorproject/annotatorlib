@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <assert.h>
 #include <boost/lexical_cast.hpp>
-
 #include "AnnotatorLib/Object.h"
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Class.h"
@@ -153,7 +152,8 @@ bool Object::addAnnotation(weak_ptr<Annotation> annotation) {
 }
 
 bool Object::removeAnnotation(unsigned int frame_nmb) {
-  auto it = annotations.find(frame_nmb);
+  auto it = annotations.find(frame_nmb);  
+
   if (it != annotations.end()) {
     if (it != annotations.begin() && it != std::prev(annotations.end())) {
       shared_ptr<Annotation> prev = std::prev(it)->second.lock();
@@ -174,6 +174,7 @@ bool Object::removeAnnotation(unsigned int frame_nmb) {
       it->second.lock()->setNext(shared_ptr<Annotation>(nullptr));
       it->second.lock()->setPrevious(shared_ptr<Annotation>(nullptr));
     }
+
     return annotations.erase(it)->first;
   }
   return false;
@@ -200,7 +201,7 @@ Object::getAnnotation(const shared_ptr<Frame> frame) const {
 }
 
 bool Object::appearsInFrame(const shared_ptr<Frame> frame) const {
-  return getAnnotation(frame).get() != nullptr;
+  return getAnnotation(frame) != nullptr;
 }
 
 void Object::findClosestKeyFrames(const shared_ptr<Frame> target_frame,
@@ -237,6 +238,40 @@ void Object::findClosestKeyFrames(const shared_ptr<Frame> target_frame,
   assert(left == nullptr || left->isTemporary() == false);
 }
 
+shared_ptr<Annotation> Object::findClosestRightKeyFrame(const unsigned long target_frame) const
+{
+  std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it =
+      annotations.lower_bound(target_frame);
+
+  if (it != annotations.cend()) {
+    while (it != annotations.cend() &&
+           it->second.lock()->isTemporary()) {
+      it++;
+    }
+  } else {
+    return nullptr;
+  }
+  return it->second.lock();
+}
+
+shared_ptr<Annotation> Object::findClosestLeftKeyFrame(const unsigned long target_frame) const
+{
+  std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it =
+      annotations.lower_bound(target_frame);
+  if (it != annotations.cend()) {
+    while (it != annotations.cbegin()) {
+      if (!it->second.lock()->isTemporary() && it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
+        return it->second.lock();
+      it--;
+    }
+    if (it == annotations.cbegin() && it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
+      return it->second.lock();
+  } else {
+    return std::prev(it)->second.lock();
+  }
+  return nullptr;
+}
+
 void Object::setActive(bool is_active) {
   if (is_active) {
     getLastAnnotation()->setNext(weak_ptr<Annotation>());
@@ -252,7 +287,7 @@ bool Object::isActive() const {
   return getLastAnnotation()->getNext().get() != getLastAnnotation().get();
 }
 
-} // of namespace AnnotatorLib
+} // End of namespace AnnotatorLib
 
 /************************************************************
  End of Object class body

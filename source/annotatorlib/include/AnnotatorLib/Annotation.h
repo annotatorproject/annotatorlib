@@ -1,5 +1,3 @@
-// Copyright 2016 Annotator Team
-
 #ifndef ANNOTATOR_ANNOTATORLIB_ANNOTATION_H
 #define ANNOTATOR_ANNOTATORLIB_ANNOTATION_H
 
@@ -8,6 +6,8 @@
  ************************************************************/
 #include <vector>
 #include <memory>
+#include <iostream>
+#include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
@@ -17,8 +17,8 @@ using std::weak_ptr;
 namespace AnnotatorLib {
 
 class Attribute;
-class Frame;
 class Object;
+class Frame;
 
 /************************************************************/
 
@@ -33,7 +33,7 @@ class ANNOTATORLIB_API Annotation {
 
  public:
   /////////STATICS/////////////
-  static unsigned long genId(const std::shared_ptr<Frame> frame, const std::shared_ptr<Object> obj);
+  static unsigned long genId(const std::shared_ptr<AnnotatorLib::Frame> frame, const std::shared_ptr<Object> obj);
 
   /**
    * Encapsulates private constructors and registers Annotations to Objects and Frames.
@@ -55,7 +55,7 @@ class ANNOTATORLIB_API Annotation {
   /////////CONSTANTS/////////////
 
   const unsigned long id;
-  const shared_ptr<Frame> frame;
+  const shared_ptr<AnnotatorLib::Frame> frame;
   const shared_ptr<Object> object;
   const AnnotationType type;
 
@@ -90,7 +90,7 @@ class ANNOTATORLIB_API Annotation {
   std::vector<shared_ptr<Attribute>> const& getAttributes() const;
   bool addAttribute(shared_ptr<Attribute> attribute);
   bool removeAttribute(shared_ptr<Attribute> attribute);
-  shared_ptr<Frame> getFrame() const;
+  shared_ptr<AnnotatorLib::Frame> getFrame() const;
   shared_ptr<Object> getObject() const;
   AnnotationType getType() const;
 
@@ -140,22 +140,30 @@ class ANNOTATORLIB_API Annotation {
 
   bool setRegistered(bool r);
 
+  friend std::ostream &operator<<(std::ostream &stream, const Annotation &a)
+  {
+    stream << "Annotation: " << a.getId();
+    stream << "; position: " << a.getX() << ", " << a.getY()
+           << "; size: " << a.getWidth() << " x " << a.getHeight() << ")" << std::endl;
+    return stream;
+  }
+
  protected:
 
   ////////PROTECTED CONSTRUCTORS//////////
 
   Annotation() = delete;
 
-  Annotation(shared_ptr<Frame> frame,
+  Annotation(shared_ptr<AnnotatorLib::Frame> frame,
              shared_ptr<Object> obj,
              AnnotationType type = AnnotationType::RECTANGLE);
 
   Annotation( shared_ptr<Annotation> a,
-              shared_ptr<Frame> f,
+              shared_ptr<AnnotatorLib::Frame> f,
               bool isTemporary = false);
 
   Annotation(unsigned long id,
-             const shared_ptr<Frame>& frame,
+             const shared_ptr<AnnotatorLib::Frame>& frame,
              const shared_ptr<Object>& obj,
              const AnnotationType type = AnnotationType::RECTANGLE,
              bool isTemporary = false);
@@ -192,6 +200,7 @@ class ANNOTATORLIB_API Annotation {
   static void unregisterAnnotation(const shared_ptr<Annotation> a);
   static void registerAnnotation(const shared_ptr<Annotation> a, bool r);
 };
+
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/

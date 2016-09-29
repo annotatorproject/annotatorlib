@@ -9,6 +9,8 @@
  Frame class header
  ************************************************************/
 #include <unordered_map>
+#include <iostream>
+#include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include "AnnotatorLib/Annotation.h"
@@ -41,30 +43,38 @@ class ANNOTATORLIB_API Frame {
   bool operator==(const Frame& right) const;
   bool operator!=(const Frame& right) const;
 
-  std::unordered_map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
+  std::unordered_map<unsigned long, std::weak_ptr<Annotation>> const& getAnnotations() const;
   bool hasAnnotations() const;
-  bool addAnnotation(const shared_ptr<Annotation> annotation);
-  bool addAnnotation(const weak_ptr<Annotation> annotation);
+  bool addAnnotation(const std::shared_ptr<Annotation> annotation);
+  bool addAnnotation(const std::weak_ptr<Annotation> annotation);
 
-  std::unordered_map<unsigned long, shared_ptr<Attribute>> const& getAttributes() const;
-  bool addAttribute(const shared_ptr<Attribute> attr);
-  bool removeAttribute(const shared_ptr<Attribute> attr);
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const;
+  bool addAttribute(const std::shared_ptr<Attribute> attr);
+  bool removeAttribute(const std::shared_ptr<Attribute> attr);
 
   unsigned long getFrameNumber() const;
-  unsigned long getId( ) const { return getFrameNumber(); }
+  unsigned long getId( ) const;
 
   bool equals(Frame* other) const;
 
+  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Frame &f)
+  {
+    stream << "Frame: " << f.frame_number << " ";
+    return stream;
+  }
+
  protected:
 
-  bool removeAnnotation(const shared_ptr<Annotation> annotation);
-  bool removeAnnotation(const weak_ptr<Annotation> annotation);
+  bool removeAnnotation(const std::shared_ptr<Annotation> annotation);
+  bool removeAnnotation(const std::weak_ptr<Annotation> annotation);
   bool removeAnnotation(unsigned int id);
 
   const unsigned long frame_number;
-  std::unordered_map<unsigned long, shared_ptr<Attribute>> attributes;
-  std::unordered_map<unsigned long, weak_ptr<Annotation>> annotations;
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> attributes;
+  std::unordered_map<unsigned long, std::weak_ptr<Annotation>> annotations;
+
 };
+
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/

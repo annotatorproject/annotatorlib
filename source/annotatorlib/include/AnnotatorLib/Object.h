@@ -12,6 +12,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <iostream>
 #include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
@@ -103,6 +104,25 @@ friend class Annotation; //private access for register/unregister
                         shared_ptr<Annotation>& left,
                         shared_ptr<Annotation>& right) const;
 
+  /**
+   * Searches for the next annotation which frameNumber is greater or equal to than the target_frame.
+   *
+   * @brief findClosestRightKeyFrame
+   * @param target_frame
+   * @return
+   */
+  shared_ptr<Annotation> findClosestRightKeyFrame(const unsigned long target_frame) const;
+
+  /**
+   * Searches for the next annotation which frameNumber is lower or equal to than the target_frame.
+   *
+   * @brief findClosestLeftKeyFrame
+   * @param target_frame
+   * @return
+   */
+  shared_ptr<Annotation> findClosestLeftKeyFrame(const unsigned long target_frame) const;
+
+
   void setActive(bool active);
 
   /**
@@ -111,6 +131,26 @@ friend class Annotation; //private access for register/unregister
    * @return
    */
   bool isActive() const;
+
+  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Object &o)
+  {
+    stream << "Object: " << o.getId();
+
+    if (o.getClass())
+      stream << "; " << o.getClass();
+
+    stream << "; number annotations: " << o.getAnnotations().size()
+           << std::endl;
+    shared_ptr<Annotation> a = o.getFirstAnnotation();
+    stream << "List of Annotations: " << std::endl;
+    while (a) {
+      stream << *a << std::endl;
+      if (a->getNext() == a)
+        break;
+      a = a->getNext();
+    }
+    return stream;
+  }
 
  protected:
   std::string genName();
@@ -123,6 +163,7 @@ friend class Annotation; //private access for register/unregister
   std::map<unsigned long, weak_ptr<Annotation>> annotations;
 
 };
+
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/

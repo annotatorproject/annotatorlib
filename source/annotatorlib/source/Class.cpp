@@ -38,4 +38,4 @@ bool Class::equals(Class *other) {
   return true;
 }
 
-}  // of namespace AnnotatorLib
+}  // End of namespace AnnotatorLib

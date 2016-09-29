@@ -1,5 +1,3 @@
-// Copyright 2016 Annotator Team
-
 #define Annotator_AnnotatorLib_Annotation_BODY
 
 /************************************************************
@@ -9,6 +7,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <cmath>
+#include <iostream>
 // include associated header file
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"
@@ -239,7 +238,7 @@ void Annotation::unregisterAnnotation(const shared_ptr<Annotation> a) {
   a->setRegistered(false);
 }
 
-} // of namespace AnnotatorLib
+} // End of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class body

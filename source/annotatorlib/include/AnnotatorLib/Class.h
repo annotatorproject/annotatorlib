@@ -1,8 +1,11 @@
 #ifndef ANNOTATOR_ANNOTATORLIB_CLASS_H
 #define ANNOTATOR_ANNOTATORLIB_CLASS_H
 
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <string>
+#include <iostream>
+#include <memory>
+
+#include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
 
@@ -51,6 +54,19 @@ class ANNOTATORLIB_API Class {
   std::string getName() const;
 
   bool equals(Class *other);
+
+  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Class &c)
+  {
+    stream << "Class: " << c.getId() << "," << c.getName() << " ";
+    return stream;
+  }
+
+  friend std::ostream &operator<<(std::ostream &stream, const std::shared_ptr<AnnotatorLib::Class> &c)
+  {
+    if (c)
+      stream << *c;
+    return stream;
+  }
 
  private:
   static std::string genName();

@@ -11,8 +11,8 @@ AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
-  this->annotation = session->removeAnnotation(annotation->getId());
-  return annotation.get();
+  shared_ptr<Annotation> removedAnnotation = session->removeAnnotation(annotation->getId());
+  return annotation == removedAnnotation;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotation::undo() {

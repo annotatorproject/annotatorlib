@@ -28,7 +28,10 @@ class ANNOTATORLIB_API RemoveAnnotationRange : public Command {
    * @param f1 the first frame in range
    * @param f2 the last frame in range
    */
-  RemoveAnnotationRange(std::shared_ptr<AnnotatorLib::Session> s, shared_ptr<Object> o, shared_ptr<Frame> f1, shared_ptr<Frame> f2);
+  RemoveAnnotationRange(std::shared_ptr<AnnotatorLib::Session> s, shared_ptr<Object> o,
+                        unsigned long lowerFrameNmb, unsigned long  upperFrameNmb);
+  RemoveAnnotationRange(std::shared_ptr<AnnotatorLib::Session> s, shared_ptr<Object> o,
+                        shared_ptr<AnnotatorLib::Frame> f1, shared_ptr<AnnotatorLib::Frame>  f2);
   ~RemoveAnnotationRange() {}
 
   bool execute();
@@ -36,12 +39,12 @@ class ANNOTATORLIB_API RemoveAnnotationRange : public Command {
   bool undo();
 
   shared_ptr<AnnotatorLib::Object> getObject();
-  shared_ptr<AnnotatorLib::Frame> getFrame1();
-  shared_ptr<AnnotatorLib::Frame> getFrame2();
+  unsigned long getFrame1();
+  unsigned long getFrame2();
 
  protected:
   std::vector<shared_ptr<Annotation>> removedAnnotations;
-  std::shared_ptr<AnnotatorLib::Frame> frame1, frame2;
+  unsigned long frame1, frame2;
   std::shared_ptr<AnnotatorLib::Object> object;
   std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 };

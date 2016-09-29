@@ -24,9 +24,6 @@ TEST_F(annotation_test, genId) {
   shared_ptr<Annotation> annotation1 = Annotation::make_shared(make_shared<Frame>(1), obj, AnnotationType::RECTANGLE);
   shared_ptr<Annotation> annotation2 = Annotation::make_shared(make_shared<Frame>(2), obj, AnnotationType::RECTANGLE);
 
-  cout << "shared_ptr<Annotation> 1 id:" << annotation1->getId() << endl;
-  cout << "shared_ptr<Annotation> 2 id:" << annotation2->getId() << endl;
-
   ASSERT_LT(annotation1->getId(), annotation2->getId());
 }
 
@@ -108,6 +105,7 @@ TEST_F(annotation_test, annotationLifeTime) {
   ASSERT_EQ(obj->getAnnotations().size(), 0);
   ASSERT_EQ(frame1->getAnnotations().size(), 0);
   shared_ptr<Annotation> annotation1 = Annotation::make_shared(frame1, obj, AnnotationType::RECTANGLE);
+  annotation1->setHRadius(10.f);
   ASSERT_EQ(obj->getAnnotations().size(), 1);
   ASSERT_EQ(frame1->getAnnotations().size(), 1);
   ASSERT_EQ(frame2->getAnnotations().size(), 0);

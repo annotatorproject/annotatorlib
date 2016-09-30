@@ -49,6 +49,8 @@ public:
 
   virtual shared_ptr<AnnotatorLib::Object> getObject() const = 0;
 
+  virtual bool requiresObject() const { return true; }
+
   /**
    * @brief setLastAnnotation
    * @param annotation

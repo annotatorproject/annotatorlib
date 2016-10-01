@@ -36,6 +36,12 @@ addons:
    - libdc1394-22-dev
    - libboost-all-dev
    - lcov
+   - texlive-fonts-recommended
+   - texlive-latex-extra
+   - texlive-fonts-extra
+   - dvipng
+   - texlive-latex-recommended
+   - texlive-full
 
 install:
  - sudo pip install cpp-coveralls
@@ -79,7 +85,7 @@ before_script:
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -DOPTION_BUILD_TESTS=1 -DCMAKE_BUILD_TYPE=Coverage ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DOPTION_BUILD_TESTS=1 -DOPTION_BUILD_DOCS=1 -DCMAKE_BUILD_TYPE=Coverage ..
 script:
  - make -j4
 
@@ -87,6 +93,15 @@ after_success:
   - make annotatorlib_coverage
   - cd ..
   - coveralls --root "." -E ".*/cmake-3.6.0/.*" -E ".*/opencv-3.1.0/.*" -E ".*/build/gtest/.*" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
+
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  file:
+  - $TRAVIS_BUILD_DIR/build/docs/manual/annotatorlib.pdf
+  skip_cleanup: true
+  on:
+    tags: true
 
 notifications:
   webhooks:

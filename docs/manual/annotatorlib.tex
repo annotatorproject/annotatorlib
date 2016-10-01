@@ -1,0 +1,64 @@
+
+\documentclass{article}
+
+\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,
+	showstringspaces=false,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue}
+}
+
+\begin{document}
+
+\title{annotatorlib: Library to annotate objects in image sets.}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+annotatorlib is annotation library, that provides the following features:
+
+\begin{itemize}
+  \item Cross Platform
+  \begin{itemize}
+    \item Windows
+    \item Linux
+    \item Mac
+  \end{itemize}
+  \item C++ library
+  \item multiple storage export formats
+\end{itemize}
+
+\end{abstract}
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+\section{Build}
+\subsection{Prerequirements for Ubuntu}
+\begin{lstlisting}[language=bash,caption={requrired libraries}]
+sudo apt-get install libboost-system-dev libboost-filesystem-dev qtbase5-dev
+\end{lstlisting}
+\begin{lstlisting}[language=bash,caption={requrired applications}]
+sudo apt-get install git cmake
+\end{lstlisting}
+
+\subsection{Download git repository}
+\begin{lstlisting}[language=bash,caption={git}]
+git clone https://github.com/lasmue/annotatorlib
+cd annotatorlib
+git submodule update --init --recursive
+\end{lstlisting}
+
+\subsection{Build annotatorlib}
+\begin{lstlisting}[language=bash,caption={build}]
+mkdir build
+cd build
+cmake ..
+make
+\end{lstlisting}
+
+\end{document}

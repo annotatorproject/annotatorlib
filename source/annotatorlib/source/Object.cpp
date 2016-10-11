@@ -193,8 +193,13 @@ std::vector<shared_ptr<Frame>> Object::getFrames() const {
 }
 
 shared_ptr<Annotation>
-Object::getAnnotation(const shared_ptr<Frame> frame) const {
-  auto it = annotations.find(frame->getFrameNumber());
+Object::getAnnotation(shared_ptr<Frame> frame) const {
+  return getAnnotation(frame->getFrameNumber());
+}
+
+shared_ptr<Annotation>
+Object::getAnnotation(unsigned long frame) const {
+  auto it = annotations.find(frame);
   if (it != annotations.end())
     return it->second.lock();
   return shared_ptr<Annotation>(nullptr);

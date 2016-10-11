@@ -13,6 +13,8 @@ message(STATUS "Test ${target}")
 
 set(sources
     main.cpp
+    #algo_test.cpp
+    algo_smooth_test.cpp
     annotation_test.cpp
     attribute_test.cpp
     commands_test.cpp

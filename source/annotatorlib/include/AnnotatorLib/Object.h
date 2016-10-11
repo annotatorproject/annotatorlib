@@ -91,6 +91,7 @@ friend class Annotation; //private access for register/unregister
    * @return
    */
   shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame> frame) const;
+  shared_ptr<Annotation> getAnnotation(unsigned long frame) const;
 
   /**
    * @brief findClosestKeyFrames

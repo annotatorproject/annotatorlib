@@ -41,7 +41,7 @@ bool Frame::operator==(const Frame &right) const {
 }
 
 bool Frame::operator!=(const Frame &right) const {
-  return frame_number != right.frame_number;
+    return frame_number != right.frame_number;
 }
 
 std::unordered_map<unsigned long, weak_ptr<Annotation>> const& Frame::getAnnotations() const { return annotations; }

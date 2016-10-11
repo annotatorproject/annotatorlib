@@ -10,23 +10,28 @@
 
 // include associated header file
 #include "AnnotatorLib/Algo/InterpolateAnnotation.h"
-#include <assert.h>
-#include <algorithm>
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Session.h"
 
+#include <algorithm>
+#include <assert.h>
+
 namespace AnnotatorLib {
 namespace Algo {
 
-shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(shared_ptr<Frame> frame,
-                                                    shared_ptr<Annotation> prev,
-                                                    shared_ptr<Annotation> next) {
-  if (!prev) return nullptr;
+shared_ptr<Annotation>
+InterpolateAnnotation::getInterpolation(shared_ptr<Frame> frame,
+                                        shared_ptr<Annotation> prev,
+                                        shared_ptr<Annotation> next) {
+  if (!prev)
+    return nullptr;
 
-  shared_ptr<Annotation> annotation = Annotation::make_shared(prev, frame, true);
+  shared_ptr<Annotation> annotation =
+      Annotation::make_shared(prev, frame, true);
 
-  if (!next) return annotation;
+  if (!next)
+    return annotation;
 
   unsigned long startFrame = prev->getFrame()->getFrameNumber();
   unsigned long endFrame = next->getFrame()->getFrameNumber();
@@ -55,10 +60,9 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(shared_ptr<Frame>
   return annotation;
 }
 
-shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const std::shared_ptr<Session> session,
-                                                    const shared_ptr<Frame> frame,
-                                                    const shared_ptr<Object> object,
-                                                    bool interpolationsOnly) {
+shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
+    const std::shared_ptr<Session> session, const shared_ptr<Frame> frame,
+    const shared_ptr<Object> object, bool interpolationsOnly) {
   assert(frame);
   assert(object);
   // is it the first frame of the object?
@@ -94,16 +98,17 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(const std::shared
   return shared_ptr<Annotation>(nullptr);
 }
 
-std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
-    const std::shared_ptr<Session> session,
-    const shared_ptr<Frame> frame,
-    bool interpolationsOnly)
-{
-  const std::unordered_map<unsigned long, std::shared_ptr<Object>>& objects_map = session->getObjects();
+std::vector<shared_ptr<Annotation>>
+InterpolateAnnotation::getInterpolations(const std::shared_ptr<Session> session,
+                                         const shared_ptr<Frame> frame,
+                                         bool interpolationsOnly) {
+  const std::unordered_map<unsigned long, std::shared_ptr<Object>>
+      &objects_map = session->getObjects();
   std::vector<shared_ptr<Annotation>> return_annotations;
 
-  for (auto& o : objects_map) {
-    shared_ptr<Annotation> a = getInterpolation(session, frame, o.second, interpolationsOnly);
+  for (auto &o : objects_map) {
+    shared_ptr<Annotation> a =
+        getInterpolation(session, frame, o.second, interpolationsOnly);
 
     if (a != nullptr) {
       return_annotations.push_back(a);
@@ -113,5 +118,5 @@ std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
   return return_annotations;
 }
 
-}  // of namespace Algo
-}  // of namespace AnnotatorLib
+} // of namespace Algo
+} // of namespace AnnotatorLib

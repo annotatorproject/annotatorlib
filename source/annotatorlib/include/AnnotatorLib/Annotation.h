@@ -4,12 +4,12 @@
 /************************************************************
  Annotation class header
  ************************************************************/
-#include <vector>
-#include <memory>
-#include <iostream>
-#include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include <iostream>
+#include <memory>
+#include <vector>
 
 using std::shared_ptr;
 using std::weak_ptr;
@@ -28,26 +28,32 @@ class Frame;
  */
 class ANNOTATORLIB_API Annotation {
 
- friend class Object;   //an object manages the order of annotations (setNext, setPrevious)
- friend class Session;  //Session needs to register/unregister
+  friend class Object; // an object manages the order of annotations (setNext,
+                       // setPrevious)
+  friend class Session; // Session needs to register/unregister
 
- public:
+public:
   /////////STATICS/////////////
-  static unsigned long genId(const std::shared_ptr<AnnotatorLib::Frame> frame, const std::shared_ptr<Object> obj);
+  static unsigned long genId(const std::shared_ptr<AnnotatorLib::Frame> frame,
+                             const std::shared_ptr<Object> obj);
 
   /**
-   * Encapsulates private constructors and registers Annotations to Objects and Frames.
+   * Encapsulates private constructors and registers Annotations to Objects and
+   * Frames.
    */
-  template<typename... _Args>
-  static shared_ptr<Annotation> make_shared(_Args&&... __args) {
-    // we need this struct to give std::make_shared(...) access to the private/protected constructors of Annotation
+  template <typename... _Args>
+  static shared_ptr<Annotation> make_shared(_Args &&... __args) {
+    // we need this struct to give std::make_shared(...) access to the
+    // private/protected constructors of Annotation
     struct make_shared_enabler : public Annotation {
-      make_shared_enabler(_Args &&... args) : Annotation(std::forward<_Args>(args)...) {}
+      make_shared_enabler(_Args &&... args)
+          : Annotation(std::forward<_Args>(args)...) {}
     };
-    shared_ptr<Annotation> a = std::make_shared<make_shared_enabler>(std::forward<_Args>(__args)...);
+    shared_ptr<Annotation> a =
+        std::make_shared<make_shared_enabler>(std::forward<_Args>(__args)...);
     a->setSelf(a);
     if (!a->isTemporary()) {
-        a->setRegistered(true);
+      a->setRegistered(true);
     }
     if (a->isTemporary())
       a->setConfidenceScore(0.0);
@@ -69,7 +75,7 @@ class ANNOTATORLIB_API Annotation {
     }
   }
 
-  void operator=(const Annotation&) = delete;
+  void operator=(const Annotation &) = delete;
 
   /**
    * @brief operator >: comparing is based on frame-number
@@ -89,7 +95,7 @@ class ANNOTATORLIB_API Annotation {
   unsigned long getId() const;
   const bool is_temporary;
 
-  std::vector<shared_ptr<Attribute>> const& getAttributes() const;
+  std::vector<shared_ptr<Attribute>> const &getAttributes() const;
   bool addAttribute(shared_ptr<Attribute> attribute);
   bool removeAttribute(shared_ptr<Attribute> attribute);
   shared_ptr<AnnotatorLib::Frame> getFrame() const;
@@ -128,8 +134,8 @@ class ANNOTATORLIB_API Annotation {
   float getVRadius() const;
   void setVRadius(float vradius);
 
-  double getConfidenceScore() const;
-  void setConfidenceScore(double conf);
+  float getConfidenceScore();
+  void setConfidenceScore(float conf);
 
   shared_ptr<Annotation> getNext() const;
   bool hasNext() const;
@@ -145,31 +151,27 @@ class ANNOTATORLIB_API Annotation {
 
   bool setRegistered(bool r);
 
-  friend std::ostream &operator<<(std::ostream &stream, const Annotation &a)
-  {
+  friend std::ostream &operator<<(std::ostream &stream, const Annotation &a) {
     stream << "Annotation: " << a.getId();
     stream << "; position: " << a.getX() << ", " << a.getY()
-           << "; size: " << a.getWidth() << " x " << a.getHeight() << ")" << std::endl;
+           << "; size: " << a.getWidth() << " x " << a.getHeight() << ")"
+           << std::endl;
     return stream;
   }
 
- protected:
-
+protected:
   ////////PROTECTED CONSTRUCTORS//////////
 
   Annotation() = delete;
 
-  Annotation(shared_ptr<AnnotatorLib::Frame> frame,
-             shared_ptr<Object> obj,
+  Annotation(shared_ptr<AnnotatorLib::Frame> frame, shared_ptr<Object> obj,
              AnnotationType type = AnnotationType::RECTANGLE);
 
-  Annotation( shared_ptr<Annotation> a,
-              shared_ptr<AnnotatorLib::Frame> f,
-              bool isTemporary = false);
+  Annotation(shared_ptr<Annotation> a, shared_ptr<AnnotatorLib::Frame> f,
+             bool isTemporary = false);
 
-  Annotation(unsigned long id,
-             const shared_ptr<AnnotatorLib::Frame>& frame,
-             const shared_ptr<Object>& obj,
+  Annotation(unsigned long id, const shared_ptr<AnnotatorLib::Frame> &frame,
+             const shared_ptr<Object> &obj,
              const AnnotationType type = AnnotationType::RECTANGLE,
              bool isTemporary = false);
   Annotation(const Annotation &obj) = delete;
@@ -187,12 +189,18 @@ class ANNOTATORLIB_API Annotation {
   float width = 0;
   float height = 0;
 
-  double confidence = 1.0;
+  /**
+   * @brief confidence
+   * a value between 0 and 1.
+   * 1 means it was set manually.
+   * 0 means it is just interpolated but not accurate.
+   * Values in between can be set or used by algorithms.
+   */
+  float confidence = 0.0f;
 
   weak_ptr<Annotation> self_;
 
- private:
-
+private:
   /////////////PRIVATE METHODS/////////////
 
   void setPrevious(weak_ptr<Annotation> previous);
@@ -214,7 +222,7 @@ class ANNOTATORLIB_API Annotation {
 
 /* Inline functions                                         */
 
-}  // of namespace AnnotatorLib
+} // of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class header

@@ -151,13 +151,11 @@ void Annotation::setVRadius(float vradius) {
   this->height = vradius * 2;
 }
 
-double Annotation::getConfidenceScore() const
-{
-  return confidence;
-}
+float Annotation::getConfidenceScore() { return confidence; }
 
-void Annotation::setConfidenceScore(double conf)
-{
+void Annotation::setConfidenceScore(float conf) {
+  assert(conf >= 0.0f);
+  assert(conf <= 1.0f);
   confidence = conf;
 }
 

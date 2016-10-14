@@ -1,9 +1,9 @@
 #ifndef ANNOTATOR_ANNOTATORLIB_CLASS_H
 #define ANNOTATOR_ANNOTATORLIB_CLASS_H
 
-#include <string>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <AnnotatorLib/annotatorlib_api.h>
 
@@ -55,16 +55,15 @@ class ANNOTATORLIB_API Class {
 
   bool equals(Class *other);
 
-  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Class &c)
-  {
+  friend std::ostream &operator<<(std::ostream &stream,
+                                  const AnnotatorLib::Class &c) {
     stream << "Class: " << c.getId() << "," << c.getName() << " ";
     return stream;
   }
 
-  friend std::ostream &operator<<(std::ostream &stream, const std::shared_ptr<AnnotatorLib::Class> &c)
-  {
-    if (c)
-      stream << *c;
+  friend std::ostream &operator<<(
+      std::ostream &stream, const std::shared_ptr<AnnotatorLib::Class> &c) {
+    if (c) stream << *c;
     return stream;
   }
 

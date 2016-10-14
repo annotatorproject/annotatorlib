@@ -35,8 +35,19 @@ class AbstractStorage;
  *
  */
 class ANNOTATORLIB_API Project {
-
-public:
+ public:
+  /**
+   * @brief create
+   * @param name
+   * @param imageSetType
+   * @param imageSetPath
+   * @param storageType
+   * @param storagePath
+   * @return
+   */
+  static std::shared_ptr<AnnotatorLib::Project> create(
+      std::string name, ImageSetType imageSetType, std::string imageSetPath,
+      StorageType storageType, std::string storagePath);
 
   /**
    * @brief create
@@ -47,22 +58,11 @@ public:
    * @param storagePath
    * @return
    */
-  static std::shared_ptr<AnnotatorLib::Project> create(std::string name, ImageSetType imageSetType,
-                         std::string imageSetPath, StorageType storageType,
-                         std::string storagePath);
-
-  /**
-   * @brief create
-   * @param name
-   * @param imageSetType
-   * @param imageSetPath
-   * @param storageType
-   * @param storagePath
-   * @return
-   */
-  static std::shared_ptr<AnnotatorLib::Project> create(std::string name, std::string imageSetType,
-                         std::string imageSetPath, std::string storageType,
-                         std::string storagePath);
+  static std::shared_ptr<AnnotatorLib::Project> create(std::string name,
+                                                       std::string imageSetType,
+                                                       std::string imageSetPath,
+                                                       std::string storageType,
+                                                       std::string storagePath);
 
   /**
    *
@@ -75,7 +75,7 @@ public:
 
   ~Project();
 
-  std::shared_ptr<AnnotatorLib::Session>getSession() const;
+  std::shared_ptr<AnnotatorLib::Session> getSession() const;
 
   AnnotatorLib::Storage::AbstractStorage *getStorage() const;
 
@@ -99,7 +99,8 @@ public:
    * @param project
    * @param path
    */
-  static void save(std::shared_ptr<AnnotatorLib::Project> project, std::string path);
+  static void save(std::shared_ptr<AnnotatorLib::Project> project,
+                   std::string path);
 
   /**
    * @brief save
@@ -150,7 +151,6 @@ public:
   bool isActive() const;
 
  protected:
-
   Project();
 
   Project(std::string name, ImageSetType imageSetType, std::string imageSetPath,
@@ -189,7 +189,8 @@ public:
   QDomElement saveProjectSettings(QDomDocument &doc);
 
   /**
-   * Updates the total duration by the elapsed time since last update if project is active.
+   * Updates the total duration by the elapsed time since last update if project
+   * is active.
    * @brief updateDuration
    * @return current duration in seconds
    */
@@ -211,12 +212,11 @@ public:
 
   std::string storagePath = "";
 
-  std::shared_ptr<AnnotatorLib::Session>session = nullptr;
+  std::shared_ptr<AnnotatorLib::Session> session = nullptr;
 
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
 
   bool active = true;
-
 };
 /************************************************************/
 /* External declarations (package visibility)               */

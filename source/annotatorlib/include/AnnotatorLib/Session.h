@@ -8,18 +8,18 @@
 /************************************************************
  Session class header
  ************************************************************/
-#include <vector>
-#include <unordered_map>
-#include <memory> //smart pointer
-#include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/AnnotatorAlgoInterface.h>
+#include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/Attribute.h>
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Commands/Command.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <memory>  //smart pointer
+#include <unordered_map>
+#include <vector>
 
 using std::shared_ptr;
 using std::unordered_map;
@@ -40,22 +40,31 @@ class ANNOTATORLIB_API Session {
   virtual void clearAll();
 
   // Attributes
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const { return attributes;}
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const&
+  getAttributes() const {
+    return attributes;
+  }
   /**
    * @brief Add an attribute to the session.
    * @param c
    * @return
    */
   virtual bool addAttribute(const shared_ptr<Attribute> attribute);
-  virtual shared_ptr<Attribute> removeAttribute(Attribute *attribute);
+  virtual shared_ptr<Attribute> removeAttribute(Attribute* attribute);
   virtual shared_ptr<Attribute> getAttribute(unsigned long id) const;
 
   // Annotations
 
-//  virtual std::pair<std::unordered_map<unsigned long, std::shared_ptr<Annotation>>::const_iterator,
-//  std::unordered_map<unsigned long, std::shared_ptr<Annotation>>::const_iterator> getAnnotationsIterator() const;
+  //  virtual std::pair<std::unordered_map<unsigned long,
+  //  std::shared_ptr<Annotation>>::const_iterator,
+  //  std::unordered_map<unsigned long,
+  //  std::shared_ptr<Annotation>>::const_iterator> getAnnotationsIterator()
+  //  const;
 
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Annotation>> const& getAnnotations() const { return annotations;}
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Annotation>> const&
+  getAnnotations() const {
+    return annotations;
+  }
 
   /**
    * @brief Will add the given annotation, the associated object
@@ -63,13 +72,19 @@ class ANNOTATORLIB_API Session {
    * @param annotation
    * @return
    */
-  virtual bool addAnnotation(shared_ptr<Annotation> annotation, bool add_associated_objects = true);
-  virtual shared_ptr<Annotation> removeAnnotation(unsigned long id, bool unregister = true);
+  virtual bool addAnnotation(shared_ptr<Annotation> annotation,
+                             bool add_associated_objects = true);
+  virtual shared_ptr<Annotation> removeAnnotation(unsigned long id,
+                                                  bool unregister = true);
   virtual shared_ptr<Annotation> getAnnotation(unsigned long id) const;
-  virtual shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame>, const shared_ptr<Object>) const;
+  virtual shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame>,
+                                               const shared_ptr<Object>) const;
 
   // Classes
-  virtual std::unordered_map<std::string, std::shared_ptr<Class>> const& getClasses() const { return classes; }
+  virtual std::unordered_map<std::string, std::shared_ptr<Class>> const&
+  getClasses() const {
+    return classes;
+  }
 
   /**
    * @brief Add a class to the session.
@@ -77,7 +92,7 @@ class ANNOTATORLIB_API Session {
    * @return
    */
   virtual bool addClass(shared_ptr<Class> c);
-  virtual shared_ptr<Class> removeClass(Class *c);
+  virtual shared_ptr<Class> removeClass(Class* c);
   /**
    * Get class by name.
    * complexity: O(1)
@@ -96,7 +111,10 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Class> getClass(unsigned long id) const;
 
   // Frames
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const& getFrames() const { return frames; }
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const&
+  getFrames() const {
+    return frames;
+  }
 
   /**
    * @brief Will add the given frame and all annotations, objects
@@ -104,8 +122,10 @@ class ANNOTATORLIB_API Session {
    * @param frame
    * @return
    */
-  virtual bool addFrame(shared_ptr<Frame> frame, bool add_associated_objects = true);
-  virtual shared_ptr<Frame> removeFrame(unsigned long frame_nmb, bool remove_annotations = true);
+  virtual bool addFrame(shared_ptr<Frame> frame,
+                        bool add_associated_objects = true);
+  virtual shared_ptr<Frame> removeFrame(unsigned long frame_nmb,
+                                        bool remove_annotations = true);
   /**
    * @brief getFrame by given number.
    * If it does not exist we create it.
@@ -121,10 +141,15 @@ class ANNOTATORLIB_API Session {
    * @param object
    * @return
    */
-  virtual bool addObject(shared_ptr<Object> object, bool add_associated_objects = true);
-  virtual shared_ptr<Object> removeObject(unsigned long id, bool remove_annotations = true);
+  virtual bool addObject(shared_ptr<Object> object,
+                         bool add_associated_objects = true);
+  virtual shared_ptr<Object> removeObject(unsigned long id,
+                                          bool remove_annotations = true);
   virtual shared_ptr<Object> getObject(unsigned long id) const;
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const& getObjects() const { return objects; }
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const&
+  getObjects() const {
+    return objects;
+  }
 
   /**
    * Executes the command and manages all involved memory.
@@ -132,7 +157,8 @@ class ANNOTATORLIB_API Session {
    * @param command
    * @return
    */
-  virtual shared_ptr<Commands::Command> execute(shared_ptr<AnnotatorLib::Commands::Command> command);
+  virtual shared_ptr<Commands::Command> execute(
+      shared_ptr<AnnotatorLib::Commands::Command> command);
   virtual shared_ptr<Commands::Command> redo();
   virtual shared_ptr<Commands::Command> undo();
 
@@ -146,7 +172,7 @@ class ANNOTATORLIB_API Session {
   unsigned int commandIndex = 0;
   std::vector<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
 
-  AnnotatorAlgo::AnnotatorAlgoInterface *annotatorAlgo;
+  AnnotatorAlgo::AnnotatorAlgoInterface* annotatorAlgo;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

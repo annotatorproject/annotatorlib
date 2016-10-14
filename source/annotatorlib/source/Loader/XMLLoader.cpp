@@ -9,10 +9,10 @@
  ************************************************************/
 #include <QDomDocument>
 #include <QFile>
-#include <memory>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
+#include <memory>
 
 // include associated header file
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
@@ -110,7 +110,8 @@ void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,
 
   if (frame != nullptr && object != nullptr) {
     shared_ptr<Annotation> annotation = Annotation::make_shared(
-        frame, object, AnnotationType::RECTANGLE);  // TODO: read type from file!
+        frame, object,
+        AnnotationType::RECTANGLE);  // TODO: read type from file!
 
     annotation->setPosition(x, y, width, height);
     session->addAnnotation(shared_ptr<Annotation>(annotation), true);

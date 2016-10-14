@@ -53,30 +53,24 @@ void JSONLoader::loadAttributes(QJsonObject &json, Session *session) {
     QString type = attribute["type"].toString();
 
     // TODO: default value
-    AttributeType t =
-        AttributeTypeFromString(type.toStdString());
-    Attribute *a =
-        new Attribute(id, t, name.toStdString());
+    AttributeType t = AttributeTypeFromString(type.toStdString());
+    Attribute *a = new Attribute(id, t, name.toStdString());
     AttributeValue *av;
     switch (t) {
       case AttributeType::STRING:
-        av = new AttributeValue(
-            attribute["default"].toString().toStdString());
+        av = new AttributeValue(attribute["default"].toString().toStdString());
         break;
       case AttributeType::INTEGER:
-        av = new AttributeValue(
-            attribute["default"].toString().toLong());
+        av = new AttributeValue(attribute["default"].toString().toLong());
         break;
       case AttributeType::FLOAT:
-        av = new AttributeValue(
-            attribute["default"].toString().toDouble());
+        av = new AttributeValue(attribute["default"].toString().toDouble());
         break;
       case AttributeType::BOOLEAN:
         av = new AttributeValue(attribute["default"].toBool());
         break;
       default:
-        av = new AttributeValue(
-            attribute["default"].toString().toStdString());
+        av = new AttributeValue(attribute["default"].toString().toStdString());
     };
     a->setDefaultValue(av);
     session->addAttribute(shared_ptr<Attribute>(a));
@@ -106,13 +100,15 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session) {
 
     if (object.contains("class")) {
       unsigned long class_id = object["class"].toString().toLong();
-      o->setClass(session->getClass(class_id)); //TODO: get Class by Name (this is more efficient)
+      o->setClass(session->getClass(
+          class_id));  // TODO: get Class by Name (this is more efficient)
     }
 
     QJsonArray attributes = object.value("attributes").toArray();
     for (QJsonValue attribute : attributes) {
       unsigned long atid = attribute.toString().toLong();
-      if (session->getAttribute(atid)) o->addAttribute(session->getAttribute(atid));
+      if (session->getAttribute(atid))
+        o->addAttribute(session->getAttribute(atid));
     }
     session->addObject(shared_ptr<Object>(o));
   }
@@ -133,7 +129,7 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
   for (QJsonValue value : annotations) {
     QJsonObject annotation = value.toObject();
     // Note: id is now generated from frame and object id
-    //unsigned long id = annotation["id"].toString().toLong();
+    // unsigned long id = annotation["id"].toString().toLong();
     unsigned long object = annotation["object"].toString().toLong();
     unsigned long frame = annotation["frame"].toString().toLong();
 
@@ -141,20 +137,21 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
     float y = annotation["y"].toString().toFloat();
     float width = annotation["width"].toString().toFloat();
     float height = annotation["height"].toString().toFloat();
-    AnnotationType type = AnnotationTypeFromString(
-        annotation["type"].toString().toStdString());
+    AnnotationType type =
+        AnnotationTypeFromString(annotation["type"].toString().toStdString());
 
     shared_ptr<Object> o = session->getObject(object);
     shared_ptr<Frame> f = session->getFrame(frame);
 
     if (o && f) {
-      shared_ptr<Annotation> a = Annotation::make_shared( f, o, type);
+      shared_ptr<Annotation> a = Annotation::make_shared(f, o, type);
       a->setPosition(x, y, width, height);
       // add attributes
       QJsonArray attributes = annotation.value("attributes").toArray();
       for (QJsonValue attribute : attributes) {
         unsigned long atid = attribute.toString().toLong();
-        if (session->getAttribute(atid)) a->addAttribute(session->getAttribute(atid));
+        if (session->getAttribute(atid))
+          a->addAttribute(session->getAttribute(atid));
       }
       session->addAnnotation(a);
     }

@@ -7,9 +7,9 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     const unsigned long newObjectId, const shared_ptr<Class> newObjectClass,
     std::shared_ptr<Session> session, shared_ptr<Frame> frame, float x, float y,
     float width, float height, float confidence)
-    : newObjectId(newObjectId), createNewObject(true),
+    : newObjectId(newObjectId),
+      createNewObject(true),
       newObjectClass(newObjectClass) {
-
   this->session = session;
   this->frame = frame;
   this->x = x;
@@ -24,7 +24,6 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     shared_ptr<Frame> frame, float x, float y, float width, float height,
     float confidence)
     : newObjectId(0), createNewObject(false), newObjectClass(0) {
-
   this->session = session;
   this->object = object;
   this->frame = frame;
@@ -43,16 +42,15 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
   this->annotation_->setPosition(x, y, width, height);
   this->annotation_->setConfidenceScore(confidence);
   bool success = session->addAnnotation(
-      annotation_, true); // adds annotation and register to them
-  if (createNewObject && success)
-    createdNewObject = true;
+      annotation_, true);  // adds annotation and register to them
+  if (createNewObject && success) createdNewObject = true;
   return success;
 }
 
 bool AnnotatorLib::Commands::NewAnnotation::undo() {
   this->annotation_ = session->removeAnnotation(
       annotation_->getId(),
-      true); // remove annotation from session and unregister
+      true);  // remove annotation from session and unregister
   // remove frame and object if empty
   if (!this->annotation_->getObject()->hasAnnotations())
     session->removeObject(this->annotation_->getObject()->getId(), false);

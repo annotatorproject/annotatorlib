@@ -1,8 +1,8 @@
 #ifndef UPDATEOBJECT_H
 #define UPDATEOBJECT_H
 
-#include <memory>
 #include <AnnotatorLib/Commands/Command.h>
+#include <memory>
 
 using std::shared_ptr;
 

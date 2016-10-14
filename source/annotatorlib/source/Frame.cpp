@@ -10,9 +10,9 @@
 
 // include associated header file
 #include "AnnotatorLib/Frame.h"
-#include "AnnotatorLib/Attribute.h"
 #include <assert.h>
 #include <algorithm>
+#include "AnnotatorLib/Attribute.h"
 
 // Derived includes directives
 
@@ -41,10 +41,13 @@ bool Frame::operator==(const Frame &right) const {
 }
 
 bool Frame::operator!=(const Frame &right) const {
-    return frame_number != right.frame_number;
+  return frame_number != right.frame_number;
 }
 
-std::unordered_map<unsigned long, weak_ptr<Annotation>> const& Frame::getAnnotations() const { return annotations; }
+std::unordered_map<unsigned long, weak_ptr<Annotation>> const &
+Frame::getAnnotations() const {
+  return annotations;
+}
 
 bool Frame::hasAnnotations() const { return !annotations.empty(); }
 
@@ -65,8 +68,7 @@ bool Frame::addAnnotation(const weak_ptr<Annotation> annotation) {
 }
 
 bool Frame::removeAnnotation(const shared_ptr<Annotation> annotation) {
-  if (annotation->getFrame().get() == this)
-    return false;
+  if (annotation->getFrame().get() == this) return false;
   return removeAnnotation(annotation->getId());
 }
 
@@ -79,7 +81,8 @@ bool Frame::removeAnnotation(unsigned int id) {
   return annotations.erase(id) > 0;
 }
 
-std::unordered_map<unsigned long, shared_ptr<Attribute>> const& Frame::getAttributes() const {
+std::unordered_map<unsigned long, shared_ptr<Attribute>> const &
+Frame::getAttributes() const {
   return attributes;
 }
 
@@ -93,9 +96,7 @@ bool Frame::removeAttribute(const shared_ptr<Attribute> attr) {
 
 unsigned long Frame::getFrameNumber() const { return frame_number; }
 
-unsigned long Frame::getId() const {
-  return getFrameNumber();
-}
+unsigned long Frame::getId() const { return getFrameNumber(); }
 
 bool Frame::equals(Frame *other) const {
   if (this == other) return true;

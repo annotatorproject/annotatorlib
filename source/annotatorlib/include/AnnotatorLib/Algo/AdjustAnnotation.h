@@ -27,14 +27,13 @@ namespace Algo {
  *
  */
 class ANNOTATORLIB_API AdjustAnnotation {
-public:
-  static shared_ptr<Annotation> getInterpolation(const std::shared_ptr<Session> session,
-                                                 const shared_ptr<Frame> frame,
-                                                 const shared_ptr<Object> object,
-                                                 unsigned int depth);
+ public:
+  static shared_ptr<Annotation> getInterpolation(
+      const std::shared_ptr<Session> session, const shared_ptr<Frame> frame,
+      const shared_ptr<Object> object, unsigned int depth);
 
   static float interpolate(float p1, float p2, float c2, unsigned int p2depth);
 };
-} // Algo
-} // AnnotatorLib
-#endif // ANNOTATOR_ANNOTATORLIB_ALGO_SMOOTHANNOTATION_H
+}  // Algo
+}  // AnnotatorLib
+#endif  // ANNOTATOR_ANNOTATORLIB_ALGO_SMOOTHANNOTATION_H

@@ -9,9 +9,9 @@ AnnotatorLib::Commands::CompressSession::CompressSession(
 }
 
 bool AnnotatorLib::Commands::CompressSession::execute() {
-  //TODO: fix bug
-  removed_annotations = AnnotatorLib::Algo::CompressObjectTrack::compressSession(
-      this->session);
+  // TODO: fix bug
+  removed_annotations =
+      AnnotatorLib::Algo::CompressObjectTrack::compressSession(this->session);
   return true;
 }
 

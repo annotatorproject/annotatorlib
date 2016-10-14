@@ -8,11 +8,11 @@
 /************************************************************
  Frame class header
  ************************************************************/
-#include <unordered_map>
-#include <iostream>
-#include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include <iostream>
+#include <memory>
+#include <unordered_map>
 #include "AnnotatorLib/Annotation.h"
 
 namespace AnnotatorLib {
@@ -27,9 +27,8 @@ class Attribute;
  * Representing a frame in a movie or an image.
  */
 class ANNOTATORLIB_API Frame {
-
- friend class Annotation; //private access for register/unregister
- friend class Object;
+  friend class Annotation;  // private access for register/unregister
+  friend class Object;
 
  public:
   Frame() = delete;
@@ -43,28 +42,29 @@ class ANNOTATORLIB_API Frame {
   bool operator==(const Frame& right) const;
   bool operator!=(const Frame& right) const;
 
-  std::unordered_map<unsigned long, std::weak_ptr<Annotation>> const& getAnnotations() const;
+  std::unordered_map<unsigned long, std::weak_ptr<Annotation>> const&
+  getAnnotations() const;
   bool hasAnnotations() const;
   bool addAnnotation(const std::shared_ptr<Annotation> annotation);
   bool addAnnotation(const std::weak_ptr<Annotation> annotation);
 
-  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const& getAttributes() const;
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const&
+  getAttributes() const;
   bool addAttribute(const std::shared_ptr<Attribute> attr);
   bool removeAttribute(const std::shared_ptr<Attribute> attr);
 
   unsigned long getFrameNumber() const;
-  unsigned long getId( ) const;
+  unsigned long getId() const;
 
   bool equals(Frame* other) const;
 
-  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Frame &f)
-  {
+  friend std::ostream& operator<<(std::ostream& stream,
+                                  const AnnotatorLib::Frame& f) {
     stream << "Frame: " << f.frame_number << " ";
     return stream;
   }
 
  protected:
-
   bool removeAnnotation(const std::shared_ptr<Annotation> annotation);
   bool removeAnnotation(const std::weak_ptr<Annotation> annotation);
   bool removeAnnotation(unsigned int id);
@@ -72,7 +72,6 @@ class ANNOTATORLIB_API Frame {
   const unsigned long frame_number;
   std::unordered_map<unsigned long, std::shared_ptr<Attribute>> attributes;
   std::unordered_map<unsigned long, std::weak_ptr<Annotation>> annotations;
-
 };
 
 /************************************************************/

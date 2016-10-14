@@ -27,7 +27,8 @@ static unsigned long lastId = 100000;
  * @param type
  * @param name
  */
-Attribute::Attribute(unsigned long id, AttributeType type, std::string name) : id(id) {
+Attribute::Attribute(unsigned long id, AttributeType type, std::string name)
+    : id(id) {
   if (lastId < id) lastId = id;
   this->type = type;
   this->name = name;

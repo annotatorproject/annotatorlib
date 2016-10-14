@@ -39,7 +39,9 @@ Project::Project(std::string name, ImageSetType imageSetType,
 
 Project::~Project() {}
 
-std::shared_ptr<AnnotatorLib::Session> Project::getSession() const { return session; }
+std::shared_ptr<AnnotatorLib::Session> Project::getSession() const {
+  return session;
+}
 
 Storage::AbstractStorage *Project::getStorage() const {
   return (AnnotatorLib::Storage::AbstractStorage *)session.get();
@@ -47,24 +49,25 @@ Storage::AbstractStorage *Project::getStorage() const {
 
 std::string Project::getName() const { return name; }
 
-unsigned long Project::updateDuration()
-{
-  int elapsed_seconds = active ? std::chrono::duration_cast<std::chrono::seconds>(
-        std::chrono::system_clock::now() - time_point_start).count() : 0;
+unsigned long Project::updateDuration() {
+  int elapsed_seconds =
+      active
+          ? std::chrono::duration_cast<std::chrono::seconds>(
+                std::chrono::system_clock::now() - time_point_start)
+                .count()
+          : 0;
   total_duration_sec += elapsed_seconds;
-  this->time_point_start = std::chrono::system_clock::now(); //reset
+  this->time_point_start = std::chrono::system_clock::now();  // reset
   return total_duration_sec;
 }
 
-unsigned long Project::getDuration()
-{
-  return updateDuration();
-}
+unsigned long Project::getDuration() { return updateDuration(); }
 
 ImageSet *Project::getImageSet() const { return imageSet; }
 
 std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
-  std::shared_ptr<AnnotatorLib::Project> project = std::shared_ptr<AnnotatorLib::Project>(new Project());
+  std::shared_ptr<AnnotatorLib::Project> project =
+      std::shared_ptr<AnnotatorLib::Project>(new Project());
   project->path = path;
   project->load();
 
@@ -132,8 +135,7 @@ void Project::loadRoot(QDomDocument &doc, QDomElement &root,
   name = root.tagName().toStdString();
 }
 
-void Project::loadProjectSettings(QDomElement &root)
-{
+void Project::loadProjectSettings(QDomElement &root) {
   QDomElement element = root.firstChildElement("Settings");
   if (!element.isNull())
     this->active = element.attribute("active").toStdString() == "1";
@@ -148,7 +150,8 @@ void Project::loadSession() {
   this->time_point_start = std::chrono::system_clock::now();
 }
 
-void Project::save(std::shared_ptr<AnnotatorLib::Project> project, std::string path) {
+void Project::save(std::shared_ptr<AnnotatorLib::Project> project,
+                   std::string path) {
   project->path = path;
   project->save();
 }
@@ -215,37 +218,33 @@ void Project::saveSession() {
   storage->flush();
 }
 
-QDomElement Project::saveProjectStatistics(QDomDocument &doc)
-{
+QDomElement Project::saveProjectStatistics(QDomDocument &doc) {
   QDomElement element = doc.createElement("Statistics");
-  element.setAttribute(
-      "duration", QString::number(getDuration()));
+  element.setAttribute("duration", QString::number(getDuration()));
   return element;
 }
 
-QDomElement Project::saveProjectSettings(QDomDocument &doc)
-{
+QDomElement Project::saveProjectSettings(QDomDocument &doc) {
   QDomElement element = doc.createElement("Settings");
-  element.setAttribute(
-      "active", QString(active ? "1" : "0"));
+  element.setAttribute("active", QString(active ? "1" : "0"));
   return element;
 }
 
-
-std::shared_ptr<AnnotatorLib::Project> Project::create(std::string name, ImageSetType imageSetType,
-                         std::string imageSetPath, StorageType storageType,
-                         std::string storagePath) {
+std::shared_ptr<AnnotatorLib::Project> Project::create(
+    std::string name, ImageSetType imageSetType, std::string imageSetPath,
+    StorageType storageType, std::string storagePath) {
   if (name == "") throw std::runtime_error("Project name is empty");
   if (imageSetType == ImageSetType::UNKNOWN)
     throw std::runtime_error("ImageSetType is unknown");
   if (storageType == StorageType::UNKNOWN)
     throw std::runtime_error("StorageType is unknown");
-  return std::shared_ptr<AnnotatorLib::Project>(new Project(name, imageSetType, imageSetPath, storageType, storagePath));
+  return std::shared_ptr<AnnotatorLib::Project>(
+      new Project(name, imageSetType, imageSetPath, storageType, storagePath));
 }
 
-std::shared_ptr<AnnotatorLib::Project> Project::create(std::string name, std::string imageSetType,
-                         std::string imageSetPath, std::string storageType,
-                         std::string storagePath) {
+std::shared_ptr<AnnotatorLib::Project> Project::create(
+    std::string name, std::string imageSetType, std::string imageSetPath,
+    std::string storageType, std::string storagePath) {
   AnnotatorLib::ImageSetType iType =
       AnnotatorLib::ImageSetTypeFromString(imageSetType);
   AnnotatorLib::StorageType sType =
@@ -269,22 +268,20 @@ bool Project::equals(shared_ptr<Project> other) const {
   return this->equals(other.get());
 }
 
-std::string Project::getImageSetPath() const { return this->imageSet->getPath(); }
+std::string Project::getImageSetPath() const {
+  return this->imageSet->getPath();
+}
 
 void Project::setPath(std::string path) { this->path = path; }
 
 std::string Project::getPath() const { return path; }
 
-void Project::setActive(bool b)
-{
+void Project::setActive(bool b) {
   updateDuration();
   active = b;
 }
 
-bool Project::isActive() const
-{
-  return active;
-}
+bool Project::isActive() const { return active; }
 
 }  // of namespace AnnotatorLib
 

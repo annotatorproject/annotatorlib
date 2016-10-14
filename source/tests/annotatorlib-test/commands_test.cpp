@@ -14,12 +14,12 @@ using std::shared_ptr;
 using namespace AnnotatorLib;
 
 class commands_test : public testing::Test {
-public:
+ public:
 };
 
 TEST_F(commands_test, newAnnotation) {
   std::shared_ptr<Session> session = std::make_shared<Session>();
-  ASSERT_EQ(session->getAnnotations().size(), (unsigned long) 0);
+  ASSERT_EQ(session->getAnnotations().size(), (unsigned long)0);
 
   shared_ptr<Frame> frame = std::make_shared<Frame>(1);
   shared_ptr<Class> c = std::make_shared<Class>("car");
@@ -126,16 +126,17 @@ TEST_F(commands_test, removeAnnotation) {
   shared_ptr<Class> c = std::make_shared<Class>("car");
   shared_ptr<Object> o = std::make_shared<Object>(c);
 
-  //create frame 2,4,6,8,10
-  for ( unsigned long i = 2; i < 11; i+=2) {
-      session->execute(
-          shared_ptr<Commands::NewAnnotation>(new Commands::NewAnnotation(
-              session, o, std::make_shared<Frame>(i), 10, 10, 5, 5)));
+  // create frame 2,4,6,8,10
+  for (unsigned long i = 2; i < 11; i += 2) {
+    session->execute(
+        shared_ptr<Commands::NewAnnotation>(new Commands::NewAnnotation(
+            session, o, std::make_shared<Frame>(i), 10, 10, 5, 5)));
   }
 
   ASSERT_EQ(session->getAnnotations().size(), 5);
 
-  std::shared_ptr<Annotation> a2 = o->getAnnotation(session->getFrame((unsigned long)2));
+  std::shared_ptr<Annotation> a2 =
+      o->getAnnotation(session->getFrame((unsigned long)2));
   session->execute(shared_ptr<Commands::RemoveAnnotation>(
       new Commands::RemoveAnnotation(session, a2)));
 
@@ -147,23 +148,26 @@ TEST_F(commands_test, removeAnnotation) {
   session->undo();
   ASSERT_EQ(session->getAnnotations().size(), 5);
 
-  //REMOVE RANGE
+  // REMOVE RANGE
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1, (unsigned long)3)));
+      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1,
+                                          (unsigned long)3)));
 
   ASSERT_EQ(session->getAnnotations().size(), 4);
   session->undo();
   ASSERT_EQ(session->getAnnotations().size(), 5);
 
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1, (unsigned long)11)));
+      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1,
+                                          (unsigned long)11)));
 
   ASSERT_EQ(session->getAnnotations().size(), 0);
   session->undo();
   ASSERT_EQ(session->getAnnotations().size(), 5);
 
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)2, (unsigned long)4)));
+      new Commands::RemoveAnnotationRange(session, o, (unsigned long)2,
+                                          (unsigned long)4)));
 
   ASSERT_EQ(session->getAnnotations().size(), 3);
   session->undo();

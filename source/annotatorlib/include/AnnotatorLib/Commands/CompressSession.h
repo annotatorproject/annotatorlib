@@ -2,8 +2,8 @@
 #define COMPRESSSESSION_CMD_H
 
 #include <AnnotatorLib/Commands/Command.h>
-#include <vector>
 #include <memory>
+#include <vector>
 
 using std::shared_ptr;
 using std::vector;
@@ -21,9 +21,7 @@ class ANNOTATORLIB_API CompressSession : public Command {
 
   CompressSession(std::shared_ptr<Session> session);
 
-  ~CompressSession() {
-    removed_annotations.clear();
-  }
+  ~CompressSession() { removed_annotations.clear(); }
 
   bool execute();
 

@@ -15,7 +15,7 @@ using namespace AnnotatorLib;
 using namespace std;
 
 class command_adjustneighbors : public testing::Test {
-public:
+ public:
 };
 
 TEST_F(command_adjustneighbors, execute) {

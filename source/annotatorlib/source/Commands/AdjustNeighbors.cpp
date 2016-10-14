@@ -17,15 +17,13 @@ bool AnnotatorLib::Commands::AdjustNeighbors::execute() {
   for (unsigned long f = (-(unsigned long)range) + aFrameNbr;
        f <= (unsigned long)range + aFrameNbr; ++f) {
     shared_ptr<Frame> frame = session->getFrame(f);
-    if (!frame)
-      frame = std::make_shared<Frame>(f);
+    if (!frame) frame = std::make_shared<Frame>(f);
     std::shared_ptr<AnnotatorLib::Annotation> cAnnotation =
         AnnotatorLib::Algo::AdjustAnnotation::getInterpolation(
             session, frame, annotation->getObject(), range);
     if (cAnnotation) {
       std::shared_ptr<AnnotatorLib::Commands::Command> command;
       if (cAnnotation->isTemporary()) {
-
         command = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
             session, annotation->getObject(), frame, cAnnotation->getX(),
             cAnnotation->getY(), cAnnotation->getWidth(),

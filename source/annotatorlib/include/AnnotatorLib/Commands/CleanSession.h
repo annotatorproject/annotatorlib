@@ -1,9 +1,9 @@
 #ifndef CLEANSESSION_CMD_H
 #define CLEANSESSION_CMD_H
 
-#include <memory>
-#include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Commands/Command.h>
+#include <AnnotatorLib/Session.h>
+#include <memory>
 
 namespace AnnotatorLib {
 
@@ -15,7 +15,7 @@ class ANNOTATORLIB_API CleanSession : public Command {
 
   CleanSession(std::shared_ptr<Session> session);
 
-  ~CleanSession() { }
+  ~CleanSession() {}
 
   bool execute();
 
@@ -23,7 +23,6 @@ class ANNOTATORLIB_API CleanSession : public Command {
 
  protected:
   std::shared_ptr<Session> session;
-
 };
 }
 }

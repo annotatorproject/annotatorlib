@@ -2,8 +2,8 @@
 #define NEWANNOTATION_H
 
 #include <AnnotatorLib/Commands/Command.h>
-#include <string>
 #include <memory>
+#include <string>
 
 using std::shared_ptr;
 
@@ -23,21 +23,17 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
 
   NewAnnotation(const unsigned long newObjectId,
                 const shared_ptr<Class> newObjectClass,
-                std::shared_ptr<Session> session,
-                shared_ptr<Frame> frame,
+                std::shared_ptr<Session> session, shared_ptr<Frame> frame,
                 float x, float y, float width, float height,
                 float confidence = 1.0);
 
-  NewAnnotation(std::shared_ptr<Session> session,
-                shared_ptr<Object> object_,
-                shared_ptr<Frame> frame_,
-                float x, float y,
-                float width, float height,
-                float confidence = 1.0);
+  NewAnnotation(std::shared_ptr<Session> session, shared_ptr<Object> object_,
+                shared_ptr<Frame> frame_, float x, float y, float width,
+                float height, float confidence = 1.0);
 
   NewAnnotation(const NewAnnotation &other) = delete;
 
-  ~NewAnnotation() { }
+  ~NewAnnotation() {}
 
   bool execute();
 

@@ -32,7 +32,8 @@ class ANNOTATORLIB_API AbstractSaver {
    *
    * @param annotation
    */
-  virtual void saveAnnotation(const AnnotatorLib::Annotation /*in*/ annotation) = 0;
+  virtual void saveAnnotation(
+      const AnnotatorLib::Annotation /*in*/ annotation) = 0;
 
   /**
    *

@@ -8,10 +8,10 @@
  Object class body
  ************************************************************/
 
-#include <algorithm>
-#include <assert.h>
-#include <boost/lexical_cast.hpp>
 #include "AnnotatorLib/Object.h"
+#include <assert.h>
+#include <algorithm>
+#include <boost/lexical_cast.hpp>
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Class.h"
 
@@ -21,7 +21,7 @@ namespace AnnotatorLib {
 
 // statics
 static unsigned long lastId = 100;
-static unsigned long namePostfixNmb= 0;
+static unsigned long namePostfixNmb = 0;
 
 Object::Object() : Object(genId(), shared_ptr<Class>(nullptr)) {
   name = genName();
@@ -33,7 +33,7 @@ Object::Object(unsigned long id, const shared_ptr<Class> c) : id(id) {
   objectClass = c;
   name = genName();
   if (lastId < id)
-    lastId = id; // avoid collisions when loading objects from file
+    lastId = id;  // avoid collisions when loading objects from file
 }
 
 unsigned long Object::genId() {
@@ -46,18 +46,15 @@ unsigned long Object::getId() const { return id; }
 std::string Object::getName() const { return name; }
 
 void Object::setName(std::string name) {
-
   // avoid postfix collisions when setting a name
   std::string name_postfix = name.substr(name.find('_') + 1);
   if (!name_postfix.empty()) {
     unsigned long nmb;
-    try
-    {
+    try {
       nmb = boost::lexical_cast<unsigned long>(name_postfix);
+    } catch (boost::bad_lexical_cast &e) {
     }
-    catch(boost::bad_lexical_cast& e)
-    { }
-    namePostfixNmb = std::max(nmb, namePostfixNmb );
+    namePostfixNmb = std::max(nmb, namePostfixNmb);
   }
   this->name = name;
 }
@@ -65,8 +62,7 @@ void Object::setName(std::string name) {
 std::string Object::genName() {
   std::string prefix = "unnamed_obj_";
   const shared_ptr<Class> c = getClass();
-  if (c)
-    prefix = c->getName() + "_";
+  if (c) prefix = c->getName() + "_";
   return prefix + std::to_string(++namePostfixNmb);
 }
 
@@ -99,27 +95,24 @@ bool Object::removeAttribute(shared_ptr<Attribute> attribute) {
 }
 
 shared_ptr<Annotation> Object::getFirstAnnotation() const {
-  if (annotations.size() == 0)
-    return nullptr;
+  if (annotations.size() == 0) return nullptr;
   // anntations are sorted by frame-number, thus we directly return the first
   return annotations.begin()->second.lock();
 }
 
 shared_ptr<Annotation> Object::getLastAnnotation() const {
-  if (annotations.size() == 0)
-    return shared_ptr<Annotation>(nullptr);
+  if (annotations.size() == 0) return shared_ptr<Annotation>(nullptr);
   // anntations are sorted by frame-number, thus we directly return the last
   return std::prev(annotations.end())->second.lock();
 }
 
-std::map<unsigned long, weak_ptr<Annotation>> const &
-Object::getAnnotations() const {
+std::map<unsigned long, weak_ptr<Annotation>> const &Object::getAnnotations()
+    const {
   return annotations;
 }
 
 bool Object::addAnnotation(shared_ptr<Annotation> annotation) {
-  if (!isActive())
-    return false;
+  if (!isActive()) return false;
   assert(!annotation->isTemporary());
 
   std::pair<std::map<unsigned long, weak_ptr<Annotation>>::iterator, bool>
@@ -144,15 +137,13 @@ bool Object::addAnnotation(shared_ptr<Annotation> annotation) {
 }
 
 bool Object::addAnnotation(weak_ptr<Annotation> annotation) {
-  if (!isActive())
-    return false;
-  if (annotation.expired())
-    return false;
+  if (!isActive()) return false;
+  if (annotation.expired()) return false;
   return addAnnotation(annotation.lock());
 }
 
 bool Object::removeAnnotation(unsigned int frame_nmb) {
-  auto it = annotations.find(frame_nmb);  
+  auto it = annotations.find(frame_nmb);
 
   if (it != annotations.end()) {
     if (it != annotations.begin() && it != std::prev(annotations.end())) {
@@ -192,16 +183,13 @@ std::vector<shared_ptr<Frame>> Object::getFrames() const {
   return frames;
 }
 
-shared_ptr<Annotation>
-Object::getAnnotation(shared_ptr<Frame> frame) const {
+shared_ptr<Annotation> Object::getAnnotation(shared_ptr<Frame> frame) const {
   return getAnnotation(frame->getFrameNumber());
 }
 
-shared_ptr<Annotation>
-Object::getAnnotation(unsigned long frame) const {
+shared_ptr<Annotation> Object::getAnnotation(unsigned long frame) const {
   auto it = annotations.find(frame);
-  if (it != annotations.end())
-    return it->second.lock();
+  if (it != annotations.end()) return it->second.lock();
   return shared_ptr<Annotation>(nullptr);
 }
 
@@ -229,28 +217,26 @@ void Object::findClosestKeyFrames(const shared_ptr<Frame> target_frame,
   if (it != annotations.cend()) {
     while (it != annotations.cbegin()) {
       it--;
-      if (!it->second.lock()->isTemporary())
-        break;
+      if (!it->second.lock()->isTemporary()) break;
     }
     left = it->second.lock();
 
   } else {
     left = std::prev(it)->second.lock();
   }
-  if(left->getFrame()->getFrameNumber() > target_frame->getFrameNumber())
-      left = nullptr;
+  if (left->getFrame()->getFrameNumber() > target_frame->getFrameNumber())
+    left = nullptr;
   assert(right == nullptr || right->isTemporary() == false);
   assert(left == nullptr || left->isTemporary() == false);
 }
 
-shared_ptr<Annotation> Object::findClosestRightKeyFrame(const unsigned long target_frame) const
-{
+shared_ptr<Annotation> Object::findClosestRightKeyFrame(
+    const unsigned long target_frame) const {
   std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it =
       annotations.lower_bound(target_frame);
 
   if (it != annotations.cend()) {
-    while (it != annotations.cend() &&
-           it->second.lock()->isTemporary()) {
+    while (it != annotations.cend() && it->second.lock()->isTemporary()) {
       it++;
     }
   } else {
@@ -259,17 +245,19 @@ shared_ptr<Annotation> Object::findClosestRightKeyFrame(const unsigned long targ
   return it->second.lock();
 }
 
-shared_ptr<Annotation> Object::findClosestLeftKeyFrame(const unsigned long target_frame) const
-{
+shared_ptr<Annotation> Object::findClosestLeftKeyFrame(
+    const unsigned long target_frame) const {
   std::map<unsigned long, weak_ptr<Annotation>>::const_iterator it =
       annotations.lower_bound(target_frame);
   if (it != annotations.cend()) {
     while (it != annotations.cbegin()) {
-      if (!it->second.lock()->isTemporary() && it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
+      if (!it->second.lock()->isTemporary() &&
+          it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
         return it->second.lock();
       it--;
     }
-    if (it == annotations.cbegin() && it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
+    if (it == annotations.cbegin() &&
+        it->second.lock()->getFrame()->getFrameNumber() <= target_frame)
       return it->second.lock();
   } else {
     return std::prev(it)->second.lock();
@@ -281,18 +269,17 @@ void Object::setActive(bool is_active) {
   if (is_active) {
     getLastAnnotation()->setNext(weak_ptr<Annotation>());
   } else {
-    getLastAnnotation()->setNext(getLastAnnotation()); // points to itself
+    getLastAnnotation()->setNext(getLastAnnotation());  // points to itself
   }
 }
 
 bool Object::isActive() const {
-  if (annotations.empty())
-    return true;
+  if (annotations.empty()) return true;
   assert(getLastAnnotation().get() != nullptr);
   return getLastAnnotation()->getNext().get() != getLastAnnotation().get();
 }
 
-} // End of namespace AnnotatorLib
+}  // End of namespace AnnotatorLib
 
 /************************************************************
  End of Object class body

@@ -9,6 +9,7 @@
  ************************************************************/
 
 // include associated header file
+#include "AnnotatorLib/Saver/JSONSaver.h"
 #include <QDebug>
 #include <QFile>
 #include <QJsonArray>
@@ -19,7 +20,6 @@
 #include "AnnotatorLib/Attribute.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
-#include "AnnotatorLib/Saver/JSONSaver.h"
 #include "AnnotatorLib/Session.h"
 
 using std::unique_ptr;
@@ -35,7 +35,7 @@ void JSONSaver::setPath(std::string path) { this->path = path; }
 
 StorageType JSONSaver::getType() { return AnnotatorLib::StorageType::JSON; }
 
-void JSONSaver::saveSession(const Session *session) {
+void JSONSaver::saveSession(const Session* session) {
   this->session = sessionToJson(session);
 }
 
@@ -44,13 +44,14 @@ bool JSONSaver::close() {
   return true;
 }
 
-QJsonObject JSONSaver::sessionToJson(const Session *session) {
+QJsonObject JSONSaver::sessionToJson(const Session* session) {
   QJsonObject json;
 
   // insert list of objects
   QJsonArray objects;
   for (auto& pair : session->getObjects()) {
-    if (pair.second->hasAnnotations()) objects.append(objectToJson(pair.second));
+    if (pair.second->hasAnnotations())
+      objects.append(objectToJson(pair.second));
   }
   json["objects"] = objects;
 
@@ -78,14 +79,15 @@ QJsonObject JSONSaver::sessionToJson(const Session *session) {
   // insert list of frames
   QJsonArray frames;
   for (auto& pair : session->getFrames()) {
-      if (pair.second->hasAnnotations()) frames.append(frameToJson(pair.second));
+    if (pair.second->hasAnnotations()) frames.append(frameToJson(pair.second));
   }
   json["frames"] = frames;
 
   return json;
 }
 
-QJsonObject JSONSaver::attributeToJson(const shared_ptr<AnnotatorLib::Attribute> attribute) {
+QJsonObject JSONSaver::attributeToJson(
+    const shared_ptr<AnnotatorLib::Attribute> attribute) {
   QJsonObject json;
   json["id"] = QString::number(attribute->getId());
   json["name"] = QString::fromStdString(attribute->getName());
@@ -96,7 +98,8 @@ QJsonObject JSONSaver::attributeToJson(const shared_ptr<AnnotatorLib::Attribute>
   return json;
 }
 
-QJsonObject JSONSaver::annotationToJson(const shared_ptr<AnnotatorLib::Annotation> annotation) {
+QJsonObject JSONSaver::annotationToJson(
+    const shared_ptr<AnnotatorLib::Annotation> annotation) {
   QJsonObject json;
   json["id"] = QString::number(annotation->getId());
   json["object"] = QString::number(annotation->getObject()->getId());
@@ -127,7 +130,8 @@ QJsonObject JSONSaver::annotationToJson(const shared_ptr<AnnotatorLib::Annotatio
   return json;
 }
 
-QJsonObject JSONSaver::frameToJson(const shared_ptr<AnnotatorLib::Frame> frame) {
+QJsonObject JSONSaver::frameToJson(
+    const shared_ptr<AnnotatorLib::Frame> frame) {
   QJsonObject json;
 
   json["number"] = QString::number(frame->getFrameNumber());
@@ -141,7 +145,8 @@ QJsonObject JSONSaver::frameToJson(const shared_ptr<AnnotatorLib::Frame> frame) 
 
   // insert list of annotations
   QJsonArray annotations;
-  for (std::pair<unsigned long, weak_ptr<Annotation>> pair : frame->getAnnotations()) {
+  for (std::pair<unsigned long, weak_ptr<Annotation>> pair :
+       frame->getAnnotations()) {
     annotations.append(QString::number(pair.second.lock()->getId()));
   }
   json["annotations"] = annotations;
@@ -153,7 +158,7 @@ QJsonObject JSONSaver::objectToJson(const shared_ptr<Object> object) {
   QJsonObject json;
   json["id"] = QString::number(object->getId());
   json["name"] = QString::fromStdString(object->getName());
-  if(object->getClass())
+  if (object->getClass())
     json["class"] = QString::number(object->getClass()->getId());
   else
     json["class"] = QString("no_class");
@@ -182,7 +187,7 @@ QJsonObject JSONSaver::objectToJson(const shared_ptr<Object> object) {
   return json;
 }
 
-QJsonObject JSONSaver::classToJson( const shared_ptr<AnnotatorLib::Class> c) {
+QJsonObject JSONSaver::classToJson(const shared_ptr<AnnotatorLib::Class> c) {
   QJsonObject json;
   json["id"] = QString::number(c->getId());
   json["name"] = QString::fromStdString(c->getName());

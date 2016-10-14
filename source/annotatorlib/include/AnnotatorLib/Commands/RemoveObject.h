@@ -25,7 +25,7 @@ class ANNOTATORLIB_API RemoveObject : public Command {
 
   bool undo();
 
-  shared_ptr<Object> getObject() { return object;}
+  shared_ptr<Object> getObject() { return object; }
 
  protected:
   std::vector<std::shared_ptr<Annotation>> removedAnnotations;

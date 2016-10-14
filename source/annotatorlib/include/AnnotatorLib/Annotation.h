@@ -27,12 +27,11 @@ class Frame;
  * Represents a label for an object on a specific frame.
  */
 class ANNOTATORLIB_API Annotation {
+  friend class Object;   // an object manages the order of annotations (setNext,
+                         // setPrevious)
+  friend class Session;  // Session needs to register/unregister
 
-  friend class Object; // an object manages the order of annotations (setNext,
-                       // setPrevious)
-  friend class Session; // Session needs to register/unregister
-
-public:
+ public:
   /////////STATICS/////////////
   static unsigned long genId(const std::shared_ptr<AnnotatorLib::Frame> frame,
                              const std::shared_ptr<Object> obj);
@@ -55,8 +54,7 @@ public:
     if (!a->isTemporary()) {
       a->setRegistered(true);
     }
-    if (a->isTemporary())
-      a->setConfidenceScore(0.0);
+    if (a->isTemporary()) a->setConfidenceScore(0.0);
     return a;
   }
 
@@ -159,7 +157,7 @@ public:
     return stream;
   }
 
-protected:
+ protected:
   ////////PROTECTED CONSTRUCTORS//////////
 
   Annotation() = delete;
@@ -200,7 +198,7 @@ protected:
 
   weak_ptr<Annotation> self_;
 
-private:
+ private:
   /////////////PRIVATE METHODS/////////////
 
   void setPrevious(weak_ptr<Annotation> previous);
@@ -222,7 +220,7 @@ private:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorLib
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class header

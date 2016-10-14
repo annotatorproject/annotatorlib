@@ -9,13 +9,13 @@
  Object class header
  ************************************************************/
 
-#include <string>
-#include <map>
-#include <vector>
-#include <iostream>
-#include <memory>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Attribute.h"
 #include "AnnotatorLib/Frame.h"
@@ -32,8 +32,7 @@ class Class;
  * @brief The Object class that represents an object of a specific class.
  */
 class ANNOTATORLIB_API Object {
-
-friend class Annotation; //private access for register/unregister
+  friend class Annotation;  // private access for register/unregister
 
  public:
   const unsigned long id = 0;
@@ -66,7 +65,7 @@ friend class Annotation; //private access for register/unregister
   shared_ptr<Annotation> getLastAnnotation() const;
   std::map<unsigned long, weak_ptr<Annotation>> const& getAnnotations() const;
   bool addAnnotation(shared_ptr<Annotation> annotation);
-  bool removeAnnotation( shared_ptr<Annotation> annotation);
+  bool removeAnnotation(shared_ptr<Annotation> annotation);
   bool hasAnnotations() const { return !annotations.empty(); }
 
   /**
@@ -102,27 +101,30 @@ friend class Annotation; //private access for register/unregister
    * @param right
    */
   void findClosestKeyFrames(const shared_ptr<Frame> target_frame,
-                        shared_ptr<Annotation>& left,
-                        shared_ptr<Annotation>& right) const;
+                            shared_ptr<Annotation>& left,
+                            shared_ptr<Annotation>& right) const;
 
   /**
-   * Searches for the next annotation which frameNumber is greater or equal to than the target_frame.
+   * Searches for the next annotation which frameNumber is greater or equal to
+   * than the target_frame.
    *
    * @brief findClosestRightKeyFrame
    * @param target_frame
    * @return
    */
-  shared_ptr<Annotation> findClosestRightKeyFrame(const unsigned long target_frame) const;
+  shared_ptr<Annotation> findClosestRightKeyFrame(
+      const unsigned long target_frame) const;
 
   /**
-   * Searches for the next annotation which frameNumber is lower or equal to than the target_frame.
+   * Searches for the next annotation which frameNumber is lower or equal to
+   * than the target_frame.
    *
    * @brief findClosestLeftKeyFrame
    * @param target_frame
    * @return
    */
-  shared_ptr<Annotation> findClosestLeftKeyFrame(const unsigned long target_frame) const;
-
+  shared_ptr<Annotation> findClosestLeftKeyFrame(
+      const unsigned long target_frame) const;
 
   void setActive(bool active);
 
@@ -133,12 +135,11 @@ friend class Annotation; //private access for register/unregister
    */
   bool isActive() const;
 
-  friend std::ostream &operator<<(std::ostream &stream, const AnnotatorLib::Object &o)
-  {
+  friend std::ostream& operator<<(std::ostream& stream,
+                                  const AnnotatorLib::Object& o) {
     stream << "Object: " << o.getId();
 
-    if (o.getClass())
-      stream << "; " << o.getClass();
+    if (o.getClass()) stream << "; " << o.getClass();
 
     stream << "; number annotations: " << o.getAnnotations().size()
            << std::endl;
@@ -146,8 +147,7 @@ friend class Annotation; //private access for register/unregister
     stream << "List of Annotations: " << std::endl;
     while (a) {
       stream << *a << std::endl;
-      if (a->getNext() == a)
-        break;
+      if (a->getNext() == a) break;
       a = a->getNext();
     }
     return stream;
@@ -156,13 +156,12 @@ friend class Annotation; //private access for register/unregister
  protected:
   std::string genName();
   bool addAnnotation(weak_ptr<Annotation> annotation);
-  bool removeAnnotation( unsigned int frame_nmb);
+  bool removeAnnotation(unsigned int frame_nmb);
 
   std::string name;
   shared_ptr<Class> objectClass;
   std::vector<shared_ptr<Attribute>> attributes;
   std::map<unsigned long, weak_ptr<Annotation>> annotations;
-
 };
 
 /************************************************************/

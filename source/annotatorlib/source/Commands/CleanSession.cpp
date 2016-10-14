@@ -1,6 +1,7 @@
 #include <AnnotatorLib/Commands/CleanSession.h>
 
-AnnotatorLib::Commands::CleanSession::CleanSession( std::shared_ptr<Session> session) {
+AnnotatorLib::Commands::CleanSession::CleanSession(
+    std::shared_ptr<Session> session) {
   this->session = session;
 }
 
@@ -10,6 +11,6 @@ bool AnnotatorLib::Commands::CleanSession::execute() {
 }
 
 bool AnnotatorLib::Commands::CleanSession::undo() {
-  //TODO
+  // TODO
   return false;
 }

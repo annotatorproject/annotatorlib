@@ -14,24 +14,21 @@
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Session.h"
 
-#include <algorithm>
 #include <assert.h>
+#include <algorithm>
 
 namespace AnnotatorLib {
 namespace Algo {
 
-shared_ptr<Annotation>
-InterpolateAnnotation::getInterpolation(shared_ptr<Frame> frame,
-                                        shared_ptr<Annotation> prev,
-                                        shared_ptr<Annotation> next) {
-  if (!prev)
-    return nullptr;
+shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
+    shared_ptr<Frame> frame, shared_ptr<Annotation> prev,
+    shared_ptr<Annotation> next) {
+  if (!prev) return nullptr;
 
   shared_ptr<Annotation> annotation =
       Annotation::make_shared(prev, frame, true);
 
-  if (!next)
-    return annotation;
+  if (!next) return annotation;
 
   unsigned long startFrame = prev->getFrame()->getFrameNumber();
   unsigned long endFrame = next->getFrame()->getFrameNumber();
@@ -75,7 +72,6 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
     // is frame within the valid range of the object?
     if (*frame <= *object->getLastAnnotation()->getFrame() &&
         *frame >= *object->getFirstAnnotation()->getFrame()) {
-
       shared_ptr<Annotation> a = session->getAnnotation(frame, object);
 
       if (!a) {
@@ -98,10 +94,9 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
   return shared_ptr<Annotation>(nullptr);
 }
 
-std::vector<shared_ptr<Annotation>>
-InterpolateAnnotation::getInterpolations(const std::shared_ptr<Session> session,
-                                         const shared_ptr<Frame> frame,
-                                         bool interpolationsOnly) {
+std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
+    const std::shared_ptr<Session> session, const shared_ptr<Frame> frame,
+    bool interpolationsOnly) {
   const std::unordered_map<unsigned long, std::shared_ptr<Object>>
       &objects_map = session->getObjects();
   std::vector<shared_ptr<Annotation>> return_annotations;
@@ -118,5 +113,5 @@ InterpolateAnnotation::getInterpolations(const std::shared_ptr<Session> session,
   return return_annotations;
 }
 
-} // of namespace Algo
-} // of namespace AnnotatorLib
+}  // of namespace Algo
+}  // of namespace AnnotatorLib

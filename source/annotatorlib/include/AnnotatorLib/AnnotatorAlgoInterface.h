@@ -32,8 +32,7 @@ namespace AnnotatorAlgo {
  *
  */
 class ANNOTATORLIB_API AnnotatorAlgoInterface {
-public:
-
+ public:
   /**
    *
    * @param image
@@ -55,8 +54,8 @@ public:
    * @brief setLastAnnotation
    * @param annotation
    */
-  virtual void
-  setLastAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) = 0;
+  virtual void setLastAnnotation(
+      shared_ptr<AnnotatorLib::Annotation> annotation) = 0;
 
   virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
   getCommands() = 0;
@@ -64,7 +63,9 @@ public:
   virtual void setProject(std::shared_ptr<AnnotatorLib::Project> project) {
     this->project = project;
   }
-  virtual std::shared_ptr<AnnotatorLib::Project> getProject() const { return project; }
+  virtual std::shared_ptr<AnnotatorLib::Project> getProject() const {
+    return project;
+  }
 
   /**
  * @brief calculate
@@ -73,12 +74,11 @@ public:
  * @param frame
  * @param image
  */
-  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>>
-  calculate(shared_ptr<AnnotatorLib::Object> object,
-            shared_ptr<AnnotatorLib::Frame> frame,
-            bool execute_commands = true) = 0;
+  virtual std::vector<shared_ptr<AnnotatorLib::Commands::Command>> calculate(
+      shared_ptr<AnnotatorLib::Object> object,
+      shared_ptr<AnnotatorLib::Frame> frame, bool execute_commands = true) = 0;
 
-protected:
+ protected:
   std::shared_ptr<AnnotatorLib::Project> project = nullptr;
 };
 /************************************************************/
@@ -87,7 +87,7 @@ protected:
 
 /* Inline functions                                         */
 
-} // of namespace AnnotatorAlgo
+}  // of namespace AnnotatorAlgo
 
 /************************************************************
  End of AnnotatorAlgoInterface class header

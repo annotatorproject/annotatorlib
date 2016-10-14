@@ -9,6 +9,7 @@
  ************************************************************/
 
 // include associated header file
+#include "AnnotatorLib/Saver/XMLSaver.h"
 #include <QDomDocument>
 #include <QFile>
 #include <QTextStream>
@@ -17,7 +18,6 @@
 #include "AnnotatorLib/Algo/InterpolateAnnotation.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
-#include "AnnotatorLib/Saver/XMLSaver.h"
 #include "AnnotatorLib/Session.h"
 
 using namespace std;
@@ -25,7 +25,8 @@ using namespace std;
 namespace AnnotatorLib {
 namespace Saver {
 
-void XMLSaver::saveFrame(const Session *session, const shared_ptr<Frame> frame) {
+void XMLSaver::saveFrame(const Session *session,
+                         const shared_ptr<Frame> frame) {
   QString filename =
       QString::fromStdString(path) +
       QString("%1").arg(frame->getFrameNumber(), 8, 10, QChar('0')) + ".xml";
@@ -38,8 +39,8 @@ void XMLSaver::saveFrame(const Session *session, const shared_ptr<Frame> frame) 
     document.clear();
     QDomElement root = document.createElement("OBJECTS");
     root.appendChild(meta(frame));
-    for (auto& pair : session->getObjects()) {
-      if (session->getAnnotation(frame, pair.second)) //appears in frame?
+    for (auto &pair : session->getObjects()) {
+      if (session->getAnnotation(frame, pair.second))  // appears in frame?
         root.appendChild(fromObject(session, pair.second, frame));
     }
 
@@ -56,8 +57,8 @@ void XMLSaver::setPath(std::string path) { this->path = path; }
 StorageType XMLSaver::getType() { return StorageType::XML; }
 
 void XMLSaver::saveSession(const Session *session) {
-  for (auto& pair : session->getFrames()) {
-      saveFrame(session, pair.second);
+  for (auto &pair : session->getFrames()) {
+    saveFrame(session, pair.second);
   }
 }
 
@@ -95,10 +96,11 @@ QDomElement XMLSaver::fromObject(const Session *session,
 
   element.setAttribute(
       "StartFr",
-      QString::number(object->getFirstAnnotation()->getFrame()->getFrameNumber()));
+      QString::number(
+          object->getFirstAnnotation()->getFrame()->getFrameNumber()));
   element.setAttribute(
-      "EndFr",
-      QString::number(object->getLastAnnotation()->getFrame()->getFrameNumber()));
+      "EndFr", QString::number(
+                   object->getLastAnnotation()->getFrame()->getFrameNumber()));
 
   // START
   QDomElement start = document.createElement("START");

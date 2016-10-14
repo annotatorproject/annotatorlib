@@ -2,11 +2,11 @@
 #define ADJUSTNEIGHBORS_CMD_H
 
 #include <AnnotatorLib/Annotation.h>
-#include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Commands/Command.h>
+#include <AnnotatorLib/Session.h>
 
-#include <memory>
 #include <list>
+#include <memory>
 
 namespace AnnotatorLib {
 
@@ -16,9 +16,10 @@ class ANNOTATORLIB_API AdjustNeighbors : public Command {
  public:
   AdjustNeighbors() = delete;
 
-  AdjustNeighbors(std::shared_ptr<Session> session, std::shared_ptr<Annotation> annotation, unsigned int range);
+  AdjustNeighbors(std::shared_ptr<Session> session,
+                  std::shared_ptr<Annotation> annotation, unsigned int range);
 
-  ~AdjustNeighbors() { }
+  ~AdjustNeighbors() {}
 
   bool execute();
 
@@ -29,7 +30,6 @@ class ANNOTATORLIB_API AdjustNeighbors : public Command {
   std::shared_ptr<Session> session;
   std::list<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
   unsigned int range;
-
 };
 }
 }

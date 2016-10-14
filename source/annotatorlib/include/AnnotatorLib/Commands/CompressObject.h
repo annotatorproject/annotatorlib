@@ -2,8 +2,8 @@
 #define COMPRESSOBJECT_CMD_H
 
 #include <AnnotatorLib/Commands/Command.h>
-#include <vector>
 #include <memory>
+#include <vector>
 
 using std::shared_ptr;
 
@@ -21,9 +21,7 @@ class ANNOTATORLIB_API CompressObject : public Command {
 
   CompressObject(std::shared_ptr<Session> session, shared_ptr<Object> obj);
 
-  ~CompressObject() {
-    removed_annotations.clear();
-  }
+  ~CompressObject() { removed_annotations.clear(); }
 
   bool execute();
 

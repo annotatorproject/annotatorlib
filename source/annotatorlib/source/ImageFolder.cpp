@@ -28,12 +28,13 @@ ImageFolder::ImageFolder(std::string path) {
 ImageSetType ImageFolder::getType() { return ImageSetType::IMAGEFOLDER; }
 
 Image ImageFolder::getImage(unsigned long frame) {
-    Image img;
-    try {
-      img = cv::imread((images.begin() + frame - 1)->string(), CV_LOAD_IMAGE_COLOR);
-    } catch (std::exception &e) {
-    }
-    return img;
+  Image img;
+  try {
+    img =
+        cv::imread((images.begin() + frame - 1)->string(), CV_LOAD_IMAGE_COLOR);
+  } catch (std::exception &e) {
+  }
+  return img;
 }
 
 bool ImageFolder::gotoPosition(unsigned long position) {

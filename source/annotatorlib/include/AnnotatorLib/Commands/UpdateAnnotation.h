@@ -12,8 +12,8 @@ namespace Commands {
 
 class ANNOTATORLIB_API UpdateAnnotation : public Command {
  public:
-  UpdateAnnotation(shared_ptr<Annotation> annotation, float x, float y, float width,
-                   float height);
+  UpdateAnnotation(shared_ptr<Annotation> annotation, float x, float y,
+                   float width, float height);
 
   ~UpdateAnnotation() {}
 

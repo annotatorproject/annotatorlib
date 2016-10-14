@@ -209,6 +209,7 @@ shared_ptr<Object> Session::getObject(unsigned long id) const {
 
 shared_ptr<Commands::Command> Session::execute(
     shared_ptr<Commands::Command> command) {
+    std::lock_guard<std::mutex> guard(mtx);
   if (!command) return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
   commands.erase(commands.begin() + commandIndex, commands.end());
   commands.push_back(std::move(command));

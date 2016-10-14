@@ -18,6 +18,7 @@
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <memory>  //smart pointer
+#include <mutex>
 #include <unordered_map>
 #include <vector>
 
@@ -170,6 +171,7 @@ class ANNOTATORLIB_API Session {
   std::unordered_map<std::string, std::shared_ptr<Class>> classes;
 
   unsigned int commandIndex = 0;
+  std::mutex mtx;
   std::vector<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
 
   AnnotatorAlgo::AnnotatorAlgoInterface* annotatorAlgo;

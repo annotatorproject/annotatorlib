@@ -9,6 +9,7 @@
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 using std::shared_ptr;
@@ -197,6 +198,8 @@ class ANNOTATORLIB_API Annotation {
   float confidence = 0.0f;
 
   weak_ptr<Annotation> self_;
+
+  std::mutex mtx;
 
  private:
   /////////////PRIVATE METHODS/////////////

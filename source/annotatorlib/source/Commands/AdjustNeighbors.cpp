@@ -4,28 +4,28 @@
 #include <AnnotatorLib/Commands/UpdateAnnotation.h>
 #include <iostream>
 
-AnnotatorLib::Commands::AdjustNeighbors::AdjustNeighbors(
-    std::shared_ptr<Session> session, std::shared_ptr<Annotation> annotation,
+AnnotatorLib::Commands::AdjustNeighbors::AdjustNeighbors(std::shared_ptr<Session> session, std::shared_ptr<Object> object, std::shared_ptr<Frame> frame,
     unsigned int range) {
   this->session = session;
-  this->annotation = annotation;
+  this->object = object;
+    this->_frame = frame;
   this->range = range;
 }
 
 bool AnnotatorLib::Commands::AdjustNeighbors::execute() {
-  unsigned long aFrameNbr = annotation->getFrame()->getFrameNumber();
+  unsigned long aFrameNbr = _frame->getFrameNumber();
   for (unsigned long f = (-(unsigned long)range) + aFrameNbr;
        f <= (unsigned long)range + aFrameNbr; ++f) {
     shared_ptr<Frame> frame = session->getFrame(f);
     if (!frame) frame = std::make_shared<Frame>(f);
     std::shared_ptr<AnnotatorLib::Annotation> cAnnotation =
         AnnotatorLib::Algo::AdjustAnnotation::getInterpolation(
-            session, frame, annotation->getObject(), range);
+            session, frame, object, range);
     if (cAnnotation) {
       std::shared_ptr<AnnotatorLib::Commands::Command> command;
       if (cAnnotation->isTemporary()) {
         command = std::make_shared<AnnotatorLib::Commands::NewAnnotation>(
-            session, annotation->getObject(), frame, cAnnotation->getX(),
+            session, object, frame, cAnnotation->getX(),
             cAnnotation->getY(), cAnnotation->getWidth(),
             cAnnotation->getHeight());
       } else {

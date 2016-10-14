@@ -55,7 +55,7 @@ TEST_F(command_adjustneighbors, execute) {
 
   shared_ptr<AnnotatorLib::Commands::AdjustNeighbors> anCommand =
       std::make_shared<AnnotatorLib::Commands::AdjustNeighbors>(session,
-                                                                annotation3, 1);
+                                                                annotation3->getObject(), annotation3->getFrame(), 1);
   anCommand->execute();
   annotation2 = AnnotatorLib::Algo::InterpolateAnnotation::getInterpolation(
       session, frame2, obj);

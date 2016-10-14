@@ -17,7 +17,7 @@ class ANNOTATORLIB_API AdjustNeighbors : public Command {
   AdjustNeighbors() = delete;
 
   AdjustNeighbors(std::shared_ptr<Session> session,
-                  std::shared_ptr<Annotation> annotation, unsigned int range);
+                  std::shared_ptr<Object> object, std::shared_ptr<Frame> frame, unsigned int range);
 
   ~AdjustNeighbors() {}
 
@@ -26,7 +26,8 @@ class ANNOTATORLIB_API AdjustNeighbors : public Command {
   bool undo();
 
  protected:
-  std::shared_ptr<Annotation> annotation;
+  std::shared_ptr<Object> object;
+  std::shared_ptr<Frame> _frame;
   std::shared_ptr<Session> session;
   std::list<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
   unsigned int range;

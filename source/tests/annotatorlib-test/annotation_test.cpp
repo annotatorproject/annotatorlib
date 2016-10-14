@@ -102,23 +102,23 @@ TEST_F(annotation_test, annotationLifeTime) {
   shared_ptr<Object> obj = make_shared<Object>();
   shared_ptr<Frame> frame1 = make_shared<Frame>(1);
   shared_ptr<Frame> frame2 = make_shared<Frame>(2);
-  ASSERT_EQ(obj->getAnnotations().size(), 0);
-  ASSERT_EQ(frame1->getAnnotations().size(), 0);
+  ASSERT_EQ(obj->getAnnotations().size(), (unsigned long) 0);
+  ASSERT_EQ(frame1->getAnnotations().size(),(unsigned long) 0);
   shared_ptr<Annotation> annotation1 = Annotation::make_shared(frame1, obj, AnnotationType::RECTANGLE);
   annotation1->setHRadius(10.f);
-  ASSERT_EQ(obj->getAnnotations().size(), 1);
-  ASSERT_EQ(frame1->getAnnotations().size(), 1);
-  ASSERT_EQ(frame2->getAnnotations().size(), 0);
+  ASSERT_EQ(obj->getAnnotations().size(), (unsigned long) 1);
+  ASSERT_EQ(frame1->getAnnotations().size(), (unsigned long) 1);
+  ASSERT_EQ(frame2->getAnnotations().size(), (unsigned long) 0);
   if (true) {
     shared_ptr<Annotation> annotation2 = Annotation::make_shared(frame2, obj, AnnotationType::RECTANGLE);
-    ASSERT_EQ(obj->getAnnotations().size(), 2);
-    ASSERT_EQ(frame1->getAnnotations().size(), 1);
-    ASSERT_EQ(frame2->getAnnotations().size(), 1);
+    ASSERT_EQ(obj->getAnnotations().size(), (unsigned long) 2);
+    ASSERT_EQ(frame1->getAnnotations().size(), (unsigned long) 1);
+    ASSERT_EQ(frame2->getAnnotations().size(), (unsigned long) 1);
     annotation2.reset();
   }
-  ASSERT_EQ(obj->getAnnotations().size(), 1);     //was annotation2 automatically unregistered?
-  ASSERT_EQ(frame1->getAnnotations().size(), 1);
-  ASSERT_EQ(frame2->getAnnotations().size(), 0);  //was annotation2 automatically unregistered?
+  ASSERT_EQ(obj->getAnnotations().size(), (unsigned long) 1);     //was annotation2 automatically unregistered?
+  ASSERT_EQ(frame1->getAnnotations().size(), (unsigned long) 1);
+  ASSERT_EQ(frame2->getAnnotations().size(), (unsigned long) 0);  //was annotation2 automatically unregistered?
 }
 
 TEST_F(annotation_test, classTest) {

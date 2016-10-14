@@ -47,6 +47,7 @@ bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
         }
     }
 
+    return true;
 }
 
 bool AnnotatorLib::Commands::RemoveAnnotationRange::undo() {

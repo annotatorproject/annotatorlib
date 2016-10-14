@@ -9,7 +9,7 @@
  ************************************************************/
 
 // include associated header file
-#include "AnnotatorLib/Algo/SmoothAnnotation.h"
+#include "AnnotatorLib/Algo/AdjustAnnotation.h"
 #include "AnnotatorLib/Algo/InterpolateAnnotation.h"
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Frame.h"
@@ -21,7 +21,7 @@
 namespace AnnotatorLib {
 namespace Algo {
 
-shared_ptr<Annotation> SmoothAnnotation::getInterpolation(
+shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
     const std::shared_ptr<Session> session, shared_ptr<Frame> frame,
     shared_ptr<Object> object, unsigned int depth) {
 
@@ -30,7 +30,7 @@ shared_ptr<Annotation> SmoothAnnotation::getInterpolation(
 
   shared_ptr<Annotation> annotation =
       InterpolateAnnotation::getInterpolation(session, frame, object);
-  if (annotation->getConfidenceScore() == 1.0f)
+  if (!annotation || annotation->getConfidenceScore() == 1.0f)
     return annotation;
 
   float confidence = 0.5f; // interpolation cannot be 1.0 but if I use 0.0 then
@@ -44,7 +44,8 @@ shared_ptr<Annotation> SmoothAnnotation::getInterpolation(
 
   for (int i = -depth; i <= (int)depth; ++i) {
     shared_ptr<Frame> nframe = session->getFrame(frame->getFrameNumber() + i);
-
+    if(!nframe)
+        nframe = std::make_shared<Frame>(frame->getFrameNumber() + i);
     shared_ptr<Annotation> nAnnotation =
         InterpolateAnnotation::getInterpolation(session, nframe, object);
     if (nAnnotation && !nAnnotation->isTemporary()) {
@@ -61,6 +62,9 @@ shared_ptr<Annotation> SmoothAnnotation::getInterpolation(
     }
   }
 
+  if(counter == 0)
+      return nullptr;
+
   annotation->setX(posX / counter);
   annotation->setY(posY / counter);
   annotation->setWidth(posW / counter);
@@ -69,7 +73,7 @@ shared_ptr<Annotation> SmoothAnnotation::getInterpolation(
   return annotation;
 }
 
-float SmoothAnnotation::interpolate(float p1, float p2, float c2,
+float AdjustAnnotation::interpolate(float p1, float p2, float c2,
                                     unsigned int p2depth) {
   if(p2depth == 0)
       return p1;

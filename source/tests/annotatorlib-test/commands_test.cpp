@@ -19,7 +19,7 @@ public:
 
 TEST_F(commands_test, newAnnotation) {
   std::shared_ptr<Session> session = std::make_shared<Session>();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), (unsigned long) 0);
 
   shared_ptr<Frame> frame = std::make_shared<Frame>(1);
   shared_ptr<Class> c = std::make_shared<Class>("car");

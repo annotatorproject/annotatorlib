@@ -26,7 +26,7 @@ namespace Algo {
 /**
  *
  */
-class ANNOTATORLIB_API SmoothAnnotation {
+class ANNOTATORLIB_API AdjustAnnotation {
 public:
   static shared_ptr<Annotation> getInterpolation(const std::shared_ptr<Session> session,
                                                  const shared_ptr<Frame> frame,

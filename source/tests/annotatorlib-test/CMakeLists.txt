@@ -14,9 +14,10 @@ message(STATUS "Test ${target}")
 set(sources
     main.cpp
     #algo_test.cpp
-    algo_smooth_test.cpp
+    algo_adjust_test.cpp
     annotation_test.cpp
     attribute_test.cpp
+    command_adjustneighbors.cpp
     commands_test.cpp
     imageset_test.cpp
     object_test.cpp

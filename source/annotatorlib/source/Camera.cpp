@@ -41,6 +41,8 @@ Image Camera::next() {
 
 unsigned int Camera::size() { return 1; }
 
+unsigned int Camera::getFPS() { return capture.get(CV_CAP_PROP_FPS); }
+
 std::string Camera::getPath() { return path; }
 
 bool Camera::equals(ImageSet *other) {

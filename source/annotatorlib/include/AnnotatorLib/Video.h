@@ -67,6 +67,8 @@ class ANNOTATORLIB_API Video : public ImageSet {
    */
   virtual unsigned int size();
 
+  virtual unsigned int getFPS() override;
+
   virtual std::string getPath();
 
   virtual bool equals(ImageSet *other);

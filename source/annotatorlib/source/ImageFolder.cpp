@@ -61,6 +61,8 @@ Image ImageFolder::next() {
 
 unsigned int ImageFolder::size() { return images.size(); }
 
+unsigned int ImageFolder::getFPS() { return 24; }
+
 std::string ImageFolder::getPath() { return path; }
 
 bool ImageFolder::equals(ImageSet *other) {

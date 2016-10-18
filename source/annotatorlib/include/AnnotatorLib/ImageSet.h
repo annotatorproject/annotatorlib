@@ -31,8 +31,17 @@ class ANNOTATORLIB_API ImageSet {
  */
   virtual Image getImage(unsigned long position) = 0;
 
+  /**
+ * @brief gotoPosition
+ * @param position to change to
+ * @return position is withing set size
+ */
   virtual bool gotoPosition(unsigned long position) = 0;
 
+  /**
+ * @brief getPosition
+ * @return current position
+ */
   virtual long getPosition() = 0;
 
   /**
@@ -53,6 +62,13 @@ class ANNOTATORLIB_API ImageSet {
 * in Folders its the number of Image Files.
    */
   virtual unsigned int size() = 0;
+
+  /**
+ * @brief getFPS
+ * The frames per second of this image set in default
+ * @return fps
+ */
+  virtual unsigned int getFPS() = 0;
 
   virtual std::string getPath() = 0;
 

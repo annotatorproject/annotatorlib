@@ -56,6 +56,8 @@ Image Video::next() {
 
 unsigned int Video::size() { return capture->get(CV_CAP_PROP_FRAME_COUNT); }
 
+unsigned int Video::getFPS() { return capture->get(CV_CAP_PROP_FPS); }
+
 std::string Video::getPath() { return this->path; }
 
 bool Video::equals(ImageSet *other) {

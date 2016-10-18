@@ -32,11 +32,11 @@ class ANNOTATORLIB_API ImageFolder : public ImageSet {
   virtual ImageSetType getType();
 
   /**
-   *
-   * @param frame
-   * @return image
+   * @brief getImage
+   * @param position
+   * @return
    */
-  virtual Image getImage(unsigned long /*in*/ frame) override;
+  virtual Image getImage(unsigned long position) override;
 
   virtual bool gotoPosition(unsigned long position) override;
 

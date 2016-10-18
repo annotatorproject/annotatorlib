@@ -8,8 +8,8 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     std::shared_ptr<Session> session, shared_ptr<Frame> frame, float x, float y,
     float width, float height, float confidence)
     : newObjectId(newObjectId),
-      createNewObject(true),
-      newObjectClass(newObjectClass) {
+      newObjectClass(newObjectClass),
+      createNewObject(true) {
   this->session = session;
   this->frame = frame;
   this->x = x;
@@ -23,7 +23,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     std::shared_ptr<Session> session, shared_ptr<Object> object,
     shared_ptr<Frame> frame, float x, float y, float width, float height,
     float confidence)
-    : newObjectId(0), createNewObject(false), newObjectClass(0) {
+    : newObjectId(0), newObjectClass(0), createNewObject(false) {
   this->session = session;
   this->object = object;
   this->frame = frame;

@@ -129,6 +129,8 @@ std::string AttributeValue::toString() {
         return "false";
     case AnnotatorLib::AttributeType::UNKNOWN:
       break;
+    default:
+      break;
   };
   return "";
 }

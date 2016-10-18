@@ -4,8 +4,8 @@
  Annotation class body
  ************************************************************/
 
-#include <algorithm>
 #include <assert.h>
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 // include associated header file
@@ -42,7 +42,10 @@ Annotation::Annotation(shared_ptr<Annotation> a, shared_ptr<Frame> frame,
 Annotation::Annotation(unsigned long id, const shared_ptr<Frame> &frame,
                        const shared_ptr<Object> &obj, const AnnotationType type,
                        bool isInterpolated)
-    : id(id), frame(frame), object(obj), type(type),
+    : id(id),
+      frame(frame),
+      object(obj),
+      type(type),
       is_temporary(isInterpolated) {}
 
 //////////////// public methods ///////////////////
@@ -97,9 +100,7 @@ bool Annotation::removeAttribute(shared_ptr<Attribute> attribute) {
   return false;
 }
 
-shared_ptr<Frame> Annotation::getFrame() const {
-  return frame;
-}
+shared_ptr<Frame> Annotation::getFrame() const { return frame; }
 
 shared_ptr<Object> Annotation::getObject() const { return object; }
 
@@ -139,8 +140,7 @@ float Annotation::getHRadius() const { return width / 2; }
 
 void Annotation::setHRadius(float hradius) {
   assert(hradius > 0);
-  if (hradius < 0)
-    hradius *= -1;
+  if (hradius < 0) hradius *= -1;
   this->width = hradius * 2;
 }
 
@@ -148,8 +148,7 @@ float Annotation::getVRadius() const { return height / 2; }
 
 void Annotation::setVRadius(float vradius) {
   assert(vradius > 0);
-  if (vradius < 0)
-    vradius *= -1;
+  if (vradius < 0) vradius *= -1;
   this->height = vradius * 2;
 }
 
@@ -169,8 +168,7 @@ void Annotation::setNext(weak_ptr<Annotation> next) {
 }
 
 shared_ptr<Annotation> Annotation::getNext() const {
-  if (next.expired())
-    return shared_ptr<Annotation>(nullptr);
+  if (next.expired()) return shared_ptr<Annotation>(nullptr);
   return next.lock();
 }
 
@@ -184,8 +182,7 @@ void Annotation::setPrevious(weak_ptr<Annotation> previous) {
 }
 
 shared_ptr<Annotation> Annotation::getPrevious() const {
-  if (previous.expired())
-    return shared_ptr<Annotation>(nullptr);
+  if (previous.expired()) return shared_ptr<Annotation>(nullptr);
   return previous.lock();
 }
 
@@ -208,8 +205,7 @@ bool Annotation::isTemporary() const { return is_temporary; }
 bool Annotation::isRegistered() const { return registered; }
 
 bool Annotation::setRegistered(bool do_register) {
-  if (isTemporary())
-    return false;
+  if (isTemporary()) return false;
   if (do_register && !registered) {
     this->getObject()->addAnnotation(self_);
     this->getFrame()->addAnnotation(self_);
@@ -248,7 +244,7 @@ void Annotation::unregisterAnnotation(const shared_ptr<Annotation> a) {
   a->setRegistered(false);
 }
 
-} // End of namespace AnnotatorLib
+}  // End of namespace AnnotatorLib
 
 /************************************************************
  End of Annotation class body

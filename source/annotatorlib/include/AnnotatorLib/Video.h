@@ -20,7 +20,8 @@ namespace AnnotatorLib {
 
 /************************************************************/
 /**
- *
+ * @brief The Video class
+ * represents an image set from a video file
  */
 class ANNOTATORLIB_API Video : public ImageSet {
  protected:
@@ -38,25 +39,25 @@ class ANNOTATORLIB_API Video : public ImageSet {
   virtual ImageSetType getType();
 
   /**
-   *
-   * @param frame
-   * @return image
+   * @brief getImage
+   * @param position the position to get, 0 based index
+   * @return image at given position
    */
-  virtual Image getImage(unsigned long /*in*/ frame) override;
+  virtual Image getImage(unsigned long position) override;
 
   bool gotoPosition(unsigned long position) override;
 
   long getPosition() override;
 
   /**
-   *
-   * @return next
+   * @brief hasNext
+   * @return true if index greater than size
    */
   virtual bool hasNext();
 
   /**
    *
-   * @return image
+   * @return image at next index
    */
   virtual Image next();
 

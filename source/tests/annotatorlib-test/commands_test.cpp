@@ -28,35 +28,35 @@ TEST_F(commands_test, newAnnotation) {
       new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
 
   session->execute(shared_ptr<Commands::Command>(nA));
-  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
   shared_ptr<Object> o = session->getObject(1001);
-  ASSERT_EQ(o->getAnnotations().size(), 1);
+  ASSERT_EQ(o->getAnnotations().size(), 1ul);
 
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
 
   // call redo 2 times
   session->redo();
-  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
   session->redo();
-  ASSERT_EQ(session->getAnnotations().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
 
   // call undo 2 times
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
 
-  for (int i = 0; i < 5; ++i) {
+  for (unsigned long i = 0ul; i < 5; ++i) {
     session->execute(std::make_shared<Commands::NewAnnotation>(
         1001 + i, c, session, frame, 10, 10, 5, 5));
     ASSERT_EQ(session->getAnnotations().size(), i + 1);
     ASSERT_EQ(session->getObjects().size(), i + 1);
   }
-  for (int i = 4; i >= 0; --i) {
+  for (long i = 4ul; i >= 0; --i) {
     session->undo();
-    ASSERT_EQ(session->getAnnotations().size(), i);
-    ASSERT_EQ(session->getObjects().size(), i);
+    ASSERT_EQ(session->getAnnotations().size(), (unsigned long)i);
+    ASSERT_EQ(session->getObjects().size(), (unsigned long)i);
   }
 }
 
@@ -76,19 +76,19 @@ TEST_F(commands_test, updateObject) {
       new Commands::UpdateObject(session->getObject(1001), c_new);
 
   session->execute(shared_ptr<Commands::Command>(uO));
-  ASSERT_EQ(session->getAnnotations().size(), 1);
-  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  ASSERT_EQ(session->getObjects().size(), 1ul);
   ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "person");
 
   session->undo();
   ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "car");
-  ASSERT_EQ(session->getAnnotations().size(), 1);
-  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  ASSERT_EQ(session->getObjects().size(), 1ul);
 
   session->redo();
   ASSERT_EQ(session->getObject(1001)->getClass()->getName(), "person");
-  ASSERT_EQ(session->getAnnotations().size(), 1);
-  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  ASSERT_EQ(session->getObjects().size(), 1ul);
 }
 
 TEST_F(commands_test, removeObject) {
@@ -102,26 +102,26 @@ TEST_F(commands_test, removeObject) {
 
   session->execute(shared_ptr<Commands::Command>(nA));
 
-  ASSERT_EQ(session->getAnnotations().size(), 1);
-  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  ASSERT_EQ(session->getObjects().size(), 1ul);
 
   session->execute(shared_ptr<Commands::Command>(
       new Commands::RemoveObject(session, session->getObject(1001))));
-  ASSERT_EQ(session->getAnnotations().size(), 0);
-  ASSERT_EQ(session->getObjects().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
+  ASSERT_EQ(session->getObjects().size(), 0ul);
 
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 1);
-  ASSERT_EQ(session->getObjects().size(), 1);
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  ASSERT_EQ(session->getObjects().size(), 1ul);
 
   session->redo();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
-  ASSERT_EQ(session->getObjects().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
+  ASSERT_EQ(session->getObjects().size(), 0ul);
 }
 
 TEST_F(commands_test, removeAnnotation) {
   std::shared_ptr<Session> session = std::make_shared<Session>();
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
 
   shared_ptr<Class> c = std::make_shared<Class>("car");
   shared_ptr<Object> o = std::make_shared<Object>(c);
@@ -133,45 +133,42 @@ TEST_F(commands_test, removeAnnotation) {
             session, o, std::make_shared<Frame>(i), 10, 10, 5, 5)));
   }
 
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
 
   std::shared_ptr<Annotation> a2 =
       o->getAnnotation(session->getFrame((unsigned long)2));
   session->execute(shared_ptr<Commands::RemoveAnnotation>(
       new Commands::RemoveAnnotation(session, a2)));
 
-  ASSERT_EQ(session->getAnnotations().size(), 4);
+  ASSERT_EQ(session->getAnnotations().size(), 4ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
   session->redo();
-  ASSERT_EQ(session->getAnnotations().size(), 4);
+  ASSERT_EQ(session->getAnnotations().size(), 4ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
 
   // REMOVE RANGE
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1,
-                                          (unsigned long)3)));
+      new Commands::RemoveAnnotationRange(session, o, 1ul, 3ul)));
 
-  ASSERT_EQ(session->getAnnotations().size(), 4);
+  ASSERT_EQ(session->getAnnotations().size(), 4ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
 
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)1,
-                                          (unsigned long)11)));
+      new Commands::RemoveAnnotationRange(session, o, 1ul, 11ul)));
 
-  ASSERT_EQ(session->getAnnotations().size(), 0);
+  ASSERT_EQ(session->getAnnotations().size(), 0ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
 
   session->execute(shared_ptr<Commands::RemoveAnnotationRange>(
-      new Commands::RemoveAnnotationRange(session, o, (unsigned long)2,
-                                          (unsigned long)4)));
+      new Commands::RemoveAnnotationRange(session, o, 2ul, 4ul)));
 
-  ASSERT_EQ(session->getAnnotations().size(), 3);
+  ASSERT_EQ(session->getAnnotations().size(), 3ul);
   session->undo();
-  ASSERT_EQ(session->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getAnnotations().size(), 5ul);
 }
 
 TEST_F(commands_test, compressObject) {
@@ -185,19 +182,19 @@ TEST_F(commands_test, compressObject) {
     ASSERT_EQ(session->getAnnotations().size(), i + 1);
     ASSERT_EQ(session->getFrames().size(), i + 1);
   }
-  ASSERT_EQ(session->getFrames().size(), 5);
-  ASSERT_EQ(obj->getAnnotations().size(), 5);
+  ASSERT_EQ(session->getFrames().size(), 5ul);
+  ASSERT_EQ(obj->getAnnotations().size(), 5ul);
 
   Commands::CompressObject *cmd = new Commands::CompressObject(session, obj);
   session->execute(shared_ptr<Commands::Command>(cmd));
 
-  ASSERT_EQ(obj->getAnnotations().size(), 2);
+  ASSERT_EQ(obj->getAnnotations().size(), 2ul);
 
   session->undo();
 
-  ASSERT_EQ(obj->getAnnotations().size(), 5);
+  ASSERT_EQ(obj->getAnnotations().size(), 5ul);
 
   session->redo();
 
-  ASSERT_EQ(obj->getAnnotations().size(), 2);
+  ASSERT_EQ(obj->getAnnotations().size(), 2ul);
 }

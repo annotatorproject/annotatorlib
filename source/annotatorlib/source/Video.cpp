@@ -28,9 +28,9 @@ Video::~Video() {
 
 ImageSetType Video::getType() { return ImageSetType::VIDEO; }
 
-Image Video::getImage(unsigned long frame) {
+Image Video::getImage(unsigned long position) {
   long prev = getPosition();
-  gotoPosition(frame - 1);
+  gotoPosition(position - 1);
   Image img = next();
   gotoPosition(prev);
   return img;

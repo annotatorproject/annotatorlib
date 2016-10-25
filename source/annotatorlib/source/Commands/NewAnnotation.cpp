@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Object.h>

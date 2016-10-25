@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef UPDATEANNOTATION_H
 #define UPDATEANNOTATION_H
 

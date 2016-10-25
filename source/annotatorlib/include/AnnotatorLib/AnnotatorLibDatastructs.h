@@ -1,4 +1,4 @@
-
+// Copyright 2016 Annotator Team
 
 #ifndef PKG_ANNOTATOR_ANNOTATORLIB
 #define PKG_ANNOTATOR_ANNOTATORLIB

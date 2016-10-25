@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef ADJUSTNEIGHBORS_CMD_H
 #define ADJUSTNEIGHBORS_CMD_H
 

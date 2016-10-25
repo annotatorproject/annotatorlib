@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #define Annotator_AnnotatorLib_Class_BODY
 
 // include associated header file

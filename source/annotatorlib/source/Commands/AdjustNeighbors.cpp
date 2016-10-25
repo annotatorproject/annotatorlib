@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Algo/AdjustAnnotation.h>
 #include <AnnotatorLib/Commands/AdjustNeighbors.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>

@@ -1,4 +1,4 @@
-
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Saver/AbstractSaver.h>
 #include <AnnotatorLib/Saver/SaverFactory.h>

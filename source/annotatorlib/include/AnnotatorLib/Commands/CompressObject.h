@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef COMPRESSOBJECT_CMD_H
 #define COMPRESSOBJECT_CMD_H
 

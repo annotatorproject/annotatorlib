@@ -1,5 +1,4 @@
 // Copyright 2016 Annotator Team
-
 #define Annotator_AnnotatorLib_Video_BODY
 
 /************************************************************

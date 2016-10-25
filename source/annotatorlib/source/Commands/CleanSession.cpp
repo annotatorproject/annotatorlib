@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Commands/CleanSession.h>
 
 AnnotatorLib::Commands::CleanSession::CleanSession(

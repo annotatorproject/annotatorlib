@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Algo/AdjustAnnotation.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Class.h>

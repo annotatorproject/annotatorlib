@@ -1,5 +1,4 @@
 // Copyright 2016 Annotator Team
-
 #ifndef ANNOTATOR_ANNOTATORLIB_VIDEO_H
 #define ANNOTATOR_ANNOTATORLIB_VIDEO_H
 

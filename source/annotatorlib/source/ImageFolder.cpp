@@ -88,8 +88,8 @@ void ImageFolder::loadFolder() {
     }
     std::sort(images.begin(), images.end());
     imgIter = images.begin();
-  }else{
-      throw std::runtime_error("File not found: " + this->path);
+  } else {
+    throw std::runtime_error("File not found: " + this->path);
   }
 }
 

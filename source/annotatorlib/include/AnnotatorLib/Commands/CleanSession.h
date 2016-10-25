@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef CLEANSESSION_CMD_H
 #define CLEANSESSION_CMD_H
 

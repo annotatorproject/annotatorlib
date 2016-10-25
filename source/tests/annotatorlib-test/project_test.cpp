@@ -1,4 +1,4 @@
-
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Project.h>
 #include <gmock/gmock.h>

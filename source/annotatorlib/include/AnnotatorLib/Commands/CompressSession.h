@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef COMPRESSSESSION_CMD_H
 #define COMPRESSSESSION_CMD_H
 

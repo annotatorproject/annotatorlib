@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/Algo/CompressObjectTrack.h>
 #include <AnnotatorLib/Commands/CompressSession.h>
 #include <AnnotatorLib/Object.h>

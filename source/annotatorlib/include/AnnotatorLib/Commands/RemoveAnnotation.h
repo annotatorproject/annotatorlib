@@ -1,3 +1,4 @@
+// Copyright 2016 Annotator Team
 #ifndef REMOVEANNOTATION
 #define REMOVEANNOTATION
 

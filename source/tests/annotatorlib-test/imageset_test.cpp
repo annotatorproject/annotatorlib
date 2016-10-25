@@ -1,4 +1,4 @@
-
+// Copyright 2016 Annotator Team
 #include <AnnotatorLib/ImageFolder.h>
 #include <AnnotatorLib/ImageSet.h>
 #include <AnnotatorLib/ImageSetFactory.h>

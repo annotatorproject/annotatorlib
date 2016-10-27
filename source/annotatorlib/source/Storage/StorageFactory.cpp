@@ -5,6 +5,8 @@
  LoaderFactory class body
  ************************************************************/
 
+#include <memory>
+
 // include associated header file
 #include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/JSONStorage.h"
@@ -17,7 +19,7 @@ namespace Storage {
 
 // static attributes (if any)
 
-AbstractStorage *StorageFactory::createStorage(std::string type) {
+shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
   if ("xml" == type) return createStorage(AnnotatorLib::StorageType::XML);
   if ("json" == type) return createStorage(AnnotatorLib::StorageType::JSON);
   if ("sql" == type) return createStorage(AnnotatorLib::StorageType::SQL);
@@ -25,12 +27,12 @@ AbstractStorage *StorageFactory::createStorage(std::string type) {
   return createStorage(AnnotatorLib::StorageType::UNKNOWN);
 }
 
-AbstractStorage *StorageFactory::createStorage(AnnotatorLib::StorageType type) {
+shared_ptr<AbstractStorage> StorageFactory::createStorage(AnnotatorLib::StorageType type) {
   switch (type) {
     case StorageType::XML:
-      return new XMLStorage();
+      return std::make_shared<XMLStorage>();
     case StorageType::JSON:
-      return new JSONStorage();
+      return std::make_shared<JSONStorage>();
     case StorageType::SQL:
     case StorageType::SQLITE:
     default:

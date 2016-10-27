@@ -40,8 +40,8 @@ std::shared_ptr<AnnotatorLib::Session> Project::getSession() const {
   return session;
 }
 
-Storage::AbstractStorage *Project::getStorage() const {
-  return (AnnotatorLib::Storage::AbstractStorage *)session.get();
+std::shared_ptr<Storage::AbstractStorage> Project::getStorage() const {
+  return std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(session);
 }
 
 std::string Project::getName() const { return name; }
@@ -69,6 +69,31 @@ std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
   project->load();
 
   return project;
+}
+
+/**
+ *
+ */
+void Project::create() {
+  QFile file(QString::fromStdString(this->path));
+
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    qDebug() << "File could not been opened: "
+             << QString::fromStdString(this->path);
+    throw std::runtime_error("File could not been opened!");
+  }
+
+  QDomDocument doc("Annotator");
+  QDomElement root = saveRoot(doc);
+
+  doc.appendChild(root);
+
+  QTextStream ts(&file);
+  ts << doc.toString();
+
+  file.close();
+
+  this->session = std::make_shared<Session>();
 }
 
 /**
@@ -139,11 +164,11 @@ void Project::loadProjectSettings(QDomElement &root) {
 }
 
 void Project::loadSession() {
-  AnnotatorLib::Storage::AbstractStorage *storage =
+  shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage =
       AnnotatorLib::Storage::StorageFactory::createStorage(this->storageType);
   storage->setPath(this->storagePath);
   storage->open();
-  this->session = (std::shared_ptr<AnnotatorLib::Session>)storage;
+  this->session = std::static_pointer_cast<AnnotatorLib::Session>(storage);
   this->time_point_start = std::chrono::system_clock::now();
 }
 
@@ -210,8 +235,7 @@ QDomElement Project::saveRoot(QDomDocument &doc) {
 }
 
 void Project::saveSession() {
-  AnnotatorLib::Storage::AbstractStorage *storage =
-      (AnnotatorLib::Storage::AbstractStorage *)session.get();
+  shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage = std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(session);
   storage->flush();
 }
 

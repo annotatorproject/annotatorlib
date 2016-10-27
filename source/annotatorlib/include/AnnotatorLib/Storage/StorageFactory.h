@@ -27,14 +27,14 @@ class ANNOTATORLIB_API StorageFactory {
    * @return loader
    * @param type
    */
-  static AbstractStorage *createStorage(std::string /*in*/ type);
+  static shared_ptr<AbstractStorage> createStorage(std::string /*in*/ type);
 
   /**
    *
    * @param type
    * @return loader
    */
-  static AbstractStorage *createStorage(AnnotatorLib::StorageType type);
+  static shared_ptr<AbstractStorage> createStorage(AnnotatorLib::StorageType type);
 };
 /************************************************************/
 /* External declarations (package visibility)               */

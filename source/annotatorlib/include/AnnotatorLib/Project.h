@@ -74,7 +74,7 @@ class ANNOTATORLIB_API Project {
 
   std::shared_ptr<AnnotatorLib::Session> getSession() const;
 
-  AnnotatorLib::Storage::AbstractStorage *getStorage() const;
+  std::shared_ptr<Storage::AbstractStorage> getStorage() const;
 
   std::string getName() const;
 
@@ -90,6 +90,11 @@ class ANNOTATORLIB_API Project {
    * @brief load
    */
   void load();
+
+  /**
+   * @brief create
+   */
+  void create();
 
   /**
    *
@@ -214,6 +219,7 @@ class ANNOTATORLIB_API Project {
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
 
   bool active = true;
+
 };
 /************************************************************/
 /* External declarations (package visibility)               */

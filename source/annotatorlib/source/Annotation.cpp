@@ -92,7 +92,7 @@ bool Annotation::addAttribute(shared_ptr<Attribute> attribute) {
 }
 
 bool Annotation::removeAttribute(shared_ptr<Attribute> attribute) {
-  std::vector<shared_ptr<Attribute>>::const_iterator position =
+  std::vector<shared_ptr<Attribute>>::iterator position =
       std::find(attributes.begin(), attributes.end(), attribute);
   if (position != attributes.end()) {
     attributes.erase(position);

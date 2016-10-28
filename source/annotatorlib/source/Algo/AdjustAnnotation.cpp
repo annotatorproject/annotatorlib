@@ -98,8 +98,8 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
 
   annotation->setX(posX / counter);
   annotation->setY(posY / counter);
-  annotation->setWidth(posW / counter);
-  annotation->setHeight(posH / counter);
+  annotation->setWidth(std::max(1.0f,posW / counter));
+  annotation->setHeight(std::max(1.0f,posH / counter));
   annotation->setConfidenceScore(confidence);
   return annotation;
 }
@@ -107,8 +107,8 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
 float AdjustAnnotation::interpolate(float p1, float p2, float c2,
                                     unsigned int p2depth) {
   if (p2depth == 0)
-    return p1 * (c2 > 0.1f ? c2 : 0.5f);
-  return p1 + (p2 - p1) * c2 / std::pow(p2depth, 2);
+    return p1 * c2;
+  return p1 + (p2 - p1) * c2 * 1 / (2 * p2depth);
 }
 
 } // of namespace Algo

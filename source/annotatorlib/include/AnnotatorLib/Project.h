@@ -219,7 +219,6 @@ class ANNOTATORLIB_API Project {
   std::chrono::time_point<std::chrono::system_clock> time_point_start;
 
   bool active = true;
-
 };
 /************************************************************/
 /* External declarations (package visibility)               */

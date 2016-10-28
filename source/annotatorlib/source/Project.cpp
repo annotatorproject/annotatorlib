@@ -41,7 +41,8 @@ std::shared_ptr<AnnotatorLib::Session> Project::getSession() const {
 }
 
 std::shared_ptr<Storage::AbstractStorage> Project::getStorage() const {
-  return std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(session);
+  return std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(
+      session);
 }
 
 std::string Project::getName() const { return name; }
@@ -235,7 +236,8 @@ QDomElement Project::saveRoot(QDomDocument &doc) {
 }
 
 void Project::saveSession() {
-  shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage = std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(session);
+  shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage =
+      std::static_pointer_cast<AnnotatorLib::Storage::AbstractStorage>(session);
   storage->flush();
 }
 

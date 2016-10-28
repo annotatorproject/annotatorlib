@@ -8,8 +8,8 @@
 #include <memory>
 
 // include associated header file
-#include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/JSONStorage.h"
+#include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
 
 // Derived includes directives
@@ -27,7 +27,8 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
   return createStorage(AnnotatorLib::StorageType::UNKNOWN);
 }
 
-shared_ptr<AbstractStorage> StorageFactory::createStorage(AnnotatorLib::StorageType type) {
+shared_ptr<AbstractStorage> StorageFactory::createStorage(
+    AnnotatorLib::StorageType type) {
   switch (type) {
     case StorageType::XML:
       return std::make_shared<XMLStorage>();

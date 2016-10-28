@@ -35,9 +35,13 @@ bool AnnotatorLib::Commands::AdjustNeighbors::execute() {
             cAnnotation->getWidth(), cAnnotation->getHeight());
       }
       commands.push_front(command);
-      command->execute();
     }
   }
+
+  for (std::shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
+    command->execute();
+  }
+
   return true;
 }
 

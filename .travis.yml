@@ -37,6 +37,8 @@ addons:
    - libjasper-dev
    - libdc1394-22-dev
    - libboost-all-dev
+   - libpoco-dev
+   - libmysqlclient-dev
    - lcov
    - texlive-fonts-recommended
    - texlive-latex-extra
@@ -79,13 +81,21 @@ before_script:
  - curl -sL https://github.com/Itseez/opencv/archive/3.1.0.zip > opencv.zip
  - unzip opencv.zip
  - cd opencv-3.1.0
-
  - mkdir build install
  - cd build
  - cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_FFMPEG=OFF -DWITH_IPP=OFF ..
  - make -j8
  - sudo make install
  - cd ../../
+
+ - git clone https://github.com/pocoproject/poco
+ - sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' poco/cmake/FindMySQL.cmake
+ - cd poco
+ - mkdir -p build
+ - cd build
+ - cmake -DCMAKE_BUILD_TYPE=Release .. && make -j3 && sudo make install && sudo ldconfig
+ - cd ../..
+
 
  - mkdir build
  - cd build
@@ -97,7 +107,7 @@ script:
 after_success:
   - make annotatorlib_coverage
   - cd ..
-  - coveralls --root "." -E ".*/cmake-3.6.0/.*" -E ".*/opencv-3.1.0/.*" -E ".*/build/gtest/.*" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
+  - coveralls --root "." -E ".*/cmake-3.6.0/.*" -E ".*/opencv-3.1.0/.*" -E ".*/poco/.*" -E ".*/build/gtest/.*" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
 
 deploy:
   provider: releases

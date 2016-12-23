@@ -24,6 +24,7 @@ set(sources
     project_test.cpp
     saver_test.cpp
     session_test.cpp
+    storage_mysql_test.cpp
 )
 
 

@@ -1,8 +1,8 @@
 // Copyright 2016 Annotator Team
-#define Annotator_AnnotatorLib_Loader_SQLLoader_BODY
+#define Annotator_AnnotatorLib_Loader_MySQLLoader_BODY
 
 /************************************************************
- SQLLoader class body
+ MySQLLoader class body
  ************************************************************/
 
 // include associated header file
@@ -29,5 +29,5 @@ void MySQLLoader::loadSession(Session *session) {
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of SQLLoader class body
+ End of MySQLLoader class body
  ************************************************************/

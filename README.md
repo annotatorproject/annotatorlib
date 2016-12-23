@@ -24,6 +24,14 @@ sudo apt-get install libboost-system-dev libboost-filesystem-dev
 sudo apt-get install qtbase5-dev
 ```
 
+Build LibPoco
+```sh
+git clone https://github.com/pocoproject/poco.git
+cd poco
+sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' cmake/FindMySQL.cmake
+sudo ./build_cmake.sh
+```
+
 Then build.
 
 ```sh

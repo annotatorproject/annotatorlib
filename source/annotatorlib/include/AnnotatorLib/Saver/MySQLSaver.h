@@ -1,28 +1,30 @@
 // Copyright 2016 Annotator Team
-#ifndef ANNOTATOR_ANNOTATORLIB_LOADER_SQLLOADER_H
-#define ANNOTATOR_ANNOTATORLIB_LOADER_SQLLOADER_H
+#ifndef ANNOTATOR_ANNOTATORLIB_SAVER_MYSQLSAVER_H
+#define ANNOTATOR_ANNOTATORLIB_SAVER_MYSQLSAVER_H
 
 /************************************************************
- SQLLoader class header
+ SQLSaver class header
  ************************************************************/
 #include <AnnotatorLib/annotatorlib_api.h>
-#include "AnnotatorLib/Loader/Pkg_Loader.h"
+#include "AnnotatorLib/Saver/Pkg_Saver.h"
 
-#include "AnnotatorLib/Loader/AbstractLoader.h"
+#include "AnnotatorLib/Saver/AbstractSaver.h"
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Saver {
 
 /************************************************************/
 /**
  *
  */
-class ANNOTATORLIB_API SQLLoader : public AbstractLoader {
-  // AbstractLoader interface
+class ANNOTATORLIB_API MySQLSaver : public AbstractSaver {
+  // AbstractSaver interface
  public:
+  void saveAnnotation(const Annotation annotation);
   void setPath(std::string path);
   StorageType getType();
-  void loadSession(AnnotatorLib::Session* session);
+  void saveSession(const AnnotatorLib::Session* session);
+  bool close();
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -30,11 +32,11 @@ class ANNOTATORLIB_API SQLLoader : public AbstractLoader {
 
 /* Inline functions                                         */
 
-}  // of namespace Loader
+}  // of namespace Saver
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of SQLLoader class header
+ End of MySQLSaver class header
  ************************************************************/
 
 #endif

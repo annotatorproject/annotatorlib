@@ -1,45 +1,45 @@
 // Copyright 2016 Annotator Team
-#define Annotator_AnnotatorLib_Storage_JSONStorage_BODY
+#define Annotator_AnnotatorLib_Storage_MySQLStorage_BODY
 
 /************************************************************
- JSONStorage class body
+ MySQLStorage class body
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/JSONLoader.h>
-#include <AnnotatorLib/Saver/JSONSaver.h>
-#include <AnnotatorLib/Storage/JSONStorage.h>
+#include <AnnotatorLib/Loader/MySQLLoader.h>
+#include <AnnotatorLib/Saver/MySQLSaver.h>
+#include <AnnotatorLib/Storage/MySQLStorage.h>
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 namespace Storage {
 
-void JSONStorage::setPath(std::string path) { this->path = path; }
+void MySQLStorage::setPath(std::string path) { this->path = path; }
 
-StorageType JSONStorage::getType() { return AnnotatorLib::StorageType::JSON; }
+StorageType MySQLStorage::getType() { return AnnotatorLib::StorageType::MYSQL; }
 
-bool JSONStorage::open() {
-  AnnotatorLib::Loader::JSONLoader loader;
+bool MySQLStorage::open() {
+  AnnotatorLib::Loader::MySQLLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
   this->_open = true;
   return _open;
 }
 
-bool JSONStorage::isOpen() { return _open; }
+bool MySQLStorage::isOpen() { return _open; }
 
-bool JSONStorage::flush() {
-  AnnotatorLib::Saver::JSONSaver saver;
+bool MySQLStorage::flush() {
+  AnnotatorLib::Saver::MySQLSaver saver;
   saver.setPath(this->path);
   saver.saveSession(this);
   _save = saver.close();
   return _save;
 }
 
-bool JSONStorage::isSaved() { return _save; }
+bool MySQLStorage::isSaved() { return _save; }
 
-bool JSONStorage::close() {
+bool MySQLStorage::close() {
   this->_open = false;
   return flush();
 }
@@ -50,5 +50,5 @@ bool JSONStorage::close() {
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of JSONStorage class body
+ End of MySQLStorage class body
  ************************************************************/

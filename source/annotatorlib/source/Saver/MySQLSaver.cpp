@@ -7,22 +7,22 @@
 
 // include associated header file
 
-#include "AnnotatorLib/Saver/SQLSaver.h"
+#include "AnnotatorLib/Saver/MySQLSaver.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 namespace Saver {
 
-void SQLSaver::saveAnnotation(const Annotation annotation) {}
+void MySQLSaver::saveAnnotation(const Annotation annotation) {}
 
-void SQLSaver::setPath(std::string path) {}
+void MySQLSaver::setPath(std::string path) {}
 
-StorageType SQLSaver::getType() { return AnnotatorLib::StorageType::SQL; }
+StorageType MySQLSaver::getType() { return AnnotatorLib::StorageType::MYSQL; }
 
-void SQLSaver::saveSession(const Session *session) {}
+void MySQLSaver::saveSession(const Session *session) {}
 
-bool SQLSaver::close() { return true; }
+bool MySQLSaver::close() { return true; }
 
 // static attributes (if any)
 

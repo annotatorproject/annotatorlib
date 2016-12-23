@@ -8,7 +8,7 @@
 // include associated header file
 #include "AnnotatorLib/Saver/SaverFactory.h"
 #include "AnnotatorLib/Saver/JSONSaver.h"
-#include "AnnotatorLib/Saver/SQLSaver.h"
+#include "AnnotatorLib/Saver/MySQLSaver.h"
 #include "AnnotatorLib/Saver/SQLiteSaver.h"
 #include "AnnotatorLib/Saver/XMLSaver.h"
 
@@ -22,7 +22,7 @@ namespace Saver {
 AbstractSaver *SaverFactory::createSaver(std::string type) {
   if ("xml" == type) return createSaver(AnnotatorLib::StorageType::XML);
   if ("json" == type) return createSaver(AnnotatorLib::StorageType::JSON);
-  if ("sql" == type) return createSaver(AnnotatorLib::StorageType::SQL);
+  if ("mysql" == type) return createSaver(AnnotatorLib::StorageType::MYSQL);
   if ("sqlite" == type) return createSaver(AnnotatorLib::StorageType::SQLITE);
   return createSaver(AnnotatorLib::StorageType::UNKNOWN);
 }
@@ -34,8 +34,8 @@ AbstractSaver *SaverFactory::createSaver(
       return new XMLSaver();
     case StorageType::JSON:
       return new JSONSaver();
-    case StorageType::SQL:
-      return new SQLSaver();
+    case StorageType::MYSQL:
+      return new MySQLSaver();
 #ifdef WITH_SQLITE3
     case StorageType::SQLITE:
       return new SQLiteSaver();

@@ -6,20 +6,20 @@
  ************************************************************/
 
 // include associated header file
-#include "AnnotatorLib/Loader/SQLLoader.h"
+#include "AnnotatorLib/Loader/MySQLLoader.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
 namespace Loader {
 
-void SQLLoader::setPath(std::string path) {
+void MySQLLoader::setPath(std::string path) {
   // TODO:
 }
 
-StorageType SQLLoader::getType() { return AnnotatorLib::StorageType::SQL; }
+StorageType MySQLLoader::getType() { return AnnotatorLib::StorageType::MYSQL; }
 
-void SQLLoader::loadSession(Session *session) {
+void MySQLLoader::loadSession(Session *session) {
   // TODO:
 }
 

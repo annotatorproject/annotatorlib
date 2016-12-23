@@ -59,7 +59,7 @@ enum class StorageType {
   /**
    *
    */
-  SQL,
+  MYSQL,
   /**
    *
    */

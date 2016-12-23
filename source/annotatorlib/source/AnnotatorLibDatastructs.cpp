@@ -41,8 +41,8 @@ std::string StorageTypeToString(StorageType type) {
   switch (type) {
     case StorageType::XML:
       return "xml";
-    case StorageType::SQL:
-      return "sql";
+    case StorageType::MYSQL:
+      return "mysql";
     case StorageType::SQLITE:
       return "sqlite";
     case StorageType::JSON:
@@ -57,7 +57,7 @@ std::string StorageTypeToString(StorageType type) {
 
 StorageType StorageTypeFromString(std::string str) {
   if (str == "xml") return StorageType::XML;
-  if (str == "sql") return StorageType::SQL;
+  if (str == "mysql") return StorageType::MYSQL;
   if (str == "sqlite") return StorageType::SQLITE;
   if (str == "json") return StorageType::JSON;
   return StorageType::UNKNOWN;

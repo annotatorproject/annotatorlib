@@ -13,6 +13,7 @@ addons:
  apt:
   sources:
    - ubuntu-toolchain-r-test
+   - sourceline: 'ppa:snappy-dev/tools'
   
   packages:
    - gcc-5
@@ -44,6 +45,7 @@ addons:
    - texlive-latex-recommended
    - texlive-full
    - snapcraft
+   - snap
 
 install:
  - sudo pip install cpp-coveralls

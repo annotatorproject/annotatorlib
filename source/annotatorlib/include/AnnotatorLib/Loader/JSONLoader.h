@@ -37,9 +37,6 @@ class ANNOTATORLIB_API JSONLoader : public AbstractLoader {
   void loadClasses(QJsonObject &json, AnnotatorLib::Session *session);
   void loadObjects(QJsonObject &json, AnnotatorLib::Session *session);
   void loadFrames(QJsonObject &json, AnnotatorLib::Session *session);
-
-  void loadAnnotationsNextPrevious(QJsonObject &json,
-                                   AnnotatorLib::Session *session);
 };
 /************************************************************/
 /* External declarations (package visibility)               */

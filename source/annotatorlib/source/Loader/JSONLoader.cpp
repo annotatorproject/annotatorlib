@@ -36,7 +36,6 @@ void JSONLoader::loadSession(Session *session) {
     loadObjects(json, session);
     loadFrames(json, session);
     loadAnnotations(json, session);
-    // loadAnnotationsNextPrevious(json, session);
   }
   file.close();
 }
@@ -154,32 +153,6 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
     }
   }
 }
-
-// NOTE: Not needed anymore. Since objects take care for the correct order
-// (based on frame-number)!
-// void JSONLoader::loadAnnotationsNextPrevious(QJsonObject &json, Session
-// *session)
-//{
-//    QJsonArray annotations = json.value("annotations").toArray();
-//    for(QJsonValue value: annotations){
-//        QJsonObject annotation = value.toObject();
-//        unsigned long id = annotation["id"].toString().toLong();
-//        Annotation * a = session->getAnnotation(id);
-
-//        if(annotation.contains("previous")){
-//            unsigned long previousId =
-//            annotation["previous"].toString().toLong();
-//            a->setPrevious(session->getAnnotation(previousId));
-//        }
-
-//        if(annotation.contains("next")){
-//            unsigned long nextId = annotation["next"].toString().toLong();
-//            a->setNext(session->getAnnotation(nextId));
-//        }
-//    }
-//}
-
-// static attributes (if any)
 
 }  // of namespace Loader
 }  // of namespace AnnotatorLib

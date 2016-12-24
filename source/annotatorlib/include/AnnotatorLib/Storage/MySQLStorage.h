@@ -22,6 +22,9 @@ namespace Storage {
 class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   // AbstractStorage interface
  public:
+
+    ~MySQLStorage();
+
   bool open();
 
   bool isOpen();

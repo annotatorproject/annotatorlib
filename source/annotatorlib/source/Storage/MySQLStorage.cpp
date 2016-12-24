@@ -49,14 +49,16 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
                      annotation->getY(),
                      annotation->getWidth(),
                      annotation->getHeight()};
-    if(annotation->getNext())
-        a_.next = std::to_string(annotation->getId());
+    if (annotation->getNext())
+      a_.next = std::to_string(annotation->getId());
 
     Poco::Data::Statement statement = getStatement();
 
     try {
-      statement << "INSERT IGNORE INTO `annotations` VALUES(?, ?, ?, ?, ?, ?, ?);",
-          use(a_.id), use(a_.next), use(a_.object), use(a_.x), use(a_.y), use(a_.width), use(a_.height), now;
+      statement
+          << "INSERT IGNORE INTO `annotations` VALUES(?, ?, ?, ?, ?, ?, ?);",
+          use(a_.id), use(a_.next), use(a_.object), use(a_.x), use(a_.y),
+          use(a_.width), use(a_.height), now;
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -67,17 +69,17 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
 
 shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
                                                       bool unregister) {
-    if (_open) {
-      Poco::Data::Statement statement = getStatement();
-      try {
-        statement << "DELETE FROM `annotations` WHERE `id`='" +
-                         std::to_string(id) + "';",
-            now;
-        statement.execute();
-      } catch (Poco::Exception &e) {
-        std::cout << e.what() << std::endl;
-      }
+  if (_open) {
+    Poco::Data::Statement statement = getStatement();
+    try {
+      statement << "DELETE FROM `annotations` WHERE `id`='" +
+                       std::to_string(id) + "';",
+          now;
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
     }
+  }
   return AnnotatorLib::Session::removeAnnotation(id, unregister);
 }
 
@@ -142,17 +144,17 @@ bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
 
 shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
                                               bool remove_annotations) {
-    if (_open) {
-      Poco::Data::Statement statement = getStatement();
-      try {
-        statement << "DELETE FROM `objects` WHERE `id`='" +
-                         std::to_string(id) + "';",
-            now;
-        statement.execute();
-      } catch (Poco::Exception &e) {
-        std::cout << e.what() << std::endl;
-      }
+  if (_open) {
+    Poco::Data::Statement statement = getStatement();
+    try {
+      statement << "DELETE FROM `objects` WHERE `id`='" + std::to_string(id) +
+                       "';",
+          now;
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
     }
+  }
   return AnnotatorLib::Session::removeObject(id, remove_annotations);
 }
 

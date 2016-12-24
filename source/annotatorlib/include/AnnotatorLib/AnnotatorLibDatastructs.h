@@ -79,6 +79,7 @@ enum class ImageSetType {
   CAMERA,
   VIDEO,
   IMAGEFOLDER,
+  IMAGEFTP,
 };
 
 /**

@@ -19,6 +19,7 @@ set(sources
     attribute_test.cpp
     command_adjustneighbors.cpp
     commands_test.cpp
+    imageftp_test.cpp
     imageset_test.cpp
     object_test.cpp
     project_test.cpp

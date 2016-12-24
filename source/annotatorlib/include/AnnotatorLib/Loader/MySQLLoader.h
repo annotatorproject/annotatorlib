@@ -5,9 +5,9 @@
 /************************************************************
  MySQLLoader class header
  ************************************************************/
-#include <AnnotatorLib/annotatorlib_api.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/Data/Session.h>
 
@@ -24,16 +24,21 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
  public:
   void setPath(std::string path);
   StorageType getType();
-  void loadSession(AnnotatorLib::Session* session);
+  void loadSession(AnnotatorLib::Session *session);
 
-protected:
+ protected:
   std::string path;
 
-  void loadAttributes(Poco::Data::Session &sqlSession, AnnotatorLib::Session *session);
-  void loadAnnotations(Poco::Data::Session &sqlSession, AnnotatorLib::Session *session);
-  void loadClasses(Poco::Data::Session &sqlSession, AnnotatorLib::Session *session);
-  void loadObjects(Poco::Data::Session &sqlSession, AnnotatorLib::Session *session);
-  void loadFrames(Poco::Data::Session &sqlSession, AnnotatorLib::Session *session);
+  void loadAttributes(Poco::Data::Session &sqlSession,
+                      AnnotatorLib::Session *session);
+  void loadAnnotations(Poco::Data::Session &sqlSession,
+                       AnnotatorLib::Session *session);
+  void loadClasses(Poco::Data::Session &sqlSession,
+                   AnnotatorLib::Session *session);
+  void loadObjects(Poco::Data::Session &sqlSession,
+                   AnnotatorLib::Session *session);
+  void loadFrames(Poco::Data::Session &sqlSession,
+                  AnnotatorLib::Session *session);
 };
 /************************************************************/
 /* External declarations (package visibility)               */

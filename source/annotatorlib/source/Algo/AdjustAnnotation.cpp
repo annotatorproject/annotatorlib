@@ -12,8 +12,8 @@
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Session.h"
 
-#include <algorithm>
 #include <assert.h>
+#include <algorithm>
 
 namespace AnnotatorLib {
 namespace Algo {
@@ -30,8 +30,8 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
   if (!annotation || annotation->getConfidenceScore() == 1.0f)
     return annotation;
 
-  float confidence = 0.5f; // interpolation cannot be 1.0 but if I use 0.0 then
-                           // min() will always be 0.0
+  float confidence = 0.5f;  // interpolation cannot be 1.0 but if I use 0.0 then
+                            // min() will always be 0.0
 
   unsigned int counter = 0;
   float posX = 0;
@@ -42,8 +42,7 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
   // interpolate with previous annotations
   for (int i = -1; i >= -(int)depth; --i) {
     shared_ptr<Frame> nframe = session->getFrame(frame->getFrameNumber() + i);
-    if (!nframe)
-      nframe = std::make_shared<Frame>(frame->getFrameNumber() + i);
+    if (!nframe) nframe = std::make_shared<Frame>(frame->getFrameNumber() + i);
     shared_ptr<Annotation> nAnnotation =
         InterpolateAnnotation::getInterpolation(session, nframe, object);
     if (nAnnotation && !nAnnotation->isTemporary()) {
@@ -69,8 +68,7 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
   // interpolate with next annotations
   for (int i = 0; i <= (int)depth; ++i) {
     shared_ptr<Frame> nframe = session->getFrame(frame->getFrameNumber() + i);
-    if (!nframe)
-      nframe = std::make_shared<Frame>(frame->getFrameNumber() + i);
+    if (!nframe) nframe = std::make_shared<Frame>(frame->getFrameNumber() + i);
     shared_ptr<Annotation> nAnnotation =
         InterpolateAnnotation::getInterpolation(session, nframe, object);
     if (nAnnotation && !nAnnotation->isTemporary()) {
@@ -93,23 +91,21 @@ shared_ptr<Annotation> AdjustAnnotation::getInterpolation(
     }
   }
 
-  if (counter == 0)
-    return nullptr;
+  if (counter == 0) return nullptr;
 
   annotation->setX(posX / counter);
   annotation->setY(posY / counter);
-  annotation->setWidth(std::max(1.0f,posW / counter));
-  annotation->setHeight(std::max(1.0f,posH / counter));
+  annotation->setWidth(std::max(1.0f, posW / counter));
+  annotation->setHeight(std::max(1.0f, posH / counter));
   annotation->setConfidenceScore(confidence);
   return annotation;
 }
 
 float AdjustAnnotation::interpolate(float p1, float p2, float c2,
                                     unsigned int p2depth) {
-  if (p2depth == 0)
-    return p1 * c2;
+  if (p2depth == 0) return p1 * c2;
   return p1 + (p2 - p1) * c2 * 1 / (2 * p2depth);
 }
 
-} // of namespace Algo
-} // of namespace AnnotatorLib
+}  // of namespace Algo
+}  // of namespace AnnotatorLib

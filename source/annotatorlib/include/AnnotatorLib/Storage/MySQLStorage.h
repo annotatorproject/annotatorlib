@@ -5,10 +5,10 @@
 /************************************************************
  MySQLStorage class header
  ************************************************************/
+#include <AnnotatorLib/Storage/AbstractStorage.h>
+#include <AnnotatorLib/Storage/Pkg_Storage.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <QJsonObject>
-#include <AnnotatorLib/Storage/Pkg_Storage.h>
-#include <AnnotatorLib/Storage/AbstractStorage.h>
 
 #include <Poco/Data/SessionPool.h>
 
@@ -22,8 +22,7 @@ namespace Storage {
 class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   // AbstractStorage interface
  public:
-
-    ~MySQLStorage();
+  ~MySQLStorage();
 
   bool open();
 
@@ -38,7 +37,8 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   /**
    * @brief setPath
    * @param path
-   * Path should be like: "host=localhost;user=annotator;password=annotator;db=annotator";
+   * Path should be like:
+   * "host=localhost;user=annotator;password=annotator;db=annotator";
    */
   void setPath(std::string path);
 
@@ -93,10 +93,9 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   virtual shared_ptr<Object> removeObject(unsigned long id,
                                           bool remove_annotations = true);
 
-
  protected:
   std::string path;
-  Poco::Data::SessionPool *pool = nullptr;
+  Poco::Data::SessionPool* pool = nullptr;
 
   bool _open = false;
   bool _save = true;

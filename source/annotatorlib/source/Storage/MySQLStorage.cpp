@@ -51,8 +51,7 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext())
-      a_.next = std::to_string(annotation->getId());
+    if (annotation->getNext()) a_.next = std::to_string(annotation->getId());
     if (annotation->getFrame())
       a_.frame = std::to_string(annotation->getFrame()->getId());
 
@@ -77,8 +76,7 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
     Poco::Data::Statement statement = getStatement();
     try {
       statement << "DELETE FROM `annotations` WHERE `id`='" +
-                       std::to_string(id) + "';"
-          ;
+                       std::to_string(id) + "';";
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -163,8 +161,7 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
 }
 
 MySQLStorage::~MySQLStorage() {
-  if (pool)
-    delete pool;
+  if (pool) delete pool;
 }
 
 bool MySQLStorage::open() {
@@ -235,8 +232,8 @@ void MySQLStorage::createTables() {
 
 // static attributes (if any)
 
-} // of namespace Storage
-} // of namespace AnnotatorLib
+}  // of namespace Storage
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLStorage class body

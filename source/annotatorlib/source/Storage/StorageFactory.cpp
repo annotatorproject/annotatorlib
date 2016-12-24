@@ -9,9 +9,9 @@
 
 // include associated header file
 #include "AnnotatorLib/Storage/JSONStorage.h"
+#include "AnnotatorLib/Storage/MySQLStorage.h"
 #include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
-#include "AnnotatorLib/Storage/MySQLStorage.h"
 
 // Derived includes directives
 

@@ -134,8 +134,8 @@ void MySQLLoader::loadFrames(Poco::Data::Session &sqlSession,
 
 // static attributes (if any)
 
-} // of namespace Loader
-} // of namespace AnnotatorLib
+}  // of namespace Loader
+}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLLoader class body

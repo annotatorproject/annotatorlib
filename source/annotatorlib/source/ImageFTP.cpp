@@ -34,7 +34,7 @@ ImageFTP::ImageFTP(std::string path) {
 ImageSetType ImageFTP::getType() { return ImageSetType::IMAGEFTP; }
 
 Image ImageFTP::getImage(unsigned long position) {
-  Image img;
+  Image img = downloadImage((images.begin() + position)->string());
   return img;
 }
 
@@ -51,7 +51,9 @@ long ImageFTP::getPosition() { return position; }
 bool ImageFTP::hasNext() { return imgIter != images.end(); }
 
 Image ImageFTP::next() {
-  Image img;
+  Image img = downloadImage(imgIter->string());
+  imgIter++;
+  position++;
   return img;
 }
 
@@ -101,6 +103,35 @@ void ImageFTP::loadFolder() {
   }
   std::sort(images.begin(), images.end());
   imgIter = images.begin();
+
+}
+
+Image ImageFTP::downloadImage(std::string file)
+{
+    cv::Mat mat;
+    try{
+    Poco::URI uri(path);
+    std::vector<std::string> userinfo;
+    boost::split(userinfo, uri.getUserInfo(), boost::is_any_of(":"));
+
+    Poco::Net::FTPClientSession session(uri.getHost(), 21, userinfo[0], userinfo[1]);
+    session.setWorkingDirectory(uri.getPath());
+    std::istream& istr = session.beginDownload(file);
+    std::ostringstream dataStr;
+    Poco::StreamCopier::copyStream(istr, dataStr);
+    session.endDownload();
+    std::string s(dataStr.str());
+    session.close();
+
+    // source: https://gist.github.com/Benjit87/4188323
+    std::vector<char> data = std::vector<char>( s.begin(), s.end() );
+    cv::Mat data_mat = cv::Mat(data);
+    mat = cv::imdecode(data_mat, 1);
+    }catch(...){
+
+    }
+
+    return mat;
 
 }
 

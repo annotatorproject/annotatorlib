@@ -73,6 +73,7 @@ StorageType StorageTypeFromString(std::string str) {
 ImageSetType ImageSetTypeFromString(std::string str) {
   if (str == "video") return ImageSetType::VIDEO;
   if (str == "images") return ImageSetType::IMAGEFOLDER;
+  if (str == "imageftp") return ImageSetType::IMAGEFTP;
   if (str == "camera") return ImageSetType::CAMERA;
   return ImageSetType::UNKNOWN;
 }
@@ -92,8 +93,10 @@ std::string ImageSetTypeToString(ImageSetType type) {
       return "camera";
     case ImageSetType::VIDEO:
       return "video";
-    case ImageSetType::IMAGEFOLDER:
-      return "images";
+  case ImageSetType::IMAGEFOLDER:
+    return "images";
+  case ImageSetType::IMAGEFTP:
+    return "imageftp";
     default:
       break;
   };

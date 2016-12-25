@@ -67,6 +67,7 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
 
  protected:
   void loadFolder();
+  Image downloadImage(std::string file);
 
   std::string path;
 

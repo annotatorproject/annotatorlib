@@ -14,6 +14,7 @@ TEST_F(imageftp_test, listfiles) {
     try{
     AnnotatorLib::ImageFTP imageFtp("ftp://test:test@localhost/images/");
     std::cout << "images on ftp server: " << imageFtp.size() << std::endl;
+    imageFtp.next();
     }catch(Poco::Net::FTPException &e)
     {
         std::cout << e.message() << std::endl;

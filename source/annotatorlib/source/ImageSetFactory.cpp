@@ -9,8 +9,8 @@
 #include <string>
 // include associated header file
 #include "AnnotatorLib/Camera.h"
-#include "AnnotatorLib/ImageFolder.h"
 #include "AnnotatorLib/ImageFTP.h"
+#include "AnnotatorLib/ImageFolder.h"
 #include "AnnotatorLib/ImageSetFactory.h"
 #include "AnnotatorLib/Video.h"
 

@@ -13,6 +13,7 @@
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <AnnotatorLib/ImageSet.h>
+#include <Poco/Net/FTPClientSession.h>
 
 namespace AnnotatorLib {
 
@@ -24,11 +25,13 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
  public:
   ImageFTP(std::string path);
 
+  ~ImageFTP();
+
   /**
    *
    * @return type
    */
-  virtual ImageSetType getType();
+  virtual ImageSetType getType() override;
 
   /**
    * @brief getImage
@@ -45,25 +48,25 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
    *
    * @return next
    */
-  virtual bool hasNext();
+  virtual bool hasNext() override;
 
   /**
    *
    * @return image
    */
-  virtual Image next();
+  virtual Image next() override;
 
   /**
    *
    * @return size
    */
-  virtual unsigned int size();
+  virtual unsigned int size() override;
 
   virtual unsigned int getFPS() override;
 
-  virtual std::string getPath();
+  virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other);
+  virtual bool equals(ImageSet *other) override;
 
  protected:
   void loadFolder();
@@ -74,6 +77,8 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
   long position = 0;
   std::vector<boost::filesystem::path> images;
   std::vector<boost::filesystem::path>::const_iterator imgIter;
+
+  std::shared_ptr<Poco::Net::FTPClientSession> ftpSession;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

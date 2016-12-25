@@ -93,10 +93,10 @@ std::string ImageSetTypeToString(ImageSetType type) {
       return "camera";
     case ImageSetType::VIDEO:
       return "video";
-  case ImageSetType::IMAGEFOLDER:
-    return "images";
-  case ImageSetType::IMAGEFTP:
-    return "imageftp";
+    case ImageSetType::IMAGEFOLDER:
+      return "images";
+    case ImageSetType::IMAGEFTP:
+      return "imageftp";
     default:
       break;
   };

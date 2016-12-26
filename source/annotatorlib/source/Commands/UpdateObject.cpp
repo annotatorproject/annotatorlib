@@ -11,12 +11,20 @@ AnnotatorLib::Commands::UpdateObject::UpdateObject(shared_ptr<Object> obj,
   this->new_class = c;
 }
 
-bool AnnotatorLib::Commands::UpdateObject::execute() {
+bool AnnotatorLib::Commands::UpdateObject::execute(
+    AnnotatorLib::Session *informSession) {
   obj->setClass(new_class);
+  if (informSession) {
+    informSession->updateObject(obj);
+  }
   return true;
 }
 
-bool AnnotatorLib::Commands::UpdateObject::undo() {
+bool AnnotatorLib::Commands::UpdateObject::undo(
+    AnnotatorLib::Session *informSession) {
   obj->setClass(old_class);
+  if (informSession) {
+    informSession->updateObject(obj);
+  }
   return true;
 }

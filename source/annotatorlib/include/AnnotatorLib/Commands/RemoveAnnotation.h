@@ -21,9 +21,9 @@ class ANNOTATORLIB_API RemoveAnnotation : public Command {
                    shared_ptr<Annotation> a);
   ~RemoveAnnotation() {}
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
   shared_ptr<AnnotatorLib::Annotation> getAnnotation();
 

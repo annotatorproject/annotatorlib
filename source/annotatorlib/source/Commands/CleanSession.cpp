@@ -6,12 +6,14 @@ AnnotatorLib::Commands::CleanSession::CleanSession(
   this->session = session;
 }
 
-bool AnnotatorLib::Commands::CleanSession::execute() {
+bool AnnotatorLib::Commands::CleanSession::execute(
+    AnnotatorLib::Session *informSession) {
   session->clearData();
   return true;
 }
 
-bool AnnotatorLib::Commands::CleanSession::undo() {
+bool AnnotatorLib::Commands::CleanSession::undo(
+    AnnotatorLib::Session *informSession) {
   // TODO
   return false;
 }

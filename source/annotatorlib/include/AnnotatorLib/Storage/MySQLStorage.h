@@ -40,9 +40,9 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * Path should be like:
    * "host=localhost;user=annotator;password=annotator;db=annotator";
    */
-  void setPath(std::string path);
+  void setPath(std::string path) override;
 
-  StorageType getType();
+  StorageType getType() override;
 
   /**
    * @brief addAnnotation
@@ -51,15 +51,22 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @return
    */
   virtual bool addAnnotation(shared_ptr<Annotation> annotation,
-                             bool add_associated_objects = true);
+                             bool add_associated_objects = true) override;
   /**
    * @brief removeAnnotation
    * @param id
    * @param unregister
    * @return
    */
-  virtual shared_ptr<Annotation> removeAnnotation(unsigned long id,
-                                                  bool unregister = true);
+  virtual shared_ptr<Annotation> removeAnnotation(
+      unsigned long id, bool unregister = true) override;
+
+  /**
+   * @brief updateAnnotation
+   * Informs session that internals of the Annotation have changed.
+   * @param annotation
+   */
+  virtual void updateAnnotation(shared_ptr<Annotation> annotation) override;
 
   /**
    * @brief addClass
@@ -67,14 +74,16 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param c
    * @return
    */
-  virtual bool addClass(shared_ptr<Class> c);
+  virtual bool addClass(shared_ptr<Class> c) override;
   /**
    * @brief removeClass
    * removes class from database if open
    * @param c
    * @return
    */
-  virtual shared_ptr<Class> removeClass(Class* c);
+  virtual shared_ptr<Class> removeClass(Class* c) override;
+
+  virtual void updateClass(shared_ptr<Class> theClass) override;
 
   /**
    * @brief addObject
@@ -83,15 +92,17 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @return
    */
   virtual bool addObject(shared_ptr<Object> object,
-                         bool add_associated_objects = true);
+                         bool add_associated_objects = true) override;
   /**
    * @brief removeObject
    * @param id
    * @param remove_annotations
    * @return
    */
-  virtual shared_ptr<Object> removeObject(unsigned long id,
-                                          bool remove_annotations = true);
+  virtual shared_ptr<Object> removeObject(
+      unsigned long id, bool remove_annotations = true) override;
+
+  virtual void updateObject(shared_ptr<Object> object) override;
 
  protected:
   std::string path;

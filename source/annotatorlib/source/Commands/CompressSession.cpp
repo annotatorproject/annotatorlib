@@ -9,17 +9,23 @@ AnnotatorLib::Commands::CompressSession::CompressSession(
   this->session = session;
 }
 
-bool AnnotatorLib::Commands::CompressSession::execute() {
+bool AnnotatorLib::Commands::CompressSession::execute(
+    AnnotatorLib::Session *informSession) {
   // TODO: fix bug
   removed_annotations =
       AnnotatorLib::Algo::CompressObjectTrack::compressSession(this->session);
+  if (informSession) {
+  }
   return true;
 }
 
-bool AnnotatorLib::Commands::CompressSession::undo() {
+bool AnnotatorLib::Commands::CompressSession::undo(
+    AnnotatorLib::Session *informSession) {
   for (auto it = removed_annotations.begin(); it != removed_annotations.end();
        it++) {
     session->addAnnotation(*it);
+  }
+  if (informSession) {
   }
   return true;
 }

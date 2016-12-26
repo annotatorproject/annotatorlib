@@ -35,7 +35,8 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->confidence = confidence;
 }
 
-bool AnnotatorLib::Commands::NewAnnotation::execute() {
+bool AnnotatorLib::Commands::NewAnnotation::execute(
+    AnnotatorLib::Session *informSession) {
   if (createNewObject)
     object = std::make_shared<Object>(newObjectId, newObjectClass);
 
@@ -45,10 +46,14 @@ bool AnnotatorLib::Commands::NewAnnotation::execute() {
   bool success = session->addAnnotation(
       annotation_, true);  // adds annotation and register to them
   if (createNewObject && success) createdNewObject = true;
+  if (informSession) {
+    informSession->updateAnnotation(this->annotation_);
+  }
   return success;
 }
 
-bool AnnotatorLib::Commands::NewAnnotation::undo() {
+bool AnnotatorLib::Commands::NewAnnotation::undo(
+    AnnotatorLib::Session *informSession) {
   this->annotation_ = session->removeAnnotation(
       annotation_->getId(),
       true);  // remove annotation from session and unregister
@@ -57,7 +62,11 @@ bool AnnotatorLib::Commands::NewAnnotation::undo() {
     session->removeObject(this->annotation_->getObject()->getId(), false);
   if (!this->annotation_->getObject()->hasAnnotations())
     session->removeFrame(this->annotation_->getFrame()->getId(), false);
-  return !this->annotation_;
+  bool ret = !this->annotation_;
+  if (informSession) {
+    informSession->updateAnnotation(this->annotation_);
+  }
+  return ret;
 }
 
 shared_ptr<AnnotatorLib::Annotation>

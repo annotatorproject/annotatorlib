@@ -23,9 +23,9 @@ class ANNOTATORLIB_API AdjustNeighbors : public Command {
 
   ~AdjustNeighbors() {}
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
  protected:
   std::shared_ptr<Object> object;

@@ -38,9 +38,9 @@ class ANNOTATORLIB_API RemoveAnnotationRange : public Command {
                         shared_ptr<AnnotatorLib::Frame> f2);
   ~RemoveAnnotationRange() {}
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
   shared_ptr<AnnotatorLib::Object> getObject();
   unsigned long getFrame1();

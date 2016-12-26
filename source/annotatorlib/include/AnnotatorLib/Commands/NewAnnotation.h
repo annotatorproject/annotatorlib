@@ -36,9 +36,9 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
 
   ~NewAnnotation() {}
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
   shared_ptr<Annotation> getAnnotation();
   bool newObjectCreated() { return createdNewObject; }

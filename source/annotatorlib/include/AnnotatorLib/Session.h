@@ -51,6 +51,13 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Attribute> removeAttribute(Attribute* attribute);
   virtual shared_ptr<Attribute> getAttribute(unsigned long id) const;
 
+  /**
+   * @brief updateAttribute
+   * Informs the session that internals of the Attribute have changed.
+   * @param attribute
+   */
+  virtual void updateAttribute(shared_ptr<Attribute> attribute) {}
+
   // Annotations
 
   //  virtual std::pair<std::unordered_map<unsigned long,
@@ -77,6 +84,12 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Annotation> getAnnotation(unsigned long id) const;
   virtual shared_ptr<Annotation> getAnnotation(const shared_ptr<Frame>,
                                                const shared_ptr<Object>) const;
+  /**
+   * @brief updateAnnotation
+   * Informs session that internals of the Annotation have changed.
+   * @param annotation
+   */
+  virtual void updateAnnotation(shared_ptr<Annotation> annotation) {}
 
   // Classes
   virtual std::unordered_map<std::string, std::shared_ptr<Class>> const&
@@ -108,6 +121,13 @@ class ANNOTATORLIB_API Session {
    */
   virtual shared_ptr<Class> getClass(unsigned long id) const;
 
+  /**
+   * @brief updateClass
+   * Informs session that internals of the Class have changed.
+   * @param theClass
+   */
+  virtual void updateClass(shared_ptr<Class> theClass) {}
+
   // Frames
   virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const&
   getFrames() const {
@@ -133,6 +153,13 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Frame> getFrame(unsigned long number);
 
   /**
+   * @brief updateFrame
+   * Informs session that internals of the Frame have changed.
+   * @param frame
+   */
+  virtual void updateFrame(shared_ptr<Frame> frame) {}
+
+  /**
    * @brief Will add the given object and all associated annotations, plus
    * frames
    * to this session. Checks for duplicates.
@@ -144,6 +171,14 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Object> removeObject(unsigned long id,
                                           bool remove_annotations = true);
   virtual shared_ptr<Object> getObject(unsigned long id) const;
+
+  /**
+   * @brief updateObject
+   * Informs session that internals of the Object have changed.
+   * @param object
+   */
+  virtual void updateObject(shared_ptr<Object> object) {}
+
   virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const&
   getObjects() const {
     return objects;

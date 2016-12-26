@@ -22,9 +22,9 @@ class ANNOTATORLIB_API RemoveObject : public Command {
   RemoveObject(const RemoveObject &other) = delete;
   ~RemoveObject() {}
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
   shared_ptr<Object> getObject() { return object; }
 

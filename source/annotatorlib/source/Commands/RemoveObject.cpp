@@ -7,17 +7,27 @@ AnnotatorLib::Commands::RemoveObject::RemoveObject(
     std::shared_ptr<Session> session, shared_ptr<Object> obj)
     : session(session), object(obj) {}
 
-bool AnnotatorLib::Commands::RemoveObject::execute() {
+bool AnnotatorLib::Commands::RemoveObject::execute(
+    AnnotatorLib::Session* informSession) {
   for (auto& pair : object->getAnnotations()) {
     removedAnnotations.push_back(pair.second.lock());
   }
   shared_ptr<Object> removed_obj = session->removeObject(object->getId());
-  return removed_obj == object;
+  bool success = removed_obj == object;
+  if (informSession) {
+    informSession->updateObject(object);
+  }
+  return success;
 }
 
-bool AnnotatorLib::Commands::RemoveObject::undo() {
+bool AnnotatorLib::Commands::RemoveObject::undo(
+    AnnotatorLib::Session* informSession) {
   for (auto& annotation : removedAnnotations) {
     session->addAnnotation(annotation, false);
   }
-  return this->session->addObject(this->object);
+  bool success = this->session->addObject(this->object);
+  if (informSession) {
+    informSession->updateObject(object);
+  }
+  return success;
 }

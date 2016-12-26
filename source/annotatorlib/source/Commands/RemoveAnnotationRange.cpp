@@ -26,7 +26,8 @@ AnnotatorLib::Commands::RemoveAnnotationRange::RemoveAnnotationRange(
   this->frame2 = f2->getFrameNumber();
 }
 
-bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
+bool AnnotatorLib::Commands::RemoveAnnotationRange::execute(
+    AnnotatorLib::Session *informSession) {
   removedAnnotations.clear();
 
   // TODO:
@@ -50,15 +51,22 @@ bool AnnotatorLib::Commands::RemoveAnnotationRange::execute() {
             session->removeAnnotation(a->getId(), true));
     }
   }
+  if (informSession) {
+    informSession->updateObject(this->object);
+  }
 
   return true;
 }
 
-bool AnnotatorLib::Commands::RemoveAnnotationRange::undo() {
+bool AnnotatorLib::Commands::RemoveAnnotationRange::undo(
+    AnnotatorLib::Session *informSession) {
   bool success = true;
   for (std::shared_ptr<AnnotatorLib::Annotation> annotation :
        removedAnnotations) {
     session->addAnnotation(annotation, true);
+  }
+  if (informSession) {
+    informSession->updateObject(this->object);
   }
   return success;
 }

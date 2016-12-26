@@ -24,9 +24,9 @@ class ANNOTATORLIB_API CompressSession : public Command {
 
   ~CompressSession() { removed_annotations.clear(); }
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
  protected:
   std::shared_ptr<Session> session;

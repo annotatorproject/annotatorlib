@@ -15,7 +15,8 @@ AnnotatorLib::Commands::UpdateAnnotation::UpdateAnnotation(
   this->annotation = annotation;
 }
 
-bool AnnotatorLib::Commands::UpdateAnnotation::execute() {
+bool AnnotatorLib::Commands::UpdateAnnotation::execute(
+    AnnotatorLib::Session *informSession) {
   old_x = annotation->getX();
   old_y = annotation->getY();
   old_width = annotation->getWidth();
@@ -23,12 +24,19 @@ bool AnnotatorLib::Commands::UpdateAnnotation::execute() {
   old_confidence = annotation->getConfidenceScore();
   annotation->setPosition(x, y, width, height);
   annotation->setConfidenceScore(confidence);
+  if (informSession) {
+    informSession->updateAnnotation(annotation);
+  }
   return true;
 }
 
-bool AnnotatorLib::Commands::UpdateAnnotation::undo() {
+bool AnnotatorLib::Commands::UpdateAnnotation::undo(
+    AnnotatorLib::Session *informSession) {
   annotation->setPosition(old_x, old_y, old_width, old_height);
   annotation->setConfidenceScore(old_confidence);
+  if (informSession) {
+    informSession->updateAnnotation(annotation);
+  }
   return true;
 }
 

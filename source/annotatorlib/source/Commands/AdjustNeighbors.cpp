@@ -14,7 +14,8 @@ AnnotatorLib::Commands::AdjustNeighbors::AdjustNeighbors(
   this->range = range;
 }
 
-bool AnnotatorLib::Commands::AdjustNeighbors::execute() {
+bool AnnotatorLib::Commands::AdjustNeighbors::execute(
+    AnnotatorLib::Session *informSession) {
   unsigned long aFrameNbr = _frame->getFrameNumber();
   for (unsigned long f = (-(unsigned long)range) + aFrameNbr;
        f <= (unsigned long)range + aFrameNbr; ++f) {
@@ -39,15 +40,23 @@ bool AnnotatorLib::Commands::AdjustNeighbors::execute() {
   }
 
   for (std::shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
-    command->execute();
+    command->execute(nullptr);
   }
 
+  if (informSession) {
+    informSession->updateObject(object);
+  }
   return true;
 }
 
-bool AnnotatorLib::Commands::AdjustNeighbors::undo() {
+bool AnnotatorLib::Commands::AdjustNeighbors::undo(
+    AnnotatorLib::Session *informSession) {
   for (std::shared_ptr<AnnotatorLib::Commands::Command> command : commands) {
-    command->undo();
+    command->undo(nullptr);
+  }
+
+  if (informSession) {
+    informSession->updateObject(object);
   }
   return true;
 }

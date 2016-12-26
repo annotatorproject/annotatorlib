@@ -12,14 +12,23 @@ AnnotatorLib::Commands::RemoveAnnotation::RemoveAnnotation(
   this->session = session;
 }
 
-bool AnnotatorLib::Commands::RemoveAnnotation::execute() {
+bool AnnotatorLib::Commands::RemoveAnnotation::execute(
+    AnnotatorLib::Session *informSession) {
   shared_ptr<Annotation> removedAnnotation =
       session->removeAnnotation(annotation->getId());
-  return annotation == removedAnnotation;
+  bool ret = annotation == removedAnnotation;
+  if (informSession) {
+    informSession->updateAnnotation(this->annotation);
+  }
+  return ret;
 }
 
-bool AnnotatorLib::Commands::RemoveAnnotation::undo() {
+bool AnnotatorLib::Commands::RemoveAnnotation::undo(
+    AnnotatorLib::Session *informSession) {
   this->session->addAnnotation(this->annotation);
+  if (informSession) {
+    informSession->updateAnnotation(this->annotation);
+  }
   return true;
 }
 

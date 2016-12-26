@@ -211,7 +211,8 @@ shared_ptr<Commands::Command> Session::execute(
   commands.erase(commands.begin() + commandIndex, commands.end());
   commands.push_back(std::move(command));
   commandIndex++;
-  bool success = commands[commandIndex - 1]->execute();  // execute new command
+  bool success =
+      commands[commandIndex - 1]->execute(this);  // execute new command
   if (success) return commands[commandIndex - 1];
   return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
 }
@@ -221,7 +222,7 @@ shared_ptr<Commands::Command> Session::redo() {
     shared_ptr<AnnotatorLib::Commands::Command> command =
         commands.at(commandIndex);
     commandIndex++;
-    bool success = command->execute();
+    bool success = command->execute(this);
     if (success) return command;
   }
   return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);
@@ -232,7 +233,7 @@ shared_ptr<Commands::Command> Session::undo() {
     commandIndex--;
     shared_ptr<AnnotatorLib::Commands::Command> command =
         commands.at(commandIndex);
-    bool success = command->undo();
+    bool success = command->undo(this);
     if (success) return command;
   }
   return shared_ptr<AnnotatorLib::Commands::Command>(nullptr);

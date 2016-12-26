@@ -85,6 +85,49 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
   return AnnotatorLib::Session::removeAnnotation(id, unregister);
 }
 
+void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
+  AnnotatorLib::Session::updateAnnotation(annotation);
+  if (_open && getAnnotation(annotation->getId())) {
+    struct Annotation {
+      std::string id;
+      std::string next;
+      std::string object;
+      std::string frame;
+      float x;
+      float y;
+      float width;
+      float height;
+      std::string type;
+    };
+    Annotation a_ = {
+        std::to_string(annotation->getId()),
+        "0",
+        std::to_string(annotation->getObject()->getId()),
+        "0",
+        annotation->getX(),
+        annotation->getY(),
+        annotation->getWidth(),
+        annotation->getHeight(),
+        AnnotatorLib::AnnotationTypeToString(annotation->getType())};
+    if (annotation->getNext()) a_.next = std::to_string(annotation->getId());
+    if (annotation->getFrame())
+      a_.frame = std::to_string(annotation->getFrame()->getId());
+
+    Poco::Data::Statement statement = getStatement();
+
+    try {
+      statement
+          << "UPDATE `annotations` SET `id`=?, `next`=?, `object`=?, `frame`=?,"
+             "`x`=?, `y`=?, `width`=?, `height`=?, `type`=? WHERE `id`=?;",
+          use(a_.id), use(a_.next), use(a_.object), use(a_.frame), use(a_.x),
+          use(a_.y), use(a_.width), use(a_.height), use(a_.type), use(a_.id);
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
+}
+
 bool MySQLStorage::addClass(shared_ptr<Class> c) {
   AnnotatorLib::Session::addClass(c);
   if (_open) {
@@ -119,6 +162,26 @@ shared_ptr<Class> MySQLStorage::removeClass(Class *c) {
   }
 
   return AnnotatorLib::Session::removeClass(c);
+}
+
+void MySQLStorage::updateClass(shared_ptr<Class> theClass) {
+  AnnotatorLib::Session::updateClass(theClass);
+  if (_open && getClass(theClass->getId())) {
+    struct ClassStruct {
+      std::string id;
+      std::string name;
+    };
+    ClassStruct c_ = {std::to_string(theClass->getId()), theClass->getName()};
+    Poco::Data::Statement statement = getStatement();
+
+    try {
+      statement << "UPDATE `classes` SET `id`=?, `name`=? WHERE `id`=?;",
+          use(c_.id), use(c_.name), use(c_.id);
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
 }
 
 bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
@@ -158,6 +221,29 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
     }
   }
   return AnnotatorLib::Session::removeObject(id, remove_annotations);
+}
+
+void MySQLStorage::updateObject(shared_ptr<Object> object) {
+  AnnotatorLib::Session::updateObject(object);
+  if (_open && getObject(object->getId())) {
+    struct Object {
+      std::string id;
+      std::string name;
+      std::string _class;
+    };
+    Object o_ = {std::to_string(object->getId()), object->getName(),
+                 std::to_string(object->getClass()->getId())};
+    Poco::Data::Statement statement = getStatement();
+
+    try {
+      statement
+          << "UPDATE `objects` SET `id`=?, `name`=?, `class`=? WHERE `id`=?;",
+          use(o_.id), use(o_.name), use(o_._class), use(o_.id);
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
 }
 
 MySQLStorage::~MySQLStorage() {

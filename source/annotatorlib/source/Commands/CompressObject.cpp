@@ -10,16 +10,24 @@ AnnotatorLib::Commands::CompressObject::CompressObject(
   this->session = session;
 }
 
-bool AnnotatorLib::Commands::CompressObject::execute() {
+bool AnnotatorLib::Commands::CompressObject::execute(
+    AnnotatorLib::Session *informSession) {
   removed_annotations = AnnotatorLib::Algo::CompressObjectTrack::compress(
       this->session, this->obj);
+  if (informSession) {
+    informSession->updateObject(obj);
+  }
   return true;
 }
 
-bool AnnotatorLib::Commands::CompressObject::undo() {
+bool AnnotatorLib::Commands::CompressObject::undo(
+    AnnotatorLib::Session *informSession) {
   for (auto it = removed_annotations.begin(); it != removed_annotations.end();
        it++) {
     session->addAnnotation(*it);
+  }
+  if (informSession) {
+    informSession->updateObject(obj);
   }
   return true;
 }

@@ -24,9 +24,9 @@ class ANNOTATORLIB_API CompressObject : public Command {
 
   ~CompressObject() { removed_annotations.clear(); }
 
-  bool execute();
+  virtual bool execute(Session *informSession = 0) override;
 
-  bool undo();
+  virtual bool undo(Session *informSession = 0) override;
 
   shared_ptr<Object> getObject() { return obj; }
 

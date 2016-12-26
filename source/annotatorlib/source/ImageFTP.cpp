@@ -82,9 +82,14 @@ void ImageFTP::loadFolder() {
   std::vector<std::string> userinfo;
   boost::split(userinfo, uri.getUserInfo(), boost::is_any_of(":"));
 
-  ftpSession = std::make_shared<Poco::Net::FTPClientSession>(
-      uri.getHost(), 21, userinfo[0], userinfo[1]);
-  ftpSession->setWorkingDirectory(uri.getPath());
+  host = uri.getHost();
+  username = userinfo[0];
+  if (userinfo.size() > 1) password = userinfo[1];
+  workingDir = uri.getPath();
+
+  ftpSession = std::make_shared<Poco::Net::FTPClientSession>();
+  ftpSession->open(host, port, username, password);
+  ftpSession->setWorkingDirectory(workingDir);
   std::istream& istr = ftpSession->beginList();
   std::ostringstream dataStr;
   Poco::StreamCopier::copyStream(istr, dataStr);
@@ -106,6 +111,10 @@ void ImageFTP::loadFolder() {
 Image ImageFTP::downloadImage(std::string file) {
   cv::Mat mat;
   try {
+    if (!ftpSession->isOpen()) {
+      ftpSession->open(host, port, username, password);
+      ftpSession->setWorkingDirectory(workingDir);
+    }
     std::istream& istr = ftpSession->beginDownload(file);
     std::ostringstream dataStr;
     Poco::StreamCopier::copyStream(istr, dataStr);

@@ -79,6 +79,11 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
   std::vector<boost::filesystem::path>::const_iterator imgIter;
 
   std::shared_ptr<Poco::Net::FTPClientSession> ftpSession;
+  std::string username;
+  std::string password;
+  int port = 21;
+  std::string host;
+  std::string workingDir;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

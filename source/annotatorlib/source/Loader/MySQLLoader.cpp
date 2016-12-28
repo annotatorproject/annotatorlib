@@ -46,26 +46,26 @@ void MySQLLoader::loadAttributes(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
                                   Session *session) {
-  typedef Poco::Tuple<std::string, std::string, std::string, std::string, float,
+  typedef Poco::Tuple<std::string, std::string, std::string, std::string, std::string, float,
                       float, float, float, std::string>
       AnnotationTuple;
   std::vector<AnnotationTuple> annotations;
 
   Poco::Data::Statement statement(sqlSession);
-  statement << "SELECT `id`,`next`,`object`, `frame`, `x`, `y`, `width`, "
+  statement << "SELECT `id`,`next`, `previous`,`object`, `frame`, `x`, `y`, `width`, "
                "`height`, `type` FROM `annotations`",
       into(annotations);
   statement.execute();
 
   for (AnnotationTuple at : annotations) {
-    unsigned long object_id = std::stol(at.get<2>());
-    unsigned long frame_id = std::stol(at.get<3>());
+    unsigned long object_id = std::stol(at.get<3>());
+    unsigned long frame_id = std::stol(at.get<4>());
 
-    float x = at.get<4>();
-    float y = at.get<5>();
-    float width = at.get<6>();
-    float height = at.get<7>();
-    AnnotationType type = AnnotationTypeFromString(at.get<8>());
+    float x = at.get<5>();
+    float y = at.get<6>();
+    float width = at.get<7>();
+    float height = at.get<8>();
+    AnnotationType type = AnnotationTypeFromString(at.get<9>());
 
     shared_ptr<Object> o = session->getObject(object_id);
     shared_ptr<Frame> f = session->getFrame(frame_id);

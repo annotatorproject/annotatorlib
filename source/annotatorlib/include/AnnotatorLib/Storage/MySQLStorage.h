@@ -115,7 +115,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @brief createTables
    * creates tables in mysql database if they not exist
    */
-  void createTables();
+  virtual void createTables();
   Poco::Data::Statement getStatement();
 };
 /************************************************************/

@@ -10,6 +10,7 @@
 // include associated header file
 #include "AnnotatorLib/Storage/JSONStorage.h"
 #include "AnnotatorLib/Storage/MySQLStorage.h"
+#include "AnnotatorLib/Storage/SQLiteStorage.h"
 #include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
 
@@ -38,6 +39,7 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(
     case StorageType::MYSQL:
       return std::make_shared<MySQLStorage>();
     case StorageType::SQLITE:
+      return std::make_shared<SQLiteStorage>();
     default:
       return nullptr;
   }

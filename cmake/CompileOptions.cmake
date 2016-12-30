@@ -27,7 +27,7 @@ set(DEFAULT_PROJECT_OPTIONS
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(Poco COMPONENTS Foundation Util Data Net DataMySQL REQUIRED)
+find_package(Poco COMPONENTS Foundation Util Data Net DataSQLite DataMySQL REQUIRED)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Xml REQUIRED)
 

@@ -25,7 +25,7 @@ class ANNOTATORLIB_API SQLiteStorage : public MySQLStorage {
  public:
   ~SQLiteStorage();
 
-  bool open();
+  bool open() override;
 
   /**
    * @brief setPath

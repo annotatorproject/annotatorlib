@@ -26,6 +26,7 @@ set(sources
     saver_test.cpp
     session_test.cpp
     storage_mysql_test.cpp
+    storage_sqlite_test.cpp
 )
 
 

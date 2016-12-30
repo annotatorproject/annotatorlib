@@ -61,13 +61,14 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
     Poco::Data::Statement statement = getStatement();
 
     try {
-      statement << "INSERT IGNORE INTO `annotations` VALUES(?, ?, ?, ?, ?, ?, ?, "
+      statement << "INSERT INTO `annotations` VALUES(?, ?, ?, ?, ?, ?, ?, "
                    "?, ?, ?);",
           use(a_.id), use(a_.next), use(a_.previous), use(a_.object), use(a_.frame), use(a_.x),
           use(a_.y), use(a_.width), use(a_.height), use(a_.type);
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
   return true;
@@ -83,6 +84,7 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
   return AnnotatorLib::Session::removeAnnotation(id, unregister);
@@ -130,6 +132,7 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
 }
@@ -145,11 +148,12 @@ bool MySQLStorage::addClass(shared_ptr<Class> c) {
     Poco::Data::Statement statement = getStatement();
 
     try {
-      statement << "INSERT IGNORE INTO `classes` VALUES(?, ?);", use(c_.id),
+      statement << "INSERT INTO `classes` VALUES(?, ?);", use(c_.id),
           use(c_.name);
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
   return true;
@@ -164,6 +168,7 @@ shared_ptr<Class> MySQLStorage::removeClass(Class *c) {
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
 
@@ -186,6 +191,7 @@ void MySQLStorage::updateClass(shared_ptr<Class> theClass) {
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
 }
@@ -204,11 +210,12 @@ bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
     Poco::Data::Statement statement = getStatement();
 
     try {
-      statement << "INSERT IGNORE INTO `objects` VALUES(?, ?, ?);", use(o_.id),
+      statement << "INSERT INTO `objects` VALUES(?, ?, ?);", use(o_.id),
           use(o_.name), use(o_._class);
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
   return true;
@@ -224,6 +231,7 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
   return AnnotatorLib::Session::removeObject(id, remove_annotations);
@@ -248,6 +256,7 @@ void MySQLStorage::updateObject(shared_ptr<Object> object) {
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
     }
   }
 }

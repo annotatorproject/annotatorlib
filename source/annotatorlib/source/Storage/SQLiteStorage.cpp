@@ -27,7 +27,6 @@ void SQLiteStorage::setPath(std::string path) { this->path = path; }
 StorageType SQLiteStorage::getType() { return AnnotatorLib::StorageType::SQLITE; }
 
 SQLiteStorage::~SQLiteStorage() {
-  if (pool) delete pool;
 }
 
 bool SQLiteStorage::open() {
@@ -48,31 +47,31 @@ void SQLiteStorage::createTables() {
 
   statement = getStatement();
 
-  statement << "PRAGMA encoding = \"UTF-8\";";
-  statement.execute();
+  //statement << "PRAGMA encoding = \"UTF-8\";";
+  //statement.execute();
 
   statement << "CREATE TABLE IF NOT EXISTS `annotations` ( \
-           `id` char(16) NOT NULL, \
-            `next` char(16) NOT NULL, \
-            `previous` char(16) NOT NULL, \
-            `object` char(16) NOT NULL, \
-            `frame` char(16) NOT NULL, \
-            `x` float NOT NULL default 0, \
-            `y` float NOT NULL default 0, \
-           `width` float NOT NULL default 1, \
-            `height` float NOT NULL default 1, \
-            `type` char(16) NOT NULL, \
+           `id` varchar(16) NOT NULL, \
+            `next` varchar(16) NOT NULL, \
+            `previous` varchar(16) NOT NULL, \
+            `object` varchar(16) NOT NULL, \
+            `frame` varchar(16) NOT NULL, \
+            `x` REAL NOT NULL DEFAULT 0, \
+            `y` REAL NOT NULL DEFAULT 0, \
+           `width` REAL NOT NULL DEFAULT 1, \
+            `height` REAL NOT NULL DEFAULT 1, \
+            `type` varchar(16) NOT NULL, \
             PRIMARY KEY (`id`) \
-            ) DEFAULT CHARSET=utf8;";
+            );";
   statement.execute();
-
+/*
   statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `classes` ("
             << "`id` char(16) NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
             << "PRIMARY KEY (`id`)"
-            << ") DEFAULT CHARSET=utf8;";
+            << ");";
   statement.execute();
 
   statement = getStatement();
@@ -82,8 +81,8 @@ void SQLiteStorage::createTables() {
             << "`name` varchar(256) NOT NULL,"
             << "`class` char(16) NOT NULL,"
             << "PRIMARY KEY (`id`)"
-            << ") DEFAULT CHARSET=utf8;";
-  statement.execute();
+            << ");";
+  statement.execute();*/
 }
 
 // static attributes (if any)

@@ -10,8 +10,8 @@
 #include <AnnotatorLib/Saver/SQLiteSaver.h>
 #include <AnnotatorLib/Storage/SQLiteStorage.h>
 
-#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/RecordSet.h>
+#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/Session.h>
 #include <Poco/Data/Statement.h>
 
@@ -24,10 +24,11 @@ namespace Storage {
 
 void SQLiteStorage::setPath(std::string path) { this->path = path; }
 
-StorageType SQLiteStorage::getType() { return AnnotatorLib::StorageType::SQLITE; }
-
-SQLiteStorage::~SQLiteStorage() {
+StorageType SQLiteStorage::getType() {
+  return AnnotatorLib::StorageType::SQLITE;
 }
+
+SQLiteStorage::~SQLiteStorage() {}
 
 bool SQLiteStorage::open() {
   Poco::Data::SQLite::Connector::registerConnector();
@@ -47,8 +48,8 @@ void SQLiteStorage::createTables() {
 
   statement = getStatement();
 
-  //statement << "PRAGMA encoding = \"UTF-8\";";
-  //statement.execute();
+  // statement << "PRAGMA encoding = \"UTF-8\";";
+  // statement.execute();
 
   statement << "CREATE TABLE IF NOT EXISTS `annotations` ( \
            `id` varchar(16) NOT NULL, \
@@ -64,25 +65,25 @@ void SQLiteStorage::createTables() {
             PRIMARY KEY (`id`) \
             );";
   statement.execute();
-/*
-  statement = getStatement();
+  /*
+    statement = getStatement();
 
-  statement << "CREATE TABLE IF NOT EXISTS `classes` ("
-            << "`id` char(16) NOT NULL, "
-            << "`name` varchar(256) NOT NULL,"
-            << "PRIMARY KEY (`id`)"
-            << ");";
-  statement.execute();
+    statement << "CREATE TABLE IF NOT EXISTS `classes` ("
+              << "`id` char(16) NOT NULL, "
+              << "`name` varchar(256) NOT NULL,"
+              << "PRIMARY KEY (`id`)"
+              << ");";
+    statement.execute();
 
-  statement = getStatement();
+    statement = getStatement();
 
-  statement << "CREATE TABLE IF NOT EXISTS `objects` ("
-            << "`id` char(16) NOT NULL, "
-            << "`name` varchar(256) NOT NULL,"
-            << "`class` char(16) NOT NULL,"
-            << "PRIMARY KEY (`id`)"
-            << ");";
-  statement.execute();*/
+    statement << "CREATE TABLE IF NOT EXISTS `objects` ("
+              << "`id` char(16) NOT NULL, "
+              << "`name` varchar(256) NOT NULL,"
+              << "`class` char(16) NOT NULL,"
+              << "PRIMARY KEY (`id`)"
+              << ");";
+    statement.execute();*/
 }
 
 // static attributes (if any)

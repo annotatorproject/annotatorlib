@@ -24,7 +24,7 @@ Session* initSession() {
   shared_ptr<Attribute> attribute = std::make_shared<Attribute>(
       Attribute::genId(), AttributeType::BOOLEAN, "light");
   AttributeValue* defaultValue = new AttributeValue(false);
-  attribute->setDefaultValue(defaultValue);
+  attribute->setValue(defaultValue);
 
   shared_ptr<Object> object1 = std::make_shared<Object>();
   shared_ptr<Object> object2 = std::make_shared<Object>();

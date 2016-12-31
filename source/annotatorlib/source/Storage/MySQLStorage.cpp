@@ -53,8 +53,10 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext()) a_.next = std::to_string(annotation->getNext()->getId());
-    if (annotation->getPrevious()) a_.previous = std::to_string(annotation->getPrevious()->getId());
+    if (annotation->getNext())
+      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getPrevious())
+      a_.previous = std::to_string(annotation->getPrevious()->getId());
     if (annotation->getFrame())
       a_.frame = std::to_string(annotation->getFrame()->getId());
 
@@ -63,8 +65,9 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
     try {
       statement << "INSERT INTO `annotations` VALUES(?, ?, ?, ?, ?, ?, ?, "
                    "?, ?, ?);",
-          use(a_.id), use(a_.next), use(a_.previous), use(a_.object), use(a_.frame), use(a_.x),
-          use(a_.y), use(a_.width), use(a_.height), use(a_.type);
+          use(a_.id), use(a_.next), use(a_.previous), use(a_.object),
+          use(a_.frame), use(a_.x), use(a_.y), use(a_.width), use(a_.height),
+          use(a_.type);
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -116,8 +119,10 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext()) a_.next = std::to_string(annotation->getNext()->getId());
-    if (annotation->getPrevious()) a_.previous = std::to_string(annotation->getPrevious()->getId());
+    if (annotation->getNext())
+      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getPrevious())
+      a_.previous = std::to_string(annotation->getPrevious()->getId());
     if (annotation->getFrame())
       a_.frame = std::to_string(annotation->getFrame()->getId());
 
@@ -125,10 +130,12 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
 
     try {
       statement
-          << "UPDATE `annotations` SET `id`=?, `next`=?, `previous`=?, `object`=?, `frame`=?,"
+          << "UPDATE `annotations` SET `id`=?, `next`=?, `previous`=?, "
+             "`object`=?, `frame`=?,"
              "`x`=?, `y`=?, `width`=?, `height`=?, `type`=? WHERE `id`=?;",
-          use(a_.id), use(a_.next), use(a_.previous), use(a_.object), use(a_.frame), use(a_.x),
-          use(a_.y), use(a_.width), use(a_.height), use(a_.type), use(a_.id);
+          use(a_.id), use(a_.next), use(a_.previous), use(a_.object),
+          use(a_.frame), use(a_.x), use(a_.y), use(a_.width), use(a_.height),
+          use(a_.type), use(a_.id);
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;

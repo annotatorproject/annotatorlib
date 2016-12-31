@@ -30,7 +30,7 @@ TEST_F(project_test, saveProject) {
     shared_ptr<Attribute> attribute = std::make_shared<Attribute>(
         Attribute::genId(), AttributeType::BOOLEAN, "light");
     AttributeValue defaultValue(false);
-    attribute->setDefaultValue(&defaultValue);
+    attribute->setValue(&defaultValue);
     session->addAttribute(shared_ptr<Attribute>(attribute));
 
     shared_ptr<Annotation> annotation =

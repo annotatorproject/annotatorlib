@@ -46,14 +46,15 @@ void MySQLLoader::loadAttributes(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
                                   Session *session) {
-  typedef Poco::Tuple<std::string, std::string, std::string, std::string, std::string, float,
-                      float, float, float, std::string>
+  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
+                      std::string, float, float, float, float, std::string>
       AnnotationTuple;
   std::vector<AnnotationTuple> annotations;
 
   Poco::Data::Statement statement(sqlSession);
-  statement << "SELECT `id`,`next`, `previous`,`object`, `frame`, `x`, `y`, `width`, "
-               "`height`, `type` FROM `annotations`",
+  statement
+      << "SELECT `id`,`next`, `previous`,`object`, `frame`, `x`, `y`, `width`, "
+         "`height`, `type` FROM `annotations`",
       into(annotations);
   statement.execute();
 

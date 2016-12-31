@@ -25,6 +25,9 @@ static unsigned long lastId = 100000;
  * @param type
  * @param name
  */
+Attribute::Attribute(std::string type, std::string name)
+    : Attribute(genId(), AttributeTypeFromString(type), name) {}
+
 Attribute::Attribute(unsigned long id, AttributeType type, std::string name)
     : id(id) {
   if (lastId < id) lastId = id;
@@ -32,9 +35,38 @@ Attribute::Attribute(unsigned long id, AttributeType type, std::string name)
   this->name = name;
 }
 
+Attribute::~Attribute() {
+  if (value) delete value;
+}
+
 unsigned long Attribute::genId() {
   lastId += 7;
   return lastId;
+}
+
+AttributeValue *Attribute::createAttributeValue(std::string type,
+                                                std::string value) {
+  AttributeType t = AttributeTypeFromString(type);
+
+  switch (t) {
+    case AnnotatorLib::AttributeType::STRING:
+      return new AttributeValue(value);
+    case AnnotatorLib::AttributeType::INTEGER:
+      return new AttributeValue(std::stol(value));
+    case AnnotatorLib::AttributeType::FLOAT:
+
+      return new AttributeValue(std::stod(value));
+    case AnnotatorLib::AttributeType::BOOLEAN:
+      if (value == "true" || value == "1" || value == "True" || value == "TRUE")
+        return new AttributeValue(true);
+      else
+        return new AttributeValue(false);
+    case AnnotatorLib::AttributeType::UNKNOWN:
+      break;
+    default:
+      break;
+  };
+  return nullptr;
 }
 
 unsigned long Attribute::getId() const { return id; }
@@ -45,11 +77,9 @@ void Attribute::setName(std::string name) { this->name = name; }
 
 std::string Attribute::getName() const { return name; }
 
-void Attribute::setDefaultValue(AttributeValue *value) {
-  this->defaultValue = value;
-}
+void Attribute::setValue(AttributeValue *value) { this->value = value; }
 
-AttributeValue *Attribute::getDefaultValue() const { return defaultValue; }
+AttributeValue *Attribute::getValue() const { return value; }
 
 bool Attribute::equals(Attribute *other) {
   if (this == other) return true;

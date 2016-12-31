@@ -68,7 +68,7 @@ void JSONLoader::loadAttributes(QJsonObject &json, Session *session) {
       default:
         av = new AttributeValue(attribute["default"].toString().toStdString());
     };
-    a->setDefaultValue(av);
+    a->setValue(av);
     session->addAttribute(shared_ptr<Attribute>(a));
   }
 }

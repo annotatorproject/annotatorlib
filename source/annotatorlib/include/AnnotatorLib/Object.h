@@ -6,16 +6,16 @@
  Object class header
  ************************************************************/
 
+#include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/Attribute.h>
+#include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <iostream>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
-#include "AnnotatorLib/Annotation.h"
-#include "AnnotatorLib/Attribute.h"
-#include "AnnotatorLib/Frame.h"
 
 using std::weak_ptr;
 using std::shared_ptr;

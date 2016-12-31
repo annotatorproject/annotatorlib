@@ -10,8 +10,8 @@
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
 
-#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/RecordSet.h>
+#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/SessionPool.h>
 #include <Poco/Data/Statement.h>
 #include <Poco/Tuple.h>
@@ -22,7 +22,9 @@ using namespace Poco::Data::Keywords;
 namespace AnnotatorLib {
 namespace Loader {
 
-StorageType SQLiteLoader::getType() { return AnnotatorLib::StorageType::SQLITE; }
+StorageType SQLiteLoader::getType() {
+  return AnnotatorLib::StorageType::SQLITE;
+}
 
 void SQLiteLoader::loadSession(Session *session) {
   Poco::Data::SQLite::Connector::registerConnector();

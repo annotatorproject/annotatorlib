@@ -90,8 +90,7 @@ QJsonObject JSONSaver::attributeToJson(
   json["name"] = QString::fromStdString(attribute->getName());
   json["type"] = QString::fromStdString(
       AnnotatorLib::AttributeTypeToString(attribute->getType()));
-  json["default"] =
-      QString::fromStdString(attribute->getDefaultValue()->toString());
+  json["default"] = QString::fromStdString(attribute->getValue()->toString());
   return json;
 }
 

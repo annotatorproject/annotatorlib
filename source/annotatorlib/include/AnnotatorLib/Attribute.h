@@ -49,20 +49,26 @@ class ANNOTATORLIB_API AttributeValue {
 
 /**
  * @brief The Attribute class
+ * Attribute at object is used as default attribute value.
  */
 class ANNOTATORLIB_API Attribute {
  public:
   const unsigned long id;
 
+  Attribute(std::string type, std::string name);
+
   Attribute(unsigned long id, AttributeType type, std::string name);
 
-  ~Attribute() {}
+  ~Attribute();
 
   /**
    *
    * @return id
    */
   static unsigned long genId();
+
+  static AttributeValue *createAttributeValue(std::string type,
+                                              std::string value);
 
   unsigned long getId() const;
 
@@ -71,8 +77,8 @@ class ANNOTATORLIB_API Attribute {
   void setName(std::string name);
   std::string getName() const;
 
-  void setDefaultValue(AttributeValue *value);
-  AttributeValue *getDefaultValue() const;
+  void setValue(AttributeValue *value);
+  AttributeValue *getValue() const;
 
   bool equals(Attribute *other);
 
@@ -84,7 +90,7 @@ class ANNOTATORLIB_API Attribute {
 
   std::string name;
 
-  AttributeValue *defaultValue;
+  AttributeValue *value = nullptr;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

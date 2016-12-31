@@ -15,15 +15,13 @@ class storage_sqlite_test : public testing::Test {
 
 TEST_F(storage_sqlite_test, createTables) {
   AnnotatorLib::Storage::SQLiteStorage storage;
-  storage.setPath(
-      "annotator.db");
+  storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
 }
 
 TEST_F(storage_sqlite_test, objects) {
   AnnotatorLib::Storage::SQLiteStorage storage;
-  storage.setPath(
-      "annotator.db");
+  storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
 
@@ -40,8 +38,7 @@ TEST_F(storage_sqlite_test, objects) {
   ASSERT_TRUE(o2->getName() == "testobject");
 
   AnnotatorLib::Storage::SQLiteStorage storage2;
-  storage2.setPath(
-      "annotator.db");
+  storage2.setPath("annotator.db");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
   ASSERT_TRUE(o3->getName() == "testobject");
@@ -49,8 +46,7 @@ TEST_F(storage_sqlite_test, objects) {
 
 TEST_F(storage_sqlite_test, annotations) {
   AnnotatorLib::Storage::SQLiteStorage storage;
-  storage.setPath(
-      "annotator.db");
+  storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
 
@@ -73,8 +69,7 @@ TEST_F(storage_sqlite_test, annotations) {
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
   AnnotatorLib::Storage::SQLiteStorage storage2;
-  storage2.setPath(
-      "annotator.db");
+  storage2.setPath("annotator.db");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
   ASSERT_TRUE(o3->getName() == "testobject");
@@ -84,4 +79,3 @@ TEST_F(storage_sqlite_test, annotations) {
   ASSERT_TRUE(a2->getObject()->getName() == "testobject");
   ASSERT_TRUE(storage2.getFrames().size() == 1);
 }
-

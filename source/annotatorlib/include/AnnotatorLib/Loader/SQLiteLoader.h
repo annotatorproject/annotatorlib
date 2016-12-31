@@ -6,9 +6,9 @@
  MySQLLoader class header
  ************************************************************/
 #include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <AnnotatorLib/Loader/MySQLLoader.h>
 #include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
-#include <AnnotatorLib/Loader/MySQLLoader.h>
 
 #include <Poco/Data/Session.h>
 

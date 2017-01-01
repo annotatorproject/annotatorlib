@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef NEWATTRIBUTE_H
 #define NEWATTRIBUTE_H
 
@@ -20,11 +20,18 @@ class Frame;
 namespace Commands {
 
 class ANNOTATORLIB_API NewAttribute : public Command {
-public:
+ public:
   NewAttribute() = delete;
 
   NewAttribute(std::shared_ptr<Session> session, shared_ptr<Object> object,
                std::string type, std::string name, std::string value);
+
+  NewAttribute(std::shared_ptr<Session> session, shared_ptr<Object> object,
+               std::shared_ptr<Attribute> attribute);
+
+  NewAttribute(std::shared_ptr<Session> session,
+               shared_ptr<Annotation> annotation,
+               std::shared_ptr<Attribute> attribute);
 
   NewAttribute(const NewAttribute &other) = delete;
 
@@ -36,14 +43,15 @@ public:
 
   shared_ptr<Attribute> getAttribute();
 
-protected:
+ protected:
   shared_ptr<Attribute> attribute_;
   const std::shared_ptr<AnnotatorLib::Session> session;
   const shared_ptr<AnnotatorLib::Object> object;
+  const shared_ptr<AnnotatorLib::Annotation> annotation;
   std::string type;
   std::string name;
   std::string value;
 };
 }
 }
-#endif // NEWANNOTATION_H
+#endif  // NEWANNOTATION_H

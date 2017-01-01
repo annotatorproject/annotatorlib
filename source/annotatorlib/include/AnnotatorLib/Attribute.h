@@ -8,6 +8,8 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
+#include <memory>
+
 namespace AnnotatorLib {
 
 /************************************************************/
@@ -54,6 +56,8 @@ class ANNOTATORLIB_API AttributeValue {
 class ANNOTATORLIB_API Attribute {
  public:
   const unsigned long id;
+
+  Attribute(std::shared_ptr<Attribute> &other);
 
   Attribute(std::string type, std::string name);
 

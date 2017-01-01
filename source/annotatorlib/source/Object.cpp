@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 
 #define Annotator_AnnotatorLib_Object_BODY
 
@@ -90,6 +90,13 @@ bool Object::removeAttribute(shared_ptr<Attribute> attribute) {
     return true;
   }
   return false;
+}
+
+shared_ptr<Attribute> Object::getAttribute(std::string name) {
+  for (shared_ptr<Attribute> attribute : attributes) {
+    if (attribute->getName() == name) return attribute;
+  }
+  return nullptr;
 }
 
 shared_ptr<Annotation> Object::getFirstAnnotation() const {

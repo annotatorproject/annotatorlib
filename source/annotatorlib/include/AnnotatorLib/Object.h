@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_OBJECT_H
 #define ANNOTATOR_ANNOTATORLIB_OBJECT_H
 
@@ -57,6 +57,13 @@ class ANNOTATORLIB_API Object {
   std::vector<shared_ptr<Attribute>> getAttributes() const;
   bool addAttribute(shared_ptr<Attribute> attribute);
   bool removeAttribute(shared_ptr<Attribute> attribute);
+  /**
+   * @brief getAttribute
+   * returns an attribute by name, nullptr if not found
+   * @param name
+   * @return
+   */
+  shared_ptr<Attribute> getAttribute(std::string name);
 
   shared_ptr<Annotation> getFirstAnnotation() const;
   shared_ptr<Annotation> getLastAnnotation() const;

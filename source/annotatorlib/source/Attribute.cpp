@@ -19,12 +19,12 @@ namespace AnnotatorLib {
 // static attributes (if any)
 static unsigned long lastId = 100000;
 
-/**
- * @brief Attribute::Attribute
- * @param id
- * @param type
- * @param name
- */
+Attribute::Attribute(std::shared_ptr<Attribute> &other)
+    : Attribute(genId(), other->type, other->name) {
+  this->value = Attribute::createAttributeValue(
+      AttributeTypeToString(this->type), other->value->toString());
+}
+
 Attribute::Attribute(std::string type, std::string name)
     : Attribute(genId(), AttributeTypeFromString(type), name) {}
 

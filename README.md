@@ -1,4 +1,7 @@
-# Annotator Library [![Stories in Ready] [waffle-image]] [waffle] [![Build Status] [travis-image] ] [travis] [![Coverage_Status] [coveralls-image] ] [coveralls]  [![Documentation] [codedocs-image] ] [codedocs] [![Gitter] [gitter-image] ] [gitter]
+Annotator Library
+=================
+
+[![Stories in Ready] [waffle-image]] [waffle] [![Build Status] [travis-image] ] [travis] [![Coverage_Status] [coveralls-image] ] [coveralls]  [![Documentation] [codedocs-image] ] [codedocs] [![Gitter] [gitter-image] ] [gitter]
 
 
 [travis-image]: https://travis-ci.org/lasmue/annotatorlib.png?branch=master
@@ -15,6 +18,7 @@
 
 [waffle-image]: https://badge.waffle.io/lasmue/annotatorlib.svg?label=ready&title=Ready
 [waffle]: http://waffle.io/lasmue/annotatorlib
+
 ### Quick start
 
 First install CMake, Qt5 and a c++11 compiler (gcc 5).

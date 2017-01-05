@@ -35,32 +35,34 @@ Attribute::Attribute(unsigned long id, AttributeType type, std::string name)
   this->name = name;
 }
 
-Attribute::~Attribute() {
-  if (value) delete value;
-}
+Attribute::~Attribute() {}
 
 unsigned long Attribute::genId() {
   lastId += 7;
   return lastId;
 }
 
-AttributeValue *Attribute::createAttributeValue(std::string type,
-                                                std::string value) {
+std::shared_ptr<AttributeValue> Attribute::createAttributeValue(
+    std::string type, std::string value) {
   AttributeType t = AttributeTypeFromString(type);
+  return createAttributeValue(t, value);
+}
 
-  switch (t) {
+std::shared_ptr<AttributeValue> Attribute::createAttributeValue(
+    AttributeType type, std::__cxx11::string value) {
+  switch (type) {
     case AnnotatorLib::AttributeType::STRING:
-      return new AttributeValue(value);
+      return std::make_shared<AttributeValue>(value);
     case AnnotatorLib::AttributeType::INTEGER:
-      return new AttributeValue(std::stol(value));
+      return std::make_shared<AttributeValue>(std::stol(value));
     case AnnotatorLib::AttributeType::FLOAT:
 
-      return new AttributeValue(std::stod(value));
+      return std::make_shared<AttributeValue>(std::stod(value));
     case AnnotatorLib::AttributeType::BOOLEAN:
       if (value == "true" || value == "1" || value == "True" || value == "TRUE")
-        return new AttributeValue(true);
+        return std::make_shared<AttributeValue>(true);
       else
-        return new AttributeValue(false);
+        return std::make_shared<AttributeValue>(false);
     case AnnotatorLib::AttributeType::UNKNOWN:
       break;
     default:
@@ -77,9 +79,11 @@ void Attribute::setName(std::string name) { this->name = name; }
 
 std::string Attribute::getName() const { return name; }
 
-void Attribute::setValue(AttributeValue *value) { this->value = value; }
+void Attribute::setValue(std::shared_ptr<AttributeValue> value) {
+  this->value = value;
+}
 
-AttributeValue *Attribute::getValue() const { return value; }
+std::shared_ptr<AttributeValue> Attribute::getValue() const { return value; }
 
 bool Attribute::equals(Attribute *other) {
   if (this == other) return true;
@@ -197,6 +201,8 @@ AttributeValue::AttributeValue(bool booleanValue) {
   this->type = AnnotatorLib::AttributeType::BOOLEAN;
   this->booleanValue = booleanValue;
 }
+
+AttributeType AttributeValue::getType() { return this->type; }
 
 }  // of namespace AnnotatorLib
 

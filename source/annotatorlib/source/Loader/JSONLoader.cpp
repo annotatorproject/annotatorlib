@@ -50,26 +50,31 @@ void JSONLoader::loadAttributes(QJsonObject &json, Session *session) {
 
     // TODO: default value
     AttributeType t = AttributeTypeFromString(type.toStdString());
-    Attribute *a = new Attribute(id, t, name.toStdString());
-    AttributeValue *av;
+    std::shared_ptr<Attribute> a =
+        std::make_shared<Attribute>(id, t, name.toStdString());
+    std::shared_ptr<AttributeValue> av;
     switch (t) {
       case AttributeType::STRING:
-        av = new AttributeValue(attribute["default"].toString().toStdString());
+        av = std::make_shared<AttributeValue>(
+            attribute["default"].toString().toStdString());
         break;
       case AttributeType::INTEGER:
-        av = new AttributeValue(attribute["default"].toString().toLong());
+        av = std::make_shared<AttributeValue>(
+            attribute["default"].toString().toLong());
         break;
       case AttributeType::FLOAT:
-        av = new AttributeValue(attribute["default"].toString().toDouble());
+        av = std::make_shared<AttributeValue>(
+            attribute["default"].toString().toDouble());
         break;
       case AttributeType::BOOLEAN:
-        av = new AttributeValue(attribute["default"].toBool());
+        av = std::make_shared<AttributeValue>(attribute["default"].toBool());
         break;
       default:
-        av = new AttributeValue(attribute["default"].toString().toStdString());
+        av = std::make_shared<AttributeValue>(
+            attribute["default"].toString().toStdString());
     };
     a->setValue(av);
-    session->addAttribute(shared_ptr<Attribute>(a));
+    session->addAttribute(a);
   }
 }
 

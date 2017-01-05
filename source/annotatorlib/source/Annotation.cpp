@@ -77,7 +77,19 @@ bool Annotation::operator!=(const Annotation &right) const {
 
 unsigned long Annotation::getId() const { return id; }
 
-std::vector<shared_ptr<Attribute>> const &Annotation::getAttributes() const {
+std::vector<shared_ptr<Attribute>> Annotation::getAttributes() {
+  std::vector<shared_ptr<Attribute>> ret;
+  ret.insert(ret.end(), attributes.begin(), attributes.end());
+
+  for (shared_ptr<Attribute> att : object->getAttributes()) {
+    // skip if default attribute already exists in annotation.
+    if (!getAttributeWithoutDefaults(att->getName())) ret.push_back(att);
+  }
+  return ret;
+}
+
+const std::vector<shared_ptr<Attribute>>
+    &Annotation::getAttributesWithoutDefaults() const {
   return attributes;
 }
 
@@ -99,6 +111,20 @@ bool Annotation::removeAttribute(shared_ptr<Attribute> attribute) {
     return true;
   }
   return false;
+}
+
+std::shared_ptr<Attribute> Annotation::getAttribute(std::string name) {
+  std::shared_ptr<Attribute> ret = getAttributeWithoutDefaults(name);
+  if (!ret) ret = object->getAttribute(name);
+  return ret;
+}
+
+std::shared_ptr<Attribute> Annotation::getAttributeWithoutDefaults(
+    std::string name) {
+  for (shared_ptr<Attribute> attribute : attributes) {
+    if (attribute->getName() == name) return attribute;
+  }
+  return nullptr;
 }
 
 shared_ptr<Frame> Annotation::getFrame() const { return frame; }

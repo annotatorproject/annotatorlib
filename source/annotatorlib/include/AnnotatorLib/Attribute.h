@@ -19,6 +19,7 @@ namespace AnnotatorLib {
  */
 class ANNOTATORLIB_API AttributeValue {
  public:
+  // AttributeValue() = delete;
   AttributeValue(std::string stringValue);
   AttributeValue(const char *stringValue);
   AttributeValue(long integerValue);
@@ -71,8 +72,11 @@ class ANNOTATORLIB_API Attribute {
    */
   static unsigned long genId();
 
-  static AttributeValue *createAttributeValue(std::string type,
-                                              std::string value);
+  static std::shared_ptr<AttributeValue> createAttributeValue(
+      std::string type, std::string value);
+
+  static std::shared_ptr<AttributeValue> createAttributeValue(
+      AttributeType type, std::string value);
 
   unsigned long getId() const;
 
@@ -81,8 +85,8 @@ class ANNOTATORLIB_API Attribute {
   void setName(std::string name);
   std::string getName() const;
 
-  void setValue(AttributeValue *value);
-  AttributeValue *getValue() const;
+  void setValue(std::shared_ptr<AttributeValue> value);
+  std::shared_ptr<AttributeValue> getValue() const;
 
   bool equals(Attribute *other);
 
@@ -94,7 +98,7 @@ class ANNOTATORLIB_API Attribute {
 
   std::string name;
 
-  AttributeValue *value = nullptr;
+  std::shared_ptr<AttributeValue> value;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

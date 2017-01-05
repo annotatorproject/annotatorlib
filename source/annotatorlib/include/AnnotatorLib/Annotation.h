@@ -95,11 +95,47 @@ class ANNOTATORLIB_API Annotation {
   unsigned long getId() const;
   const bool is_temporary;
 
-  std::vector<shared_ptr<Attribute>> const &getAttributes() const;
+  /**
+   * @brief getAttributes
+   * Gets all Attributes, also object defaults
+   * @return
+   */
+  std::vector<shared_ptr<Attribute>> getAttributes();
+
+  /**
+   * @brief getAttributesWithoutDefaults
+   * @return
+   */
+  const std::vector<shared_ptr<Attribute>> &getAttributesWithoutDefaults()
+      const;
+
   bool addAttribute(shared_ptr<Attribute> attribute);
   bool removeAttribute(shared_ptr<Attribute> attribute);
+
+  /**
+   * @brief getAttribute
+   * Get attribute by name.
+   * @param name
+   * @return nullptr if attribute does not exist.
+   */
+  std::shared_ptr<Attribute> getAttribute(std::string name);
+
+  /**
+   * @brief getAttributeWithoutDefaults
+   * Get attribute by name. No default object attributes.
+   * @param name
+   * @return
+   */
+  std::shared_ptr<Attribute> getAttributeWithoutDefaults(std::string name);
+
   shared_ptr<AnnotatorLib::Frame> getFrame() const;
   shared_ptr<Object> getObject() const;
+
+  /**
+   * @brief getType
+   * Type of Annotation like rect or circle.
+   * @return
+   */
   AnnotationType getType() const;
 
   /**

@@ -14,7 +14,7 @@ AnnotatorLib::Commands::NewAttribute::NewAttribute(
     std::string value)
     : session(session), object(object), type(type), name(name), value(value) {
   attribute_ = std::make_shared<AnnotatorLib::Attribute>(type, name);
-  AnnotatorLib::AttributeValue *av =
+  std::shared_ptr<AnnotatorLib::AttributeValue> av =
       AnnotatorLib::Attribute::createAttributeValue(type, value);
   attribute_->setValue(av);
 }

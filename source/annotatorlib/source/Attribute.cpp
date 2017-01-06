@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 
 #define Annotator_AnnotatorLib_Attribute_BODY
 
@@ -49,7 +49,7 @@ std::shared_ptr<AttributeValue> Attribute::createAttributeValue(
 }
 
 std::shared_ptr<AttributeValue> Attribute::createAttributeValue(
-    AttributeType type, std::__cxx11::string value) {
+    AttributeType type, std::string value) {
   switch (type) {
     case AnnotatorLib::AttributeType::STRING:
       return std::make_shared<AttributeValue>(value);

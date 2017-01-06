@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_ATTRIBUTE_H
 #define ANNOTATOR_ANNOTATORLIB_ATTRIBUTE_H
 

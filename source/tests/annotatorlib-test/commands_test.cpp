@@ -1,10 +1,12 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
+#include <AnnotatorLib/Commands/NewAttribute.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotationRange.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
+#include <AnnotatorLib/Commands/UpdateAttribute.h>
 #include <AnnotatorLib/Commands/UpdateObject.h>
 #include <AnnotatorLib/Project.h>
 #include <gmock/gmock.h>
@@ -198,4 +200,66 @@ TEST_F(commands_test, compressObject) {
   session->redo();
 
   ASSERT_EQ(obj->getAnnotations().size(), 2ul);
+}
+
+TEST_F(commands_test, newAttribute) {
+  std::shared_ptr<Session> session = std::make_shared<Session>();
+  ASSERT_EQ(session->getAnnotations().size(), (unsigned long)0);
+
+  shared_ptr<Frame> frame = std::make_shared<Frame>(1);
+  shared_ptr<Class> c = std::make_shared<Class>("car");
+
+  Commands::NewAnnotation *nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
+
+  session->execute(shared_ptr<Commands::Command>(nA));
+
+  shared_ptr<Annotation> annotation = nA->getAnnotation();
+
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  shared_ptr<Object> o = session->getObject(1001);
+  ASSERT_EQ(o->getAnnotations().size(), 1ul);
+
+  Commands::NewAttribute *nAttr =
+      new Commands::NewAttribute(session, o, "string", "testattribute", "test");
+  session->execute(shared_ptr<Commands::Command>(nAttr));
+  ASSERT_EQ(annotation->getAttributes().size(), 1);
+}
+
+TEST_F(commands_test, updateAttribute) {
+  std::shared_ptr<Session> session = std::make_shared<Session>();
+  ASSERT_EQ(session->getAnnotations().size(), (unsigned long)0);
+
+  shared_ptr<Frame> frame = std::make_shared<Frame>(1);
+  shared_ptr<Class> c = std::make_shared<Class>("car");
+
+  Commands::NewAnnotation *nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
+
+  session->execute(shared_ptr<Commands::Command>(nA));
+
+  shared_ptr<Annotation> annotation = nA->getAnnotation();
+
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  shared_ptr<Object> o = session->getObject(1001);
+  ASSERT_EQ(o->getAnnotations().size(), 1ul);
+
+  Commands::NewAttribute *nAttr =
+      new Commands::NewAttribute(session, o, "string", "testattribute", "test");
+  session->execute(shared_ptr<Commands::Command>(nAttr));
+  ASSERT_EQ(annotation->getAttributes().size(), 1);
+
+  Commands::NewAttribute *nAttr2 = new Commands::NewAttribute(
+      session, o, "string", "testattribute2", "test2");
+  session->execute(shared_ptr<Commands::Command>(nAttr2));
+  ASSERT_EQ(annotation->getAttributes().size(), 2);
+
+  Commands::UpdateAttribute *uAttr =
+      new Commands::UpdateAttribute(annotation, "testattribute", "test1");
+  session->execute(shared_ptr<Commands::Command>(uAttr));
+  ASSERT_EQ(annotation->getAttributes().size(), 2);
+  ASSERT_EQ(annotation->getAttributesWithoutDefaults().size(), 1);
+  ASSERT_EQ(annotation->getAttribute("testattribute")->getValue()->getString(),
+            "test1");
+  ASSERT_EQ(o->getAttribute("testattribute")->getValue()->getString(), "test");
 }

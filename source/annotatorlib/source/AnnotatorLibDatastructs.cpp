@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 /************************************************************
  Pkg_AnnotatorLib package header
  ************************************************************/
@@ -30,10 +30,10 @@ std::string AttributeTypeToString(AttributeType type) {
 }
 
 AttributeType AttributeTypeFromString(std::string str) {
-  if (str == "String") return AttributeType::STRING;
-  if (str == "Boolean") return AttributeType::BOOLEAN;
-  if (str == "Integer") return AttributeType::INTEGER;
-  if (str == "Float") return AttributeType::FLOAT;
+  if (str == "String" || str == "string") return AttributeType::STRING;
+  if (str == "Boolean" || str == "boolean") return AttributeType::BOOLEAN;
+  if (str == "Integer" || str == "integer") return AttributeType::INTEGER;
+  if (str == "Float" || str == "float") return AttributeType::FLOAT;
   return AttributeType::UNKNOWN;
 }
 

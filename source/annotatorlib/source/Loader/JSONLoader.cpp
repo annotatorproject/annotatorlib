@@ -40,41 +40,45 @@ void JSONLoader::loadSession(Session *session) {
   file.close();
 }
 
+std::shared_ptr<Attribute> JSONLoader::loadAttribute(QJsonValue &value) {
+  QJsonObject attribute = value.toObject();
+  unsigned long id = attribute["id"].toString().toLong();
+  QString name = attribute["name"].toString();
+  QString type = attribute["type"].toString();
+
+  // TODO: default value
+  AttributeType t = AttributeTypeFromString(type.toStdString());
+  std::shared_ptr<Attribute> a =
+      std::make_shared<Attribute>(id, t, name.toStdString());
+  std::shared_ptr<AttributeValue> av;
+  switch (t) {
+    case AttributeType::STRING:
+      av = std::make_shared<AttributeValue>(
+          attribute["value"].toString().toStdString());
+      break;
+    case AttributeType::INTEGER:
+      av = std::make_shared<AttributeValue>(
+          attribute["value"].toString().toLong());
+      break;
+    case AttributeType::FLOAT:
+      av = std::make_shared<AttributeValue>(
+          attribute["value"].toString().toDouble());
+      break;
+    case AttributeType::BOOLEAN:
+      av = std::make_shared<AttributeValue>(attribute["value"].toBool());
+      break;
+    default:
+      av = std::make_shared<AttributeValue>(
+          attribute["value"].toString().toStdString());
+  };
+  a->setValue(av);
+  return a;
+}
+
 void JSONLoader::loadAttributes(QJsonObject &json, Session *session) {
   QJsonArray attributes = json.value("attributes").toArray();
   for (QJsonValue value : attributes) {
-    QJsonObject attribute = value.toObject();
-    unsigned long id = attribute["id"].toString().toLong();
-    QString name = attribute["name"].toString();
-    QString type = attribute["type"].toString();
-
-    // TODO: default value
-    AttributeType t = AttributeTypeFromString(type.toStdString());
-    std::shared_ptr<Attribute> a =
-        std::make_shared<Attribute>(id, t, name.toStdString());
-    std::shared_ptr<AttributeValue> av;
-    switch (t) {
-      case AttributeType::STRING:
-        av = std::make_shared<AttributeValue>(
-            attribute["default"].toString().toStdString());
-        break;
-      case AttributeType::INTEGER:
-        av = std::make_shared<AttributeValue>(
-            attribute["default"].toString().toLong());
-        break;
-      case AttributeType::FLOAT:
-        av = std::make_shared<AttributeValue>(
-            attribute["default"].toString().toDouble());
-        break;
-      case AttributeType::BOOLEAN:
-        av = std::make_shared<AttributeValue>(attribute["default"].toBool());
-        break;
-      default:
-        av = std::make_shared<AttributeValue>(
-            attribute["default"].toString().toStdString());
-    };
-    a->setValue(av);
-    session->addAttribute(a);
+    session->addAttribute(loadAttribute(value));
   }
 }
 
@@ -107,9 +111,10 @@ void JSONLoader::loadObjects(QJsonObject &json, Session *session) {
 
     QJsonArray attributes = object.value("attributes").toArray();
     for (QJsonValue attribute : attributes) {
-      unsigned long atid = attribute.toString().toLong();
-      if (session->getAttribute(atid))
-        o->addAttribute(session->getAttribute(atid));
+      o->addAttribute(loadAttribute(attribute));
+      // unsigned long atid = attribute.toString().toLong();
+      // if (session->getAttribute(atid))
+      //  o->addAttribute(session->getAttribute(atid));
     }
     session->addObject(shared_ptr<Object>(o));
   }
@@ -150,9 +155,10 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
       // add attributes
       QJsonArray attributes = annotation.value("attributes").toArray();
       for (QJsonValue attribute : attributes) {
-        unsigned long atid = attribute.toString().toLong();
-        if (session->getAttribute(atid))
-          a->addAttribute(session->getAttribute(atid));
+        a->addAttribute(loadAttribute(attribute));
+        // unsigned long atid = attribute.toString().toLong();
+        // if (session->getAttribute(atid))
+        //  a->addAttribute(session->getAttribute(atid));
       }
       session->addAnnotation(a);
     }

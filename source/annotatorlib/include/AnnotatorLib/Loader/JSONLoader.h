@@ -14,6 +14,7 @@
 namespace AnnotatorLib {
 
 class Session;
+class Attribute;
 
 namespace Loader {
 
@@ -32,6 +33,7 @@ class ANNOTATORLIB_API JSONLoader : public AbstractLoader {
  protected:
   std::string path;
 
+  std::shared_ptr<AnnotatorLib::Attribute> loadAttribute(QJsonValue &value);
   void loadAttributes(QJsonObject &json, AnnotatorLib::Session *session);
   void loadAnnotations(QJsonObject &json, AnnotatorLib::Session *session);
   void loadClasses(QJsonObject &json, AnnotatorLib::Session *session);

@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Saver_JSONSaver_BODY
 
 /************************************************************
@@ -90,7 +90,7 @@ QJsonObject JSONSaver::attributeToJson(
   json["name"] = QString::fromStdString(attribute->getName());
   json["type"] = QString::fromStdString(
       AnnotatorLib::AttributeTypeToString(attribute->getType()));
-  json["default"] = QString::fromStdString(attribute->getValue()->toString());
+  json["value"] = QString::fromStdString(attribute->getValue()->toString());
   return json;
 }
 
@@ -118,8 +118,8 @@ QJsonObject JSONSaver::annotationToJson(
 
   // insert list of attributes
   QJsonArray attributes;
-  for (shared_ptr<Attribute> attribute : annotation->getAttributes()) {
-    attributes.append(QString::number(attribute->getId()));
+  for (std::shared_ptr<Attribute> attribute : annotation->getAttributes()) {
+    attributes.append(attributeToJson(attribute));
   }
   json["attributes"] = attributes;
 
@@ -161,8 +161,8 @@ QJsonObject JSONSaver::objectToJson(const shared_ptr<Object> object) {
 
   // insert list of attributes
   QJsonArray attributes;
-  for (shared_ptr<Attribute>& attribute : object->getAttributes()) {
-    attributes.append(QString::number(attribute->getId()));
+  for (std::shared_ptr<Attribute> attribute : object->getAttributes()) {
+    attributes.append(attributeToJson(attribute));
   }
   json["attributes"] = attributes;
 

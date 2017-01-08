@@ -74,10 +74,54 @@ void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
     if (o && f) {
       shared_ptr<Annotation> a = Annotation::make_shared(f, o, type);
       a->setPosition(x, y, width, height);
-      // TODO: add attributes
-
       session->addAnnotation(a);
+      loadAnnotationAttributes(sqlSession, a);
     }
+  }
+}
+
+void MySQLLoader::loadAnnotationAttributes(
+    Poco::Data::Session &sqlSession, std::shared_ptr<Annotation> annotation) {
+  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
+                      std::string>
+      AttributeTuple;
+  std::vector<AttributeTuple> attributes;
+
+  Poco::Data::Statement statement(sqlSession);
+  std::string annotation_id = std::to_string(annotation->getId());
+  statement << "SELECT `id`,`name`, `type`, `value`, `annotation_id` FROM "
+               "`annotation_attributes` WHERE `annotation_id`=?",
+      use(annotation_id), into(attributes);
+  statement.execute();
+
+  for (AttributeTuple attribute : attributes) {
+    unsigned long id = std::stol(attribute.get<0>());
+    std::string name = attribute.get<1>();
+    std::string type = attribute.get<2>();
+    std::string value = attribute.get<3>();
+
+    AttributeType t = AttributeTypeFromString(type);
+    std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
+    std::shared_ptr<AttributeValue> av;
+    switch (t) {
+      case AttributeType::STRING:
+        av = std::make_shared<AttributeValue>(value);
+        break;
+      case AttributeType::INTEGER:
+        av = std::make_shared<AttributeValue>(std::stol(value));
+        break;
+      case AttributeType::FLOAT:
+        av = std::make_shared<AttributeValue>(std::stod(value));
+        break;
+      case AttributeType::BOOLEAN:
+        av = std::make_shared<AttributeValue>(value == "true" ||
+                                              value == "True");
+        break;
+      default:
+        av = std::make_shared<AttributeValue>(value);
+    };
+    a->setValue(av);
+    annotation->addAttribute(a);
   }
 }
 

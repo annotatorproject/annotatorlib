@@ -28,6 +28,7 @@ bool AnnotatorLib::Commands::UpdateAttribute::execute(
   attribute->setValue(av);
 
   if (informSession) {
+    informSession->updateAnnotation(annotation);
     informSession->updateAttribute(attribute);
   }
   return true;

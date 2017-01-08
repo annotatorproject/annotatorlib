@@ -30,7 +30,7 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
                                  bool add_associated_objects) {
   AnnotatorLib::Session::addAnnotation(annotation, add_associated_objects);
   if (_open) {
-    struct Annotation {
+    struct AnnotationStruct {
       std::string id;
       std::string next;
       std::string previous;
@@ -42,7 +42,7 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
       float height;
       std::string type;
     };
-    Annotation a_ = {
+    AnnotationStruct a_ = {
         std::to_string(annotation->getId()),
         "0",
         "0",
@@ -69,6 +69,7 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
           use(a_.frame), use(a_.x), use(a_.y), use(a_.width), use(a_.height),
           use(a_.type);
       statement.execute();
+      insertOrUpdateAnnotationAttributes(annotation);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -96,7 +97,7 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
 void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
   AnnotatorLib::Session::updateAnnotation(annotation);
   if (_open && getAnnotation(annotation->getId())) {
-    struct Annotation {
+    struct AnnotationStruct {
       std::string id;
       std::string next;
       std::string previous;
@@ -108,7 +109,7 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
       float height;
       std::string type;
     };
-    Annotation a_ = {
+    AnnotationStruct a_ = {
         std::to_string(annotation->getId()),
         "0",
         "0",
@@ -137,6 +138,7 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
           use(a_.frame), use(a_.x), use(a_.y), use(a_.width), use(a_.height),
           use(a_.type), use(a_.id);
       statement.execute();
+      insertOrUpdateAnnotationAttributes(annotation);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -302,6 +304,39 @@ bool MySQLStorage::close() {
 Poco::Data::Statement MySQLStorage::getStatement() {
   Poco::Data::Session sess(pool->get());
   return Poco::Data::Statement(sess);
+}
+
+void MySQLStorage::insertOrUpdateAnnotationAttributes(
+    shared_ptr<Annotation> annotation) {
+  struct AttributeStruct {
+    std::string id;
+    std::string name;
+    std::string type;
+    std::string value;
+    std::string annotation_id;
+  };
+
+  for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
+       annotation->getAttributes()) {
+    AttributeStruct a_ = {
+        std::to_string(attribute->getId()), attribute->getName(),
+        AttributeTypeToString(attribute->getType()),
+        attribute->getValue()->toString(), std::to_string(annotation->getId())};
+
+    Poco::Data::Statement statement = getStatement();
+
+    try {
+      statement << "INSERT INTO `annotation_attributes` (`id`,`name`, `type`, "
+                   "`value`, `annotation_id`) VALUES (?,?,?,?,?)"
+                   "ON DUPLICATE KEY UPDATE `value`=? ;",
+          use(a_.id), use(a_.name), use(a_.type), use(a_.value),
+          use(a_.annotation_id), use(a_.value);
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
+    }
+  }
 }
 
 void MySQLStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {

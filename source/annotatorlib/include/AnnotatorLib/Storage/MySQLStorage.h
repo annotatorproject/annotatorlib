@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_STORAGE_MYSQLSTORAGE_H
 #define ANNOTATOR_ANNOTATORLIB_STORAGE_MYSQLSTORAGE_H
 
@@ -118,6 +118,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   virtual void createTables();
   Poco::Data::Statement getStatement();
 
+  void insertOrUpdateAnnotationAttributes(shared_ptr<Annotation> annotation);
   void insertOrUpdateObjectAttributes(shared_ptr<Object> object);
 };
 /************************************************************/

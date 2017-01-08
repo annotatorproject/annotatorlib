@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_LOADER_MYSQLLOADER_H
 #define ANNOTATOR_ANNOTATORLIB_LOADER_MYSQLLOADER_H
 
@@ -34,12 +34,15 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
                       AnnotatorLib::Session *session);
   void loadAnnotations(Poco::Data::Session &sqlSession,
                        AnnotatorLib::Session *session);
+  void loadAnnotationAttributes(
+      Poco::Data::Session &sqlSession,
+      std::shared_ptr<AnnotatorLib::Annotation> annotation);
   void loadClasses(Poco::Data::Session &sqlSession,
+                   AnnotatorLib::Session *session);
+  void loadObjects(Poco::Data::Session &sqlSession,
                    AnnotatorLib::Session *session);
   void loadObjectAttributes(Poco::Data::Session &sqlSession,
                             std::shared_ptr<AnnotatorLib::Object> object);
-  void loadObjects(Poco::Data::Session &sqlSession,
-                   AnnotatorLib::Session *session);
   void loadFrames(Poco::Data::Session &sqlSession,
                   AnnotatorLib::Session *session);
 };

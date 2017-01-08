@@ -7,6 +7,7 @@
  ************************************************************/
 #include <AnnotatorLib/Loader/AbstractLoader.h>
 #include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/Data/Session.h>
@@ -35,6 +36,8 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
                        AnnotatorLib::Session *session);
   void loadClasses(Poco::Data::Session &sqlSession,
                    AnnotatorLib::Session *session);
+  void loadObjectAttributes(Poco::Data::Session &sqlSession,
+                            std::shared_ptr<AnnotatorLib::Object> object);
   void loadObjects(Poco::Data::Session &sqlSession,
                    AnnotatorLib::Session *session);
   void loadFrames(Poco::Data::Session &sqlSession,

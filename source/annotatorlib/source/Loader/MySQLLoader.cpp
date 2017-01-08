@@ -97,6 +97,51 @@ void MySQLLoader::loadClasses(Poco::Data::Session &sqlSession,
   }
 }
 
+void MySQLLoader::loadObjectAttributes(Poco::Data::Session &sqlSession,
+                                       std::shared_ptr<Object> object) {
+  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
+                      std::string>
+      AttributeTuple;
+  std::vector<AttributeTuple> attributes;
+
+  Poco::Data::Statement statement(sqlSession);
+  std::string object_id = std::to_string(object->getId());
+  statement << "SELECT `id`,`name`, `type`, `value`, `object_id` FROM "
+               "`object_attributes` WHERE `object_id`=?",
+      use(object_id), into(attributes);
+  statement.execute();
+
+  for (AttributeTuple attribute : attributes) {
+    unsigned long id = std::stol(attribute.get<0>());
+    std::string name = attribute.get<1>();
+    std::string type = attribute.get<2>();
+    std::string value = attribute.get<3>();
+
+    AttributeType t = AttributeTypeFromString(type);
+    std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
+    std::shared_ptr<AttributeValue> av;
+    switch (t) {
+      case AttributeType::STRING:
+        av = std::make_shared<AttributeValue>(value);
+        break;
+      case AttributeType::INTEGER:
+        av = std::make_shared<AttributeValue>(std::stol(value));
+        break;
+      case AttributeType::FLOAT:
+        av = std::make_shared<AttributeValue>(std::stod(value));
+        break;
+      case AttributeType::BOOLEAN:
+        av = std::make_shared<AttributeValue>(value == "true" ||
+                                              value == "True");
+        break;
+      default:
+        av = std::make_shared<AttributeValue>(value);
+    };
+    a->setValue(av);
+    object->addAttribute(a);
+  }
+}
+
 void MySQLLoader::loadObjects(Poco::Data::Session &sqlSession,
                               Session *session) {
   typedef Poco::Tuple<std::string, std::string, std::string> ObjectTuple;
@@ -110,11 +155,12 @@ void MySQLLoader::loadObjects(Poco::Data::Session &sqlSession,
     std::string object_name = o.get<1>();
     unsigned long class_id = std::stol(o.get<2>());
 
-    Object *object = new Object(object_id);
+    std::shared_ptr<Object> object = std::make_shared<Object>(object_id);
     object->setName(object_name);
 
     object->setClass(session->getClass(class_id));
-    session->addObject(shared_ptr<Object>(object));
+    session->addObject(object);
+    loadObjectAttributes(sqlSession, object);
   }
 }
 

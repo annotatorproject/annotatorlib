@@ -207,19 +207,20 @@ bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
                              bool add_associated_objects) {
   AnnotatorLib::Session::addObject(object, add_associated_objects);
   if (_open) {
-    struct Object {
+    struct ObjectStruct {
       std::string id;
       std::string name;
       std::string _class;
     };
-    Object o_ = {std::to_string(object->getId()), object->getName(),
-                 std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
+                       std::to_string(object->getClass()->getId())};
     Poco::Data::Statement statement = getStatement();
 
     try {
       statement << "INSERT INTO `objects` VALUES(?, ?, ?);", use(o_.id),
           use(o_.name), use(o_._class);
       statement.execute();
+      insertOrUpdateObjectAttributes(object);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -247,13 +248,13 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
 void MySQLStorage::updateObject(shared_ptr<Object> object) {
   AnnotatorLib::Session::updateObject(object);
   if (_open && getObject(object->getId())) {
-    struct Object {
+    struct ObjectStruct {
       std::string id;
       std::string name;
       std::string _class;
     };
-    Object o_ = {std::to_string(object->getId()), object->getName(),
-                 std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
+                       std::to_string(object->getClass()->getId())};
     Poco::Data::Statement statement = getStatement();
 
     try {
@@ -261,6 +262,8 @@ void MySQLStorage::updateObject(shared_ptr<Object> object) {
           << "UPDATE `objects` SET `id`=?, `name`=?, `class`=? WHERE `id`=?;",
           use(o_.id), use(o_.name), use(o_._class), use(o_.id);
       statement.execute();
+
+      insertOrUpdateObjectAttributes(object);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -301,6 +304,38 @@ Poco::Data::Statement MySQLStorage::getStatement() {
   return Poco::Data::Statement(sess);
 }
 
+void MySQLStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
+  struct AttributeStruct {
+    std::string id;
+    std::string name;
+    std::string type;
+    std::string value;
+    std::string object_id;
+  };
+
+  for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
+       object->getAttributes()) {
+    AttributeStruct a_ = {
+        std::to_string(attribute->getId()), attribute->getName(),
+        AttributeTypeToString(attribute->getType()),
+        attribute->getValue()->toString(), std::to_string(object->getId())};
+
+    Poco::Data::Statement statement = getStatement();
+
+    try {
+      statement << "INSERT INTO `object_attributes` (`id`,`name`, `type`, "
+                   "`value`, `object_id`) VALUES (?,?,?,?,?)"
+                   "ON DUPLICATE KEY UPDATE `value`=? ;",
+          use(a_.id), use(a_.name), use(a_.type), use(a_.value),
+          use(a_.object_id), use(a_.value);
+      statement.execute();
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << std::endl;
+      std::cout << e.message() << std::endl;
+    }
+  }
+}
+
 void MySQLStorage::createTables() {
   Poco::Data::Statement statement = getStatement();
 
@@ -334,6 +369,30 @@ void MySQLStorage::createTables() {
             << "`id` char(16) NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
             << "`class` char(16) NOT NULL,"
+            << "PRIMARY KEY (`id`)"
+            << ") DEFAULT CHARSET=utf8;";
+  statement.execute();
+
+  statement = getStatement();
+
+  statement << "CREATE TABLE IF NOT EXISTS `object_attributes` ("
+            << "`id` char(16) NOT NULL, "
+            << "`name` varchar(256) NOT NULL,"
+            << "`type` varchar(16) NOT NULL,"
+            << "`value` varchar(4096) NOT NULL,"
+            << "`object_id` char(16) NOT NULL, "
+            << "PRIMARY KEY (`id`)"
+            << ") DEFAULT CHARSET=utf8;";
+  statement.execute();
+
+  statement = getStatement();
+
+  statement << "CREATE TABLE IF NOT EXISTS `annotation_attributes` ("
+            << "`id` char(16) NOT NULL, "
+            << "`name` varchar(256) NOT NULL,"
+            << "`type` varchar(16) NOT NULL,"
+            << "`value` varchar(4096) NOT NULL,"
+            << "`annotation_id` char(16) NOT NULL, "
             << "PRIMARY KEY (`id`)"
             << ") DEFAULT CHARSET=utf8;";
   statement.execute();

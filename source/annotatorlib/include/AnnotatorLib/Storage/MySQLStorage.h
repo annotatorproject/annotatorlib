@@ -117,6 +117,8 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    */
   virtual void createTables();
   Poco::Data::Statement getStatement();
+
+  void insertOrUpdateObjectAttributes(shared_ptr<Object> object);
 };
 /************************************************************/
 /* External declarations (package visibility)               */

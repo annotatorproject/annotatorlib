@@ -5,6 +5,7 @@
 #include <AnnotatorLib/Commands/NewAttribute.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
 #include <AnnotatorLib/Commands/RemoveAnnotationRange.h>
+#include <AnnotatorLib/Commands/RemoveAttribute.h>
 #include <AnnotatorLib/Commands/RemoveObject.h>
 #include <AnnotatorLib/Commands/UpdateAttribute.h>
 #include <AnnotatorLib/Commands/UpdateObject.h>
@@ -262,4 +263,48 @@ TEST_F(commands_test, updateAttribute) {
   ASSERT_EQ(annotation->getAttribute("testattribute")->getValue()->getString(),
             "test1");
   ASSERT_EQ(o->getAttribute("testattribute")->getValue()->getString(), "test");
+}
+
+TEST_F(commands_test, removeAttribute) {
+  std::shared_ptr<Session> session = std::make_shared<Session>();
+  ASSERT_EQ(session->getAnnotations().size(), (unsigned long)0);
+
+  shared_ptr<Frame> frame = std::make_shared<Frame>(1);
+  shared_ptr<Class> c = std::make_shared<Class>("car");
+
+  Commands::NewAnnotation *nA =
+      new Commands::NewAnnotation(1001, c, session, frame, 10, 10, 5, 5);
+
+  session->execute(shared_ptr<Commands::Command>(nA));
+
+  shared_ptr<Annotation> annotation = nA->getAnnotation();
+
+  ASSERT_EQ(session->getAnnotations().size(), 1ul);
+  shared_ptr<Object> o = session->getObject(1001);
+  ASSERT_EQ(o->getAnnotations().size(), 1ul);
+
+  std::shared_ptr<Commands::NewAttribute> nAttr =
+      std::make_shared<Commands::NewAttribute>(session, o, "string",
+                                               "testattribute", "test");
+  session->execute(nAttr);
+  std::shared_ptr<Attribute> attr = nAttr->getAttribute();
+  ASSERT_EQ(annotation->getAttributes().size(), 1);
+
+  std::shared_ptr<Commands::RemoveAttribute> rAttr =
+      std::make_shared<Commands::RemoveAttribute>(session, o, "testattribute");
+  session->execute(rAttr);
+
+  ASSERT_EQ(annotation->getAttributes().size(), 0);
+  session->undo();
+  ASSERT_EQ(annotation->getAttributes().size(), 1);
+  session->redo();
+  ASSERT_EQ(annotation->getAttributes().size(), 0);
+  session->undo();
+  ASSERT_EQ(annotation->getAttributes().size(), 1);
+
+  std::shared_ptr<Commands::RemoveAttribute> rAttr2 =
+      std::make_shared<Commands::RemoveAttribute>(session, o, attr);
+  session->execute(rAttr);
+
+  ASSERT_EQ(annotation->getAttributes().size(), 0);
 }

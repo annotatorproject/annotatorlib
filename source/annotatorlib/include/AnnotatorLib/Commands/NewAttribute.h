@@ -54,4 +54,4 @@ class ANNOTATORLIB_API NewAttribute : public Command {
 };
 }
 }
-#endif  // NEWANNOTATION_H
+#endif  // NEWATTRIBUTE_H

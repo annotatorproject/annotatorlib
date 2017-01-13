@@ -33,7 +33,9 @@ Build LibPoco
 git clone https://github.com/pocoproject/poco.git
 cd poco
 sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' cmake/FindMySQL.cmake
-sudo ./build_cmake.sh
+cd build
+cmake ..
+make -j2
 ```
 
 Then build.
@@ -44,7 +46,7 @@ git submodule update --init --recursive
 cd annotatorlib
 mkdir build
 cd build
-cmake ..
+cmake -DPoco_DIR= ../../poco/build/Poco ..
 make
 ```
 

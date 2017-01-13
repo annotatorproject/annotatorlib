@@ -38,6 +38,9 @@ Annotation::Annotation(shared_ptr<Annotation> a, shared_ptr<Frame> frame,
     : Annotation(genId(frame, a->getObject()), frame, a->getObject(),
                  a->getType(), isInterpolated) {
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
+    for(std::shared_ptr<Attribute> attribute: a->getAttributesWithoutDefaults()){
+        this->addAttribute(std::make_shared<Attribute>(attribute));
+    }
 }
 
 Annotation::Annotation(unsigned long id, const shared_ptr<Frame> &frame,

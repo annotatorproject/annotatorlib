@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Storage/JSONStorage.h>
@@ -42,7 +42,6 @@ TEST_F(storage_json_test, objects) {
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
   ASSERT_TRUE(o3->getName() == "testobject");
-
 }
 
 TEST_F(storage_json_test, annotations) {
@@ -106,8 +105,10 @@ TEST_F(storage_json_test, attributes) {
   a->setPosition(0, 0, 1, 1);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  std::shared_ptr<AnnotatorLib::Attribute> attr = std::make_shared<AnnotatorLib::Attribute>(AnnotatorLib::Attribute::genId(),
-                            AnnotatorLib::AttributeType::BOOLEAN, "light");
+  std::shared_ptr<AnnotatorLib::Attribute> attr =
+      std::make_shared<AnnotatorLib::Attribute>(
+          AnnotatorLib::Attribute::genId(),
+          AnnotatorLib::AttributeType::BOOLEAN, "light");
   attr->getValue()->setValue(true);
   a->addAttribute(attr);
   storage.flush();
@@ -124,5 +125,4 @@ TEST_F(storage_json_test, attributes) {
   ASSERT_TRUE(storage2.getFrames().size() == 1);
   ASSERT_TRUE(storage2.getFrames().size() == 1);
   ASSERT_TRUE(a2->getAttribute("light")->getValue()->getBoolean());
-
 }

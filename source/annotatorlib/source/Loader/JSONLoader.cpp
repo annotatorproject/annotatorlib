@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Loader_JSONLoader_BODY
 
 /************************************************************
@@ -9,12 +9,18 @@
 #include <AnnotatorLib/Loader/JSONLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
-#include <QDebug>
-#include <QFile>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
+
 #include <memory>
+
+#include <Poco/Dynamic/Var.h>
+#include <Poco/File.h>
+#include <Poco/FileStream.h>
+#include <Poco/JSON/Handler.h>
+#include <Poco/JSON/JSON.h>
+#include <Poco/JSON/Object.h>
+#include <Poco/JSON/Parser.h>
+#include <Poco/JSON/Stringifier.h>
+#include <Poco/Path.h>
 
 using std::shared_ptr;
 
@@ -26,125 +32,91 @@ void JSONLoader::setPath(std::string path) { this->path = path; }
 StorageType JSONLoader::getType() { return StorageType::JSON; }
 
 void JSONLoader::loadSession(Session *session) {
-  QFile file(QString::fromStdString(this->path));
-  if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    QJsonDocument document = QJsonDocument::fromJson(file.readAll());
+  Poco::Path path(this->path);
+  Poco::File file(path);
 
-    QJsonObject json = document.object();
-    loadAttributes(json, session);
-    loadClasses(json, session);
-    loadObjects(json, session);
-    loadFrames(json, session);
-    loadAnnotations(json, session);
+  if (file.exists()) {
+    Poco::FileInputStream fis(this->path);
+    Poco::JSON::Parser parser;
+    parser.parse(fis);
+    Poco::Dynamic::Var result = parser.result();
+    Poco::JSON::Object::Ptr json = result.extract<Poco::JSON::Object::Ptr>();
+    try {
+      loadAttributes(json, session);
+      loadClasses(json, session);
+      loadObjects(json, session);
+      loadFrames(json, session);
+      loadAnnotations(json, session);
+    } catch (Poco::Exception &e) {
+      std::cout << e.what() << e.message() << std::endl << std::endl;
+    }
   }
-  file.close();
 }
 
-std::shared_ptr<Attribute> JSONLoader::loadAttribute(QJsonValue &value) {
-  QJsonObject attribute = value.toObject();
-  unsigned long id = attribute["id"].toString().toLong();
-  QString name = attribute["name"].toString();
-  QString type = attribute["type"].toString();
+std::shared_ptr<Attribute> JSONLoader::loadAttribute(
+    Poco::JSON::Object::Ptr value) {
+  unsigned long id = std::stoul(value->get("id").extract<std::string>());
+  std::string name = value->get("name").extract<std::string>();
+  std::string type = value->get("type").extract<std::string>();
 
   // TODO: default value
-  AttributeType t = AttributeTypeFromString(type.toStdString());
-  std::shared_ptr<Attribute> a =
-      std::make_shared<Attribute>(id, t, name.toStdString());
+  AttributeType t = AttributeTypeFromString(type);
+  std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
   std::shared_ptr<AttributeValue> av;
   switch (t) {
     case AttributeType::STRING:
       av = std::make_shared<AttributeValue>(
-          attribute["value"].toString().toStdString());
+          value->get("value").extract<std::string>());
       break;
     case AttributeType::INTEGER:
-      av = std::make_shared<AttributeValue>(
-          attribute["value"].toString().toLong());
+      av =
+          std::make_shared<AttributeValue>(value->get("value").extract<long>());
       break;
     case AttributeType::FLOAT:
       av = std::make_shared<AttributeValue>(
-          attribute["value"].toString().toDouble());
+          value->get("value").extract<double>());
       break;
     case AttributeType::BOOLEAN:
-      av = std::make_shared<AttributeValue>(attribute["value"].toBool());
+      av = std::make_shared<AttributeValue>(
+          value->get("value").extract<std::string>() == "true");
+
       break;
     default:
       av = std::make_shared<AttributeValue>(
-          attribute["value"].toString().toStdString());
+          value->get("value").extract<std::string>());
   };
   a->setValue(av);
   return a;
 }
 
-void JSONLoader::loadAttributes(QJsonObject &json, Session *session) {
-  QJsonArray attributes = json.value("attributes").toArray();
-  for (QJsonValue value : attributes) {
+void JSONLoader::loadAttributes(Poco::JSON::Object::Ptr json,
+                                Session *session) {
+  if (!json->has("attributes")) return;
+  Poco::JSON::Array::Ptr array = json->getArray("attributes");
+
+  for (int i = 0; i < array->size(); ++i) {
+    Poco::JSON::Object::Ptr value = array->getObject(i);
     session->addAttribute(loadAttribute(value));
   }
 }
 
-void JSONLoader::loadClasses(QJsonObject &json, Session *session) {
-  QJsonArray classes = json.value("classes").toArray();
-  for (QJsonValue value : classes) {
-    QJsonObject object = value.toObject();
-    unsigned long id = object["id"].toString().toLong();
-    QString name = object["name"].toString();
-    Class *c = new Class(id, name.toStdString());
+void JSONLoader::loadAnnotations(Poco::JSON::Object::Ptr json,
+                                 Session *session) {
+  if (!json->has("annotations")) return;
+  Poco::JSON::Array::Ptr array = json->getArray("annotations");
 
-    session->addClass(shared_ptr<Class>(c));
-  }
-}
-
-void JSONLoader::loadObjects(QJsonObject &json, Session *session) {
-  QJsonArray objects = json.value("objects").toArray();
-  for (QJsonValue value : objects) {
-    QJsonObject object = value.toObject();
-    unsigned long id = object["id"].toString().toLong();
-    QString name = object["name"].toString();
-    Object *o = new Object(id);
-    o->setName(name.toStdString());
-
-    if (object.contains("class")) {
-      unsigned long class_id = object["class"].toString().toLong();
-      o->setClass(session->getClass(
-          class_id));  // TODO: get Class by Name (this is more efficient)
-    }
-
-    QJsonArray attributes = object.value("attributes").toArray();
-    for (QJsonValue attribute : attributes) {
-      o->addAttribute(loadAttribute(attribute));
-      // unsigned long atid = attribute.toString().toLong();
-      // if (session->getAttribute(atid))
-      //  o->addAttribute(session->getAttribute(atid));
-    }
-    session->addObject(shared_ptr<Object>(o));
-  }
-}
-
-void JSONLoader::loadFrames(QJsonObject &json, Session *session) {
-  QJsonArray frames = json.value("frames").toArray();
-  for (QJsonValue value : frames) {
-    QJsonObject frame = value.toObject();
-    unsigned long nmb = frame["number"].toString().toLong();
-    Frame *f = new Frame(nmb);
-    session->addFrame(shared_ptr<Frame>(f));
-  }
-}
-
-void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
-  QJsonArray annotations = json.value("annotations").toArray();
-  for (QJsonValue value : annotations) {
-    QJsonObject annotation = value.toObject();
-    // Note: id is now generated from frame and object id
-    // unsigned long id = annotation["id"].toString().toLong();
-    unsigned long object = annotation["object"].toString().toLong();
-    unsigned long frame = annotation["frame"].toString().toLong();
-
-    float x = annotation["x"].toString().toFloat();
-    float y = annotation["y"].toString().toFloat();
-    float width = annotation["width"].toString().toFloat();
-    float height = annotation["height"].toString().toFloat();
+  for (int i = 0; i < array->size(); ++i) {
+    Poco::JSON::Object::Ptr value = array->getObject(i);
+    unsigned long object =
+        std::stoul(value->get("object").extract<std::string>());
+    unsigned long frame =
+        std::stoul(value->get("frame").extract<std::string>());
+    float x = std::stof(value->get("x").extract<std::string>());
+    float y = std::stof(value->get("y").extract<std::string>());
+    float width = std::stof(value->get("width").extract<std::string>());
+    float height = std::stof(value->get("height").extract<std::string>());
     AnnotationType type =
-        AnnotationTypeFromString(annotation["type"].toString().toStdString());
+        AnnotationTypeFromString(value->get("type").extract<std::string>());
 
     shared_ptr<Object> o = session->getObject(object);
     shared_ptr<Frame> f = session->getFrame(frame);
@@ -153,15 +125,75 @@ void JSONLoader::loadAnnotations(QJsonObject &json, Session *session) {
       shared_ptr<Annotation> a = Annotation::make_shared(f, o, type);
       a->setPosition(x, y, width, height);
       // add attributes
-      QJsonArray attributes = annotation.value("attributes").toArray();
-      for (QJsonValue attribute : attributes) {
-        a->addAttribute(loadAttribute(attribute));
-        // unsigned long atid = attribute.toString().toLong();
-        // if (session->getAttribute(atid))
-        //  a->addAttribute(session->getAttribute(atid));
+      if (value->has("attributes") && !value->isNull("attributes")) {
+        Poco::JSON::Array::Ptr attrArray = value->getArray("attributes");
+
+        for (int i = 0; i < attrArray->size(); ++i) {
+          Poco::JSON::Object::Ptr attrValue = attrArray->getObject(i);
+          a->addAttribute(loadAttribute(attrValue));
+        }
       }
       session->addAnnotation(a);
     }
+  }
+}
+
+void JSONLoader::loadClasses(Poco::JSON::Object::Ptr json, Session *session) {
+  if (!json->has("classes")) return;
+  Poco::JSON::Array::Ptr array = json->getArray("classes");
+
+  for (int i = 0; i < array->size(); ++i) {
+    Poco::JSON::Object::Ptr value = array->getObject(i);
+    unsigned long id = std::stoul(value->get("id").extract<std::string>());
+    std::string name = value->get("name").extract<std::string>();
+    shared_ptr<Class> c = std::make_shared<Class>(id, name);
+    session->addClass(c);
+  }
+}
+
+void JSONLoader::loadObjects(Poco::JSON::Object::Ptr json, Session *session) {
+  if (!json->has("objects")) return;
+  Poco::JSON::Array::Ptr array = json->getArray("objects");
+
+  for (int i = 0; i < array->size(); ++i) {
+    Poco::JSON::Object::Ptr value = array->getObject(i);
+    unsigned long id = std::stoul(value->get("id").extract<std::string>());
+    std::string name = value->get("name").extract<std::string>();
+
+    shared_ptr<Object> o = std::make_shared<Object>(id);
+    o->setName(name);
+
+    if (value->has("class")) {
+      std::string class_id = value->get("class").extract<std::string>();
+
+      if (class_id != "no_class") {
+        o->setClass(session->getClass(std::stoul(class_id)));
+      }
+    }
+
+    if (value->has("attributes") && !value->isNull("attributes")) {
+      Poco::JSON::Array::Ptr attrArray = value->getArray("attributes");
+
+      for (int i = 0; i < attrArray->size(); ++i) {
+        Poco::JSON::Object::Ptr attrValue = attrArray->getObject(i);
+        o->addAttribute(loadAttribute(attrValue));
+      }
+    }
+
+    session->addObject(o);
+  }
+}
+
+void JSONLoader::loadFrames(Poco::JSON::Object::Ptr json, Session *session) {
+  if (!json->has("frames")) return;
+  Poco::JSON::Array::Ptr array = json->getArray("frames");
+
+  for (int i = 0; i < array->size(); ++i) {
+    Poco::JSON::Object::Ptr value = array->getObject(i);
+    unsigned long number =
+        std::stoul(value->get("number").extract<std::string>());
+    shared_ptr<Frame> f = std::make_shared<Frame>(number);
+    session->addFrame(f);
   }
 }
 

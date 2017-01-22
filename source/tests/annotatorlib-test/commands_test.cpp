@@ -263,8 +263,6 @@ TEST_F(commands_test, updateAttribute) {
   ASSERT_EQ(annotation->getAttribute("testattribute")->getValue()->getString(),
             "test1");
   ASSERT_EQ(o->getAttribute("testattribute")->getValue()->getString(), "test");
-
-
 }
 
 TEST_F(commands_test, removeAttribute) {

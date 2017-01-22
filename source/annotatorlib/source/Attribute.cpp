@@ -33,6 +33,7 @@ Attribute::Attribute(unsigned long id, AttributeType type, std::string name)
   if (lastId < id) lastId = id;
   this->type = type;
   this->name = name;
+  this->value = createAttributeValue(type, "");
 }
 
 Attribute::~Attribute() {}

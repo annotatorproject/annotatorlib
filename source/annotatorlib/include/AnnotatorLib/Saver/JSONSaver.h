@@ -5,12 +5,12 @@
 /************************************************************
  JSONSaver class header
  ************************************************************/
-#include <AnnotatorLib/Saver/Pkg_Saver.h>
-#include <AnnotatorLib/annotatorlib_api.h>
-#include <QJsonObject>
-
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Saver/AbstractSaver.h>
+#include <AnnotatorLib/Saver/Pkg_Saver.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+
+#include <Poco/JSON/Object.h>
 
 namespace AnnotatorLib {
 namespace Saver {
@@ -31,16 +31,23 @@ class ANNOTATORLIB_API JSONSaver : public AbstractSaver {
 
  protected:
   std::string path;
-  QJsonObject sessionToJson(const AnnotatorLib::Session* session);
-  QJsonObject attributeToJson(
-      const shared_ptr<AnnotatorLib::Attribute> attribute);
-  QJsonObject annotationToJson(
-      const shared_ptr<AnnotatorLib::Annotation> annotation);
-  QJsonObject frameToJson(const shared_ptr<AnnotatorLib::Frame> frame);
-  QJsonObject objectToJson(const shared_ptr<AnnotatorLib::Object> object);
-  QJsonObject classToJson(const shared_ptr<AnnotatorLib::Class> c);
+  Poco::JSON::Object::Ptr sessionToJson(const AnnotatorLib::Session* session);
 
-  QJsonObject session;
+  Poco::JSON::Object::Ptr attributeToJson(
+      const shared_ptr<AnnotatorLib::Attribute> attribute);
+
+  Poco::JSON::Object::Ptr annotationToJson(
+      const shared_ptr<AnnotatorLib::Annotation> annotation);
+
+  Poco::JSON::Object::Ptr frameToJson(
+      const shared_ptr<AnnotatorLib::Frame> frame);
+
+  Poco::JSON::Object::Ptr objectToJson(
+      const shared_ptr<AnnotatorLib::Object> object);
+
+  Poco::JSON::Object::Ptr classToJson(const shared_ptr<AnnotatorLib::Class> c);
+
+  Poco::JSON::Object::Ptr session;
   void save();
 };
 /************************************************************/

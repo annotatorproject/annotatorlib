@@ -6,18 +6,22 @@
  ************************************************************/
 
 // include associated header file
+
 #include "AnnotatorLib/Saver/JSONSaver.h"
-#include <QDebug>
-#include <QFile>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <memory>
-#include <unordered_map>
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Attribute.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
 #include "AnnotatorLib/Session.h"
+
+#include <fstream>
+#include <memory>
+#include <unordered_map>
+
+#include <Poco/FileStream.h>
+#include <Poco/JSON/JSON.h>
+#include <Poco/JSON/Parser.h>
+#include <Poco/JSON/PrintHandler.h>
 
 using std::unique_ptr;
 using std::pair;
@@ -41,165 +45,152 @@ bool JSONSaver::close() {
   return true;
 }
 
-QJsonObject JSONSaver::sessionToJson(const Session* session) {
-  QJsonObject json;
+Poco::JSON::Object::Ptr JSONSaver::sessionToJson(const Session* session) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
 
   // insert list of objects
-  QJsonArray objects;
+  Poco::JSON::Array::Ptr objects = new Poco::JSON::Array;
   for (auto& pair : session->getObjects()) {
-    if (pair.second->hasAnnotations())
-      objects.append(objectToJson(pair.second));
+    if (pair.second->hasAnnotations()) objects->add(objectToJson(pair.second));
   }
-  json["objects"] = objects;
+  json->set("objects", objects);
 
   // insert list of attributes
-  QJsonArray attributes;
+  Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
   for (auto& pair : session->getAttributes()) {
-    attributes.append(attributeToJson(pair.second));
+    attributes->add(attributeToJson(pair.second));
   }
-  json["attributes"] = attributes;
+  json->set("attributes", attributes);
 
   // insert list of annotations
-  QJsonArray annotations;
+  Poco::JSON::Array::Ptr annotations = new Poco::JSON::Array;
   for (auto& pair : session->getAnnotations()) {
-    annotations.append(annotationToJson(pair.second));
+    annotations->add(annotationToJson(pair.second));
   }
-  json["annotations"] = annotations;
+  json->set("annotations", annotations);
 
   // insert list of classes
-  QJsonArray classes;
+  Poco::JSON::Array::Ptr classes = new Poco::JSON::Array;
   for (auto& pair : session->getClasses()) {
-    classes.append(classToJson(pair.second));
+    classes->add(classToJson(pair.second));
   }
-  json["classes"] = classes;
+  json->set("classes", classes);
 
   // insert list of frames
-  QJsonArray frames;
+  Poco::JSON::Array::Ptr frames = new Poco::JSON::Array;
   for (auto& pair : session->getFrames()) {
-    if (pair.second->hasAnnotations()) frames.append(frameToJson(pair.second));
+    if (pair.second->hasAnnotations()) frames->add(frameToJson(pair.second));
   }
-  json["frames"] = frames;
+  json->set("frames", frames);
 
   return json;
 }
 
-QJsonObject JSONSaver::attributeToJson(
-    const shared_ptr<AnnotatorLib::Attribute> attribute) {
-  QJsonObject json;
-  json["id"] = QString::number(attribute->getId());
-  json["name"] = QString::fromStdString(attribute->getName());
-  json["type"] = QString::fromStdString(
-      AnnotatorLib::AttributeTypeToString(attribute->getType()));
-  json["value"] = QString::fromStdString(attribute->getValue()->toString());
+Poco::JSON::Object::Ptr JSONSaver::attributeToJson(
+    const shared_ptr<Attribute> attribute) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
+  json->set("id", std::to_string(attribute->getId()));
+  json->set("name", attribute->getName());
+  json->set("type", AnnotatorLib::AttributeTypeToString(attribute->getType()));
+  json->set("value", attribute->getValue()->toString());
   return json;
 }
 
-QJsonObject JSONSaver::annotationToJson(
-    const shared_ptr<AnnotatorLib::Annotation> annotation) {
-  QJsonObject json;
-  json["id"] = QString::number(annotation->getId());
-  json["object"] = QString::number(annotation->getObject()->getId());
-  json["frame"] = QString::number(annotation->getFrame()->getFrameNumber());
+Poco::JSON::Object::Ptr JSONSaver::annotationToJson(
+    const shared_ptr<Annotation> annotation) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
+  json->set("id", std::to_string(annotation->getId()));
+  json->set("object", std::to_string(annotation->getObject()->getId()));
+  json->set("frame", std::to_string(annotation->getFrame()->getFrameNumber()));
 
-  json["x"] = QString::number(annotation->getX());
-  json["y"] = QString::number(annotation->getY());
-  json["width"] = QString::number(annotation->getWidth());
-  json["height"] = QString::number(annotation->getHeight());
-  json["type"] = QString::fromStdString(
-      AnnotatorLib::AnnotationTypeToString(annotation->getType()));
+  json->set("x", std::to_string(annotation->getX()));
+  json->set("y", std::to_string(annotation->getY()));
+  json->set("width", std::to_string(annotation->getWidth()));
+  json->set("height", std::to_string(annotation->getHeight()));
 
+  json->set("type",
+            AnnotatorLib::AnnotationTypeToString(annotation->getType()));
   if (annotation->getPrevious() != nullptr) {
-    json["previous"] = QString::number(annotation->getPrevious()->getId());
+    json->set("previous", std::to_string(annotation->getPrevious()->getId()));
   }
-
   if (annotation->getNext() != nullptr) {
-    json["next"] = QString::number(annotation->getNext()->getId());
+    json->set("next", std::to_string(annotation->getNext()->getId()));
   }
 
-  // insert list of attributes
-  QJsonArray attributes;
+  Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
   for (std::shared_ptr<Attribute> attribute : annotation->getAttributes()) {
-    attributes.append(attributeToJson(attribute));
+    attributes->add(attributeToJson(attribute));
   }
-  json["attributes"] = attributes;
+  json->set("attributes", attributes);
 
   return json;
 }
 
-QJsonObject JSONSaver::frameToJson(
-    const shared_ptr<AnnotatorLib::Frame> frame) {
-  QJsonObject json;
+Poco::JSON::Object::Ptr JSONSaver::frameToJson(const shared_ptr<Frame> frame) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
 
-  json["number"] = QString::number(frame->getFrameNumber());
+  json->set("number", std::to_string(frame->getFrameNumber()));
 
-  // insert list of attributes
-  QJsonArray attributes;
+  Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
   for (auto& pair : frame->getAttributes()) {
-    attributes.append(QString::number(pair.second->getId()));
+    attributes->add(std::to_string(pair.second->getId()));
   }
-  json["attributes"] = attributes;
+  json->set("attributes", attributes);
 
-  // insert list of annotations
-  QJsonArray annotations;
+  Poco::JSON::Array::Ptr annotations = new Poco::JSON::Array;
+
   for (std::pair<unsigned long, weak_ptr<Annotation>> pair :
        frame->getAnnotations()) {
-    annotations.append(QString::number(pair.second.lock()->getId()));
+    annotations->add(std::to_string(pair.second.lock()->getId()));
   }
-  json["annotations"] = annotations;
-
+  json->set("annotations", annotations);
   return json;
 }
 
-QJsonObject JSONSaver::objectToJson(const shared_ptr<Object> object) {
-  QJsonObject json;
-  json["id"] = QString::number(object->getId());
-  json["name"] = QString::fromStdString(object->getName());
+Poco::JSON::Object::Ptr JSONSaver::objectToJson(
+    const shared_ptr<Object> object) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
+  json->set("id", std::to_string(object->getId()));
+  json->set("name", object->getName());
+
   if (object->getClass())
-    json["class"] = QString::number(object->getClass()->getId());
+    json->set("class", std::to_string(object->getClass()->getId()));
   else
-    json["class"] = QString("no_class");
+    json->set("class", std::string("no_class"));
 
-  // insert list of attributes
-  QJsonArray attributes;
+  Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
   for (std::shared_ptr<Attribute> attribute : object->getAttributes()) {
-    attributes.append(attributeToJson(attribute));
+    attributes->add(attributeToJson(attribute));
   }
-  json["attributes"] = attributes;
+  json->set("attributes", attributes);
 
-  // insert list of annotations
-  QJsonArray annotations;
+  Poco::JSON::Array::Ptr annotations = new Poco::JSON::Array;
+
   for (auto& pair : object->getAnnotations()) {
-    annotations.append(QString::number(pair.second.lock()->getId()));
+    annotations->add(std::to_string(pair.second.lock()->getId()));
   }
-  json["annotations"] = annotations;
+  json->set("annotations", annotations);
 
-  // insert list of frames
-  QJsonArray frames;
+  Poco::JSON::Array::Ptr frames = new Poco::JSON::Array;
+
   for (auto frame : object->getFrames()) {
-    frames.append(QString::number(frame->getFrameNumber()));
+    frames->add(std::to_string(frame->getFrameNumber()));
   }
-  json["frames"] = frames;
+  json->set("frames", frames);
 
   return json;
 }
 
-QJsonObject JSONSaver::classToJson(const shared_ptr<AnnotatorLib::Class> c) {
-  QJsonObject json;
-  json["id"] = QString::number(c->getId());
-  json["name"] = QString::fromStdString(c->getName());
+Poco::JSON::Object::Ptr JSONSaver::classToJson(const shared_ptr<Class> c) {
+  Poco::JSON::Object::Ptr json = new Poco::JSON::Object;
+  json->set("id", std::to_string(c->getId()));
+  json->set("name", c->getName());
   return json;
 }
 
 void JSONSaver::save() {
-  QFile file(QString::fromStdString(this->path));
-  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QJsonDocument document;
-    // QJsonObject object;
-    // object["session"] = this->session;
-    document.setObject(this->session);
-    file.write(document.toJson());
-  }
-  file.close();
+  std::ofstream ostr(this->path, std::ios::out);
+  this->session.get()->stringify(ostr, 1);
 }
 
 // static attributes (if any)

@@ -6,10 +6,8 @@
  JSONStorage class header
  ************************************************************/
 #include <AnnotatorLib/annotatorlib_api.h>
-#include <QJsonObject>
-#include "AnnotatorLib/Storage/Pkg_Storage.h"
-
-#include "AnnotatorLib/Storage/AbstractStorage.h"
+#include <AnnotatorLib/Storage/Pkg_Storage.h>
+#include <AnnotatorLib/Storage/AbstractStorage.h>
 
 namespace AnnotatorLib {
 namespace Storage {

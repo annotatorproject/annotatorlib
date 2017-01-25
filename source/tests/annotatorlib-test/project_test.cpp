@@ -16,7 +16,7 @@ TEST_F(project_test, saveProject) {
   try {
     std::string path = "test.xml";
     std::shared_ptr<AnnotatorLib::Project> project =
-        Project::create("testname", "video", "video.mpg", "json", "test.json");
+        Project::create("testname", "images", "", "json", "test.json");
     project->setPath(path);
     project->load();
     std::shared_ptr<Session> session = project->getSession();
@@ -59,7 +59,7 @@ TEST_F(project_test, saveLoadProject) {
   try {
     std::string path = "testsaveload.xml";
     std::shared_ptr<AnnotatorLib::Project> project =
-        Project::create("testname", "video", "video.mpg", "json", "test.json");
+        Project::create("testname", "images", "", "json", "test.json");
     project->setPath(path);
     project->load();
     std::shared_ptr<AnnotatorLib::Session> session = project->getSession();
@@ -79,6 +79,7 @@ TEST_F(project_test, saveLoadProject) {
 }
 
 TEST_F(project_test, equals) {
+
   std::shared_ptr<AnnotatorLib::Project> project =
       Project::create("testname", "video", "video.mpg", "json", "test.json");
   std::shared_ptr<AnnotatorLib::Project> project1 =

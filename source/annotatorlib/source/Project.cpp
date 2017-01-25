@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Project_BODY
 
 /************************************************************
@@ -6,14 +6,22 @@
  ************************************************************/
 
 // include associated header file
-#include "AnnotatorLib/Project.h"
+#include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/Storage/StorageFactory.h>
-#include <QDebug>
-#include <QFile>
-#include <QTextStream>
-#include "AnnotatorLib/ImageSetFactory.h"
-#include "AnnotatorLib/Loader/LoaderFactory.h"
-#include "AnnotatorLib/Saver/SaverFactory.h"
+#include <AnnotatorLib/ImageSetFactory.h>
+#include <AnnotatorLib/Loader/LoaderFactory.h>
+#include <AnnotatorLib/Saver/SaverFactory.h>
+
+#include <fstream>
+
+#include <Poco/AutoPtr.h>
+#include <Poco/DOM/Document.h>
+#include <Poco/DOM/DOMWriter.h>
+#include <Poco/DOM/Element.h>
+#include <Poco/XML/XMLWriter.h>
+#include <Poco/DOM/Text.h>
+#include <Poco/SAX/InputSource.h>
+#include <Poco/DOM/DOMParser.h>
 
 // Derived includes directives
 
@@ -76,23 +84,14 @@ std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
  *
  */
 void Project::create() {
-  QFile file(QString::fromStdString(this->path));
 
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    qDebug() << "File could not been opened: "
-             << QString::fromStdString(this->path);
-    throw std::runtime_error("File could not been opened!");
-  }
-
-  QDomDocument doc("Annotator");
-  QDomElement root = saveRoot(doc);
-
-  doc.appendChild(root);
-
-  QTextStream ts(&file);
-  ts << doc.toString();
-
-  file.close();
+    std::ofstream ostr(path, std::ios::out);
+    Poco::XML::DOMWriter writer;
+    writer.setNewLine("\n");
+    writer.setOptions(Poco::XML::XMLWriter::PRETTY_PRINT);
+    Poco::AutoPtr<Poco::XML::Document> document = new Poco::XML::Document;
+    Poco::AutoPtr<Poco::XML::Element> root = saveRoot(document);
+    document->appendChild(root);
 
   this->session = std::make_shared<Session>();
 }
@@ -101,22 +100,14 @@ void Project::create() {
  *
  */
 void Project::load() {
-  QFile file(QString::fromStdString(this->path));
 
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    qDebug() << "File could not been opened: "
-             << QString::fromStdString(this->path);
-    throw std::runtime_error("File could not been opened!");
-  }
+    std::ifstream in(path);
+    Poco::XML::InputSource src(in);
 
-  QDomDocument doc;
-  if (!doc.setContent(&file)) {
-    file.close();
-    throw std::runtime_error("File is not valide!");
-  }
-  file.close();
+    Poco::XML::DOMParser parser;
+    Poco::AutoPtr<Poco::XML::Document> doc = parser.parse(&src);
 
-  QDomElement root;
+    Poco::AutoPtr<Poco::XML::Element> root;
 
   loadRoot(doc, root, this->name);
   std::string imageSetPath;
@@ -130,38 +121,38 @@ void Project::load() {
   loadSession();
 }
 
-void Project::loadImageSet(QDomElement &root, ImageSetType &type,
+void Project::loadImageSet(Poco::AutoPtr<Poco::XML::Element> root, ImageSetType &type,
                            std::string &imageSetPath) {
-  QDomElement element = root.firstChildElement("ImageSet");
+  Poco::AutoPtr<Poco::XML::Element> element = root->getChildElement("ImageSet");
   type = AnnotatorLib::ImageSetTypeFromString(
-      element.attribute("type").toStdString());
-  imageSetPath = element.attribute("path").toStdString();
+      element->getAttribute("type"));
+  imageSetPath = element->getAttribute("path");
 }
 
-void Project::loadStorage(QDomElement &root, StorageType &type,
+void Project::loadStorage(Poco::AutoPtr<Poco::XML::Element> root, StorageType &type,
                           std::string &storagePath) {
-  QDomElement element = root.firstChildElement("Storage");
+  Poco::AutoPtr<Poco::XML::Element> element = root->getChildElement("Storage");
   type = AnnotatorLib::StorageTypeFromString(
-      element.attribute("type").toStdString());
-  storagePath = element.attribute("path").toStdString();
+      element->getAttribute("type"));
+  storagePath = element->getAttribute("path");
 }
 
-void Project::loadProjectStatistics(QDomElement &root) {
-  QDomElement element = root.firstChildElement("Statistics");
-  if (!element.isNull())
-    this->total_duration_sec = element.attribute("duration").toULong();
+void Project::loadProjectStatistics(Poco::AutoPtr<Poco::XML::Element> root) {
+  Poco::AutoPtr<Poco::XML::Element> element = root->getChildElement("Statistics");
+  if (element)
+    this->total_duration_sec = std::stoul(element->getAttribute("duration"));
 }
 
-void Project::loadRoot(QDomDocument &doc, QDomElement &root,
+void Project::loadRoot(Poco::AutoPtr<Poco::XML::Document> doc, Poco::AutoPtr<Poco::XML::Element> root,
                        std::string &name) {
-  root = doc.documentElement();
-  name = root.tagName().toStdString();
+  root = doc->documentElement();
+  name = root->tagName();
 }
 
-void Project::loadProjectSettings(QDomElement &root) {
-  QDomElement element = root.firstChildElement("Settings");
-  if (!element.isNull())
-    this->active = element.attribute("active").toStdString() == "1";
+void Project::loadProjectSettings(Poco::AutoPtr<Poco::XML::Element> root) {
+  Poco::AutoPtr<Poco::XML::Element> element = root->getChildElement("Settings");
+  if (element)
+    this->active = element->getAttribute("active") == "1";
 }
 
 void Project::loadSession() {
@@ -180,57 +171,44 @@ void Project::save(std::shared_ptr<AnnotatorLib::Project> project,
 }
 
 void Project::save() {
-  QFile file(QString::fromStdString(this->path));
 
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    qDebug() << "File could not been opened: "
-             << QString::fromStdString(this->path);
-    throw std::runtime_error("File could not been opened!");
-  }
-
-  QDomDocument doc("Annotator");
-  QDomElement root = saveRoot(doc);
-
-  doc.appendChild(root);
-
-  QTextStream ts(&file);
-  ts << doc.toString();
-
-  file.close();
+    std::ofstream ostr(path, std::ios::out);
+    Poco::XML::DOMWriter writer;
+    writer.setNewLine("\n");
+    writer.setOptions(Poco::XML::XMLWriter::PRETTY_PRINT);
+    Poco::AutoPtr<Poco::XML::Document> document = new Poco::XML::Document;
+    Poco::AutoPtr<Poco::XML::Element> root = saveRoot(document);
+    document->appendChild(root);
 
   saveSession();
 }
 
-QDomElement Project::saveImageSet(QDomDocument &doc) {
+Poco::AutoPtr<Poco::XML::Element> Project::saveImageSet(Poco::AutoPtr<Poco::XML::Document> doc) {
   if (this->imageSet == nullptr)
     throw std::runtime_error("ImageSet not set properly!");
-  QDomElement element = doc.createElement("ImageSet");
-  element.setAttribute(
-      "type", QString::fromStdString(
-                  AnnotatorLib::ImageSetTypeToString(this->imageSetType)));
-  element.setAttribute("path",
-                       QString::fromStdString(this->imageSet->getPath()));
-
+  Poco::AutoPtr<Poco::XML::Element> element = doc->createElement("ImageSet");
+  element->setAttribute(
+      "type", AnnotatorLib::ImageSetTypeToString(this->imageSetType));
+  element->setAttribute("path", this->imageSet->getPath());
   return element;
 }
 
-QDomElement Project::saveStorage(QDomDocument &doc) {
+Poco::AutoPtr<Poco::XML::Element> Project::saveStorage(Poco::AutoPtr<Poco::XML::Document> doc) {
   if (this->storageType == StorageType::UNKNOWN)
     throw std::runtime_error("StorageType not set properly!");
-  QDomElement element = doc.createElement("Storage");
-  element.setAttribute(
-      "type", QString::fromStdString(
-                  AnnotatorLib::StorageTypeToString(this->storageType)));
-  element.setAttribute("path", QString::fromStdString(this->storagePath));
+  Poco::AutoPtr<Poco::XML::Element> element = doc->createElement("Storage");
+  element->setAttribute(
+      "type", AnnotatorLib::StorageTypeToString(this->storageType));
+  element->setAttribute("path", this->storagePath);
   return element;
 }
 
-QDomElement Project::saveRoot(QDomDocument &doc) {
-  QDomElement root = doc.createElement(QString::fromStdString(this->name));
-  root.appendChild(saveStorage(doc));
-  root.appendChild(saveImageSet(doc));
-  root.appendChild(saveProjectStatistics(doc));
-  root.appendChild(saveProjectSettings(doc));
+Poco::AutoPtr<Poco::XML::Element> Project::saveRoot(Poco::AutoPtr<Poco::XML::Document> doc) {
+  Poco::AutoPtr<Poco::XML::Element> root = doc->createElement(this->name);
+  root->appendChild(saveStorage(doc));
+  root->appendChild(saveImageSet(doc));
+  root->appendChild(saveProjectStatistics(doc));
+  root->appendChild(saveProjectSettings(doc));
 
   return root;
 }
@@ -241,15 +219,15 @@ void Project::saveSession() {
   storage->flush();
 }
 
-QDomElement Project::saveProjectStatistics(QDomDocument &doc) {
-  QDomElement element = doc.createElement("Statistics");
-  element.setAttribute("duration", QString::number(getDuration()));
+Poco::AutoPtr<Poco::XML::Element> Project::saveProjectStatistics(Poco::AutoPtr<Poco::XML::Document> doc) {
+  Poco::AutoPtr<Poco::XML::Element> element = doc->createElement("Statistics");
+  element->setAttribute("duration", std::to_string(getDuration()));
   return element;
 }
 
-QDomElement Project::saveProjectSettings(QDomDocument &doc) {
-  QDomElement element = doc.createElement("Settings");
-  element.setAttribute("active", QString(active ? "1" : "0"));
+Poco::AutoPtr<Poco::XML::Element> Project::saveProjectSettings(Poco::AutoPtr<Poco::XML::Document> doc) {
+  Poco::AutoPtr<Poco::XML::Element> element = doc->createElement("Settings");
+  element->setAttribute("active", active ? "1" : "0");
   return element;
 }
 

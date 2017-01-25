@@ -8,7 +8,6 @@
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/Storage/Pkg_Storage.h>
 #include <AnnotatorLib/annotatorlib_api.h>
-#include <QJsonObject>
 
 #include <Poco/Data/SessionPool.h>
 

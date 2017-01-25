@@ -28,8 +28,6 @@ set(DEFAULT_PROJECT_OPTIONS
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Poco COMPONENTS Foundation Util Data Net DataSQLite DataMySQL REQUIRED)
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Xml REQUIRED)
 
 # 
 # Include directories
@@ -42,7 +40,7 @@ set(DEFAULT_INCLUDE_DIRECTORIES)
 # Libraries
 # 
 
-set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Poco_LIBRARIES} Qt5::Core Qt5::Xml)
+set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Poco_LIBRARIES})
 
 
 # 

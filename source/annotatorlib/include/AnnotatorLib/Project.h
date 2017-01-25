@@ -1,25 +1,23 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_PROJECT_H
 #define ANNOTATOR_ANNOTATORLIB_PROJECT_H
 
 /************************************************************
  Project class header
  ************************************************************/
+#include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <AnnotatorLib/ImageSet.h>
+#include <AnnotatorLib/Session.h>
 
 #include <string>
-
 #include <chrono>
 #include <ctime>
 #include <memory>
 
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
-
-#include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/annotatorlib_api.h>
-
-#include <AnnotatorLib/ImageSet.h>
-#include <AnnotatorLib/Session.h>
+#include <Poco/AutoPtr.h>
+#include <Poco/DOM/Document.h>
+#include <Poco/DOM/Element.h>
 
 namespace AnnotatorLib {
 
@@ -163,32 +161,32 @@ class ANNOTATORLIB_API Project {
    */
   void loadSession();
 
-  void loadImageSet(QDomElement &root, ImageSetType &type,
+  void loadImageSet(Poco::AutoPtr<Poco::XML::Element> root, ImageSetType &type,
                     std::string &imageSetPath);
 
-  void loadStorage(QDomElement &root, StorageType &type,
+  void loadStorage(Poco::AutoPtr<Poco::XML::Element> root, StorageType &type,
                    std::string &storagePath);
 
-  void loadRoot(QDomDocument &doc, QDomElement &root, std::string &name);
+  void loadRoot(Poco::AutoPtr<Poco::XML::Document> doc, Poco::AutoPtr<Poco::XML::Element> root, std::string &name);
 
-  void loadProjectSettings(QDomElement &root);
+  void loadProjectSettings(Poco::AutoPtr<Poco::XML::Element> root);
 
-  void loadProjectStatistics(QDomElement &root);
+  void loadProjectStatistics(Poco::AutoPtr<Poco::XML::Element> root);
 
   /**
    * @brief saveSession
    */
   void saveSession();
 
-  QDomElement saveImageSet(QDomDocument &doc);
+  Poco::AutoPtr<Poco::XML::Element> saveImageSet(Poco::AutoPtr<Poco::XML::Document> doc);
 
-  QDomElement saveStorage(QDomDocument &doc);
+  Poco::AutoPtr<Poco::XML::Element> saveStorage(Poco::AutoPtr<Poco::XML::Document> doc);
 
-  QDomElement saveRoot(QDomDocument &doc);
+  Poco::AutoPtr<Poco::XML::Element> saveRoot(Poco::AutoPtr<Poco::XML::Document> doc);
 
-  QDomElement saveProjectStatistics(QDomDocument &doc);
+  Poco::AutoPtr<Poco::XML::Element> saveProjectStatistics(Poco::AutoPtr<Poco::XML::Document> doc);
 
-  QDomElement saveProjectSettings(QDomDocument &doc);
+  Poco::AutoPtr<Poco::XML::Element> saveProjectSettings(Poco::AutoPtr<Poco::XML::Document> doc);
 
   /**
    * Updates the total duration by the elapsed time since last update if project

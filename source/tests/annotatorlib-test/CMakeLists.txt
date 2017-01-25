@@ -28,6 +28,7 @@ set(sources
     storage_json_test.cpp
     storage_mysql_test.cpp
     storage_sqlite_test.cpp
+    storage_xml_test.cpp
 )
 
 

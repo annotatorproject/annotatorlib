@@ -1,17 +1,17 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_SAVER_XMLSAVER_H
 #define ANNOTATOR_ANNOTATORLIB_SAVER_XMLSAVER_H
 
 /************************************************************
  XMLSaver class header
  ************************************************************/
-#include <QDomDocument>
-#include <QDomElement>
-
 #include <AnnotatorLib/annotatorlib_api.h>
-#include "AnnotatorLib/Saver/Pkg_Saver.h"
+#include <AnnotatorLib/Saver/Pkg_Saver.h>
+#include <AnnotatorLib/Saver/AbstractSaver.h>
 
-#include "AnnotatorLib/Saver/AbstractSaver.h"
+#include <Poco/AutoPtr.h>
+#include <Poco/DOM/Document.h>
+#include <Poco/DOM/Element.h>
 
 namespace AnnotatorLib {
 
@@ -24,7 +24,7 @@ namespace Saver {
  *
  */
 class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
-  // AbstractSaver interface
+
  public:
   void saveFrame(const Session *session, const shared_ptr<Frame> frame);
   void saveAnnotation(const Annotation annotation);
@@ -34,14 +34,14 @@ class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
   bool close();
 
  protected:
-  QDomElement meta(const shared_ptr<Frame> frame);
-  QDomElement fromObject(const Session *session,
+  Poco::AutoPtr<Poco::XML::Element> meta(const shared_ptr<Frame> frame);
+  Poco::AutoPtr<Poco::XML::Element> fromObject(const Session *session,
                          const shared_ptr<Object> object,
                          const shared_ptr<Frame> frame);
 
   std::string path;
 
-  QDomDocument document;
+  Poco::AutoPtr<Poco::XML::Document> document;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

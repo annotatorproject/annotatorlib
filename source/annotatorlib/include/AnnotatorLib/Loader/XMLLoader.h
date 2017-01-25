@@ -1,17 +1,17 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_LOADER_XMLLOADER_H
 #define ANNOTATOR_ANNOTATORLIB_LOADER_XMLLOADER_H
 
 /************************************************************
  XMLLoader class header
  ************************************************************/
-#include <boost/filesystem.hpp>
+#include <AnnotatorLib/annotatorlib_api.h>
+#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/Loader/AbstractLoader.h>
+
 #include <vector>
 
-#include <AnnotatorLib/annotatorlib_api.h>
-#include "AnnotatorLib/Loader/Pkg_Loader.h"
-
-#include "AnnotatorLib/Loader/AbstractLoader.h"
+#include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
 namespace Loader {

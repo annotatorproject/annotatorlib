@@ -1,21 +1,28 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Loader_XMLLoader_BODY
 
 /************************************************************
  XMLLoader class body
  ************************************************************/
-#include <QDomDocument>
-#include <QFile>
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/range/algorithm/remove_if.hpp>
-#include <memory>
-
 // include associated header file
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/Loader/XMLLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+
+#include <memory>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/range/algorithm/remove_if.hpp>
+
+#include <Poco/DOM/DOMParser.h>
+#include <Poco/DOM/Document.h>
+#include <Poco/DOM/NodeIterator.h>
+#include <Poco/DOM/NodeList.h>
+#include <Poco/DOM/NodeFilter.h>
+#include <Poco/DOM/AutoPtr.h>
+#include <Poco/SAX/InputSource.h>
 
 // Derived includes directives
 
@@ -51,36 +58,34 @@ void XMLLoader::findXMLFiles() {
 }
 
 void XMLLoader::loadFile(std::string fileName, Session *session) {
-  QFile file(QString::fromStdString(fileName));
-  QDomDocument doc;
-  if (!doc.setContent(&file)) return;
-  QDomElement root = doc.firstChildElement("OBJECTS");
-  QDomNodeList items = root.elementsByTagName("OBJECT");
-  for (int i = 0; i < items.count(); i++) {
-    QDomNode item = items.at(i);
-    if (item.isElement()) {
-      unsigned long id = 0;
-      unsigned long start = 0;
-      unsigned long end = 0;
-      std::string name = "";
-      int ulX = 0;
-      int ulY = 0;
-      int lrX = 0;
-      int lrY = 0;
 
-      QDomElement element = item.toElement();
-      id = element.firstChildElement("ID").text().toLong(0);
-      start = element.firstChildElement("START").text().toLong();
-      end = element.firstChildElement("END").text().toLong();
-      name = element.firstChildElement("NAME").text().toStdString();
-      parseXY(element.firstChildElement("UL").text().toStdString(), "UL:() ",
-              ulX, ulY);
-      parseXY(element.firstChildElement("LR").text().toStdString(), "LR:() ",
-              lrX, lrY);
+    std::ifstream in(fileName);
+    Poco::XML::InputSource src(in);
 
-      loadAnnotation(id, start, end, name, ulX, ulY, lrX, lrY, session);
+    Poco::XML::DOMParser parser;
+    Poco::AutoPtr<Poco::XML::Document> pDoc = parser.parse(&src);
+    Poco::AutoPtr<Poco::XML::Element> element = pDoc->getElementById("OBJECTS");
+
+    for (Poco::XML::Node *pNode = element->firstChild(); pNode != 0; pNode = pNode->nextSibling()) {
+      auto pElem = dynamic_cast<Poco::XML::Element*>(pNode);
+      if(pElem) {
+        unsigned long id = std::stoul(pElem->getElementById("ID", "")->getNodeValue());
+        unsigned long start = std::stoul(pElem->getElementById("START", "")->getNodeValue());
+        unsigned long end = std::stoul(pElem->getElementById("END", "")->getNodeValue());
+        std::string name = pElem->getElementById("NAME", "")->getNodeValue();
+        int ulX = 0;
+        int ulY = 0;
+        int lrX = 0;
+        int lrY = 0;
+
+        parseXY(pElem->getElementById("UL", "")->getNodeValue(), "UL:() ",
+                ulX, ulY);
+        parseXY(pElem->getElementById("LR", "")->getNodeValue(), "LR:() ",
+                lrX, lrY);
+
+        loadAnnotation(id, start, end, name, ulX, ulY, lrX, lrY, session);
+      }
     }
-  }
 }
 
 void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,

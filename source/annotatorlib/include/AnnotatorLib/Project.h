@@ -6,18 +6,14 @@
  Project class header
  ************************************************************/
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/annotatorlib_api.h>
 #include <AnnotatorLib/ImageSet.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
-#include <string>
 #include <chrono>
 #include <ctime>
 #include <memory>
-
-#include <Poco/AutoPtr.h>
-#include <Poco/DOM/Document.h>
-#include <Poco/DOM/Element.h>
+#include <string>
 
 namespace AnnotatorLib {
 
@@ -161,32 +157,12 @@ class ANNOTATORLIB_API Project {
    */
   void loadSession();
 
-  void loadImageSet(Poco::AutoPtr<Poco::XML::Element> root, ImageSetType &type,
-                    std::string &imageSetPath);
-
-  void loadStorage(Poco::AutoPtr<Poco::XML::Element> root, StorageType &type,
-                   std::string &storagePath);
-
-  void loadRoot(Poco::AutoPtr<Poco::XML::Document> doc, Poco::AutoPtr<Poco::XML::Element> root, std::string &name);
-
-  void loadProjectSettings(Poco::AutoPtr<Poco::XML::Element> root);
-
-  void loadProjectStatistics(Poco::AutoPtr<Poco::XML::Element> root);
+  void saveConfig();
 
   /**
    * @brief saveSession
    */
   void saveSession();
-
-  Poco::AutoPtr<Poco::XML::Element> saveImageSet(Poco::AutoPtr<Poco::XML::Document> doc);
-
-  Poco::AutoPtr<Poco::XML::Element> saveStorage(Poco::AutoPtr<Poco::XML::Document> doc);
-
-  Poco::AutoPtr<Poco::XML::Element> saveRoot(Poco::AutoPtr<Poco::XML::Document> doc);
-
-  Poco::AutoPtr<Poco::XML::Element> saveProjectStatistics(Poco::AutoPtr<Poco::XML::Document> doc);
-
-  Poco::AutoPtr<Poco::XML::Element> saveProjectSettings(Poco::AutoPtr<Poco::XML::Document> doc);
 
   /**
    * Updates the total duration by the elapsed time since last update if project

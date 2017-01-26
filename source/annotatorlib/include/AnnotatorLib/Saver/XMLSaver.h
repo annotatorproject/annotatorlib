@@ -5,9 +5,9 @@
 /************************************************************
  XMLSaver class header
  ************************************************************/
-#include <AnnotatorLib/annotatorlib_api.h>
-#include <AnnotatorLib/Saver/Pkg_Saver.h>
 #include <AnnotatorLib/Saver/AbstractSaver.h>
+#include <AnnotatorLib/Saver/Pkg_Saver.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/AutoPtr.h>
 #include <Poco/DOM/Document.h>
@@ -24,7 +24,6 @@ namespace Saver {
  *
  */
 class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
-
  public:
   void saveFrame(const Session *session, const shared_ptr<Frame> frame);
   void saveAnnotation(const Annotation annotation);
@@ -36,8 +35,8 @@ class ANNOTATORLIB_API XMLSaver : public AbstractSaver {
  protected:
   Poco::AutoPtr<Poco::XML::Element> meta(const shared_ptr<Frame> frame);
   Poco::AutoPtr<Poco::XML::Element> fromObject(const Session *session,
-                         const shared_ptr<Object> object,
-                         const shared_ptr<Frame> frame);
+                                               const shared_ptr<Object> object,
+                                               const shared_ptr<Frame> frame);
 
   std::string path;
 

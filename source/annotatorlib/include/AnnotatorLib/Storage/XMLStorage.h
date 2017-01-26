@@ -5,9 +5,9 @@
 /************************************************************
  JSONStorage class header
  ************************************************************/
-#include <AnnotatorLib/annotatorlib_api.h>
-#include <AnnotatorLib/Storage/Pkg_Storage.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
+#include <AnnotatorLib/Storage/Pkg_Storage.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
 namespace Storage {

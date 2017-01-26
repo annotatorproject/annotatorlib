@@ -5,9 +5,9 @@
 /************************************************************
  XMLLoader class header
  ************************************************************/
-#include <AnnotatorLib/annotatorlib_api.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/annotatorlib_api.h>
 
 #include <vector>
 

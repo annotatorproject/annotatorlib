@@ -16,12 +16,12 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
 
+#include <Poco/DOM/AutoPtr.h>
 #include <Poco/DOM/DOMParser.h>
 #include <Poco/DOM/Document.h>
+#include <Poco/DOM/NodeFilter.h>
 #include <Poco/DOM/NodeIterator.h>
 #include <Poco/DOM/NodeList.h>
-#include <Poco/DOM/NodeFilter.h>
-#include <Poco/DOM/AutoPtr.h>
 #include <Poco/SAX/InputSource.h>
 
 // Derived includes directives
@@ -58,34 +58,37 @@ void XMLLoader::findXMLFiles() {
 }
 
 void XMLLoader::loadFile(std::string fileName, Session *session) {
+  std::ifstream in(fileName);
+  Poco::XML::InputSource src(in);
 
-    std::ifstream in(fileName);
-    Poco::XML::InputSource src(in);
+  Poco::XML::DOMParser parser;
+  Poco::AutoPtr<Poco::XML::Document> pDoc = parser.parse(&src);
+  Poco::AutoPtr<Poco::XML::Element> element = pDoc->getElementById("OBJECTS");
 
-    Poco::XML::DOMParser parser;
-    Poco::AutoPtr<Poco::XML::Document> pDoc = parser.parse(&src);
-    Poco::AutoPtr<Poco::XML::Element> element = pDoc->getElementById("OBJECTS");
+  for (Poco::XML::Node *pNode = element->firstChild(); pNode != 0;
+       pNode = pNode->nextSibling()) {
+    auto pElem = dynamic_cast<Poco::XML::Element *>(pNode);
+    if (pElem) {
+      unsigned long id =
+          std::stoul(pElem->getElementById("ID", "")->getNodeValue());
+      unsigned long start =
+          std::stoul(pElem->getElementById("START", "")->getNodeValue());
+      unsigned long end =
+          std::stoul(pElem->getElementById("END", "")->getNodeValue());
+      std::string name = pElem->getElementById("NAME", "")->getNodeValue();
+      int ulX = 0;
+      int ulY = 0;
+      int lrX = 0;
+      int lrY = 0;
 
-    for (Poco::XML::Node *pNode = element->firstChild(); pNode != 0; pNode = pNode->nextSibling()) {
-      auto pElem = dynamic_cast<Poco::XML::Element*>(pNode);
-      if(pElem) {
-        unsigned long id = std::stoul(pElem->getElementById("ID", "")->getNodeValue());
-        unsigned long start = std::stoul(pElem->getElementById("START", "")->getNodeValue());
-        unsigned long end = std::stoul(pElem->getElementById("END", "")->getNodeValue());
-        std::string name = pElem->getElementById("NAME", "")->getNodeValue();
-        int ulX = 0;
-        int ulY = 0;
-        int lrX = 0;
-        int lrY = 0;
+      parseXY(pElem->getElementById("UL", "")->getNodeValue(), "UL:() ", ulX,
+              ulY);
+      parseXY(pElem->getElementById("LR", "")->getNodeValue(), "LR:() ", lrX,
+              lrY);
 
-        parseXY(pElem->getElementById("UL", "")->getNodeValue(), "UL:() ",
-                ulX, ulY);
-        parseXY(pElem->getElementById("LR", "")->getNodeValue(), "LR:() ",
-                lrX, lrY);
-
-        loadAnnotation(id, start, end, name, ulX, ulY, lrX, lrY, session);
-      }
+      loadAnnotation(id, start, end, name, ulX, ulY, lrX, lrY, session);
     }
+  }
 }
 
 void XMLLoader::loadAnnotation(unsigned long id, unsigned long start,

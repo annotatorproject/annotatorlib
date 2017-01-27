@@ -10,6 +10,7 @@
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
 
+#include <fstream>
 #include <memory>
 
 #include <boost/algorithm/string.hpp>

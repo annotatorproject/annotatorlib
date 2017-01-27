@@ -87,8 +87,6 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 include(cmake/3rdParty.cmake)
 include(cmake/CompileOptions.cmake)
 
-include(cmake/Clang-Format.cmake)
-include(cmake/Clang-Tidy.cmake)
 # 
 # Deployment/installation setup
 # 
@@ -174,3 +172,6 @@ install(FILES README.md DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
 
 # Install runtime data
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA} COMPONENT runtime)
+
+include(cmake/Clang-Format.cmake)
+include(cmake/Clang-Tidy.cmake)

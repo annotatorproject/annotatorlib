@@ -93,7 +93,8 @@ void Project::create() {
  *
  */
 void Project::load() {
-  std::istringstream istr(path);
+  std::fstream istr;
+  istr.open(path, std::ios::in);
   Poco::AutoPtr<Poco::Util::XMLConfiguration> config =
       new Poco::Util::XMLConfiguration(istr);
 
@@ -113,6 +114,7 @@ void Project::load() {
   this->imageSet = AnnotatorLib::ImageSetFactory::createImageSet(
       this->imageSetType, imageSetPath);
 
+  istr.close();
   loadSession();
 }
 
@@ -126,7 +128,8 @@ void Project::loadSession() {
 }
 
 void Project::saveConfig() {
-  std::ofstream ostr(path, std::ios::out);
+  std::fstream ostr;
+  ostr.open(path, std::ios::out);
 
   Poco::XML::DOMWriter writer;
   writer.setNewLine("\n");
@@ -146,6 +149,7 @@ void Project::saveConfig() {
   config->setBool("Settings[@active]", this->active);
 
   config->save(writer, ostr);
+  ostr.close();
 }
 
 void Project::save(std::shared_ptr<AnnotatorLib::Project> project,

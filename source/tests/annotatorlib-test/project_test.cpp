@@ -14,12 +14,11 @@ class project_test : public testing::Test {
 
 TEST_F(project_test, saveProject) {
   try {
-    std::string path =
-        "/home/chriamue/builds/build-annotatorlib-Desktop-Debug/test.xml";
+    std::string path = "test.xml";
     std::shared_ptr<AnnotatorLib::Project> project =
         Project::create("testname", "images", "", "json", "test.json");
     project->setPath(path);
-    project->load();
+    // project->load();
     std::shared_ptr<Session> session = project->getSession();
     shared_ptr<Object> object = std::make_shared<Object>();
     object->setName("testobject");
@@ -103,4 +102,3 @@ TEST_F(project_test, equals) {
 
   ASSERT_TRUE(project->equals(project6));
 }
-

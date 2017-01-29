@@ -47,6 +47,8 @@ std::string StorageTypeToString(StorageType type) {
       return "sqlite";
     case StorageType::JSON:
       return "json";
+    case StorageType::MONGODB:
+      return "mongodb";
     case StorageType::UNKNOWN:
       return "unknown";
     default:
@@ -60,6 +62,7 @@ StorageType StorageTypeFromString(std::string str) {
   if (str == "mysql") return StorageType::MYSQL;
   if (str == "sqlite") return StorageType::SQLITE;
   if (str == "json") return StorageType::JSON;
+  if (str == "mongodb") return StorageType::MONGODB;
   return StorageType::UNKNOWN;
 }
 

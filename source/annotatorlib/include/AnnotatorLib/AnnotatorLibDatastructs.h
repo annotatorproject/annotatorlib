@@ -68,6 +68,10 @@ enum class StorageType {
    *
    */
   JSON,
+  /**
+   *
+   */
+  MONGODB,
 };
 
 /**

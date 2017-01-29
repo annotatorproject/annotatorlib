@@ -111,8 +111,6 @@ class ANNOTATORLIB_API MongoDBStorage : public AbstractStorage {
   bool _open = false;
   bool _save = true;
 
-  Poco::MongoDB::Database getDatabase();
-
   void insertOrUpdateAnnotationAttributes(shared_ptr<Annotation> annotation);
   void insertOrUpdateObjectAttributes(shared_ptr<Object> object);
 };

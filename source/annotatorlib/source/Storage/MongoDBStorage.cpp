@@ -1,5 +1,5 @@
 // Copyright 2016-2017 Annotator Team
-#define Annotator_AnnotatorLib_Storage_MySQLStorage_BODY
+#define Annotator_AnnotatorLib_Storage_MongoDBStorage_BODY
 
 /************************************************************
  MongoDBStorage class body
@@ -68,8 +68,9 @@ bool MongoDBStorage::addAnnotation(shared_ptr<Annotation> annotation,
       a_.frame = std::to_string(annotation->getFrame()->getId());
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
-          getDatabase().createInsertRequest("annotations");
+          db.createInsertRequest("annotations");
       insertRequest->addNewDocument()
           .add("id", a_.id)
           .add("next", a_.next)
@@ -82,11 +83,13 @@ bool MongoDBStorage::addAnnotation(shared_ptr<Annotation> annotation,
           .add("height", a_.height)
           .add("type", a_.type);
 
+      std::cout << insertRequest->documents().size() << std::endl;
+
       connection->sendRequest(*insertRequest);
 
-      std::string lastError = getDatabase().getLastError(*connection);
+      std::string lastError = db.getLastError(*connection);
       if (!lastError.empty()) {
-        std::cout << "Last Error: " << getDatabase().getLastError(*connection)
+        std::cout << "Last Error: " << db.getLastError(*connection)
                   << std::endl;
       }
       insertOrUpdateAnnotationAttributes(annotation);
@@ -102,11 +105,17 @@ shared_ptr<Annotation> MongoDBStorage::removeAnnotation(unsigned long id,
                                                         bool unregister) {
   if (_open) {
     try {
+          Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
-          getDatabase().createDeleteRequest("annotations");
+          db.createDeleteRequest("annotations");
       request->selector().add("id", std::to_string(id));
 
       connection->sendRequest(*request);
+      std::string lastError = db.getLastError(*connection);
+      if (!lastError.empty()) {
+        std::cout << "Last Error: " << db.getLastError(*connection)
+                  << std::endl;
+      }
 
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -150,8 +159,9 @@ void MongoDBStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
       a_.frame = std::to_string(annotation->getFrame()->getId());
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
-          getDatabase().createUpdateRequest("annotations");
+          db.createUpdateRequest("annotations");
       request->selector().add("id", a_.id);
 
       request->update()
@@ -167,6 +177,11 @@ void MongoDBStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
           .add("type", a_.type);
 
       connection->sendRequest(*request);
+      std::string lastError = db.getLastError(*connection);
+      if (!lastError.empty()) {
+        std::cout << "Last Error: " << db.getLastError(*connection)
+                  << std::endl;
+      }
 
       insertOrUpdateAnnotationAttributes(annotation);
     } catch (Poco::Exception &e) {
@@ -186,11 +201,17 @@ bool MongoDBStorage::addClass(shared_ptr<Class> c) {
     ClassStruct c_ = {std::to_string(c->getId()), c->getName()};
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
-          getDatabase().createInsertRequest("classes");
+          db.createInsertRequest("classes");
       insertRequest->addNewDocument().add("id", c_.id).add("name", c_.name);
 
       connection->sendRequest(*insertRequest);
+      std::string lastError = db.getLastError(*connection);
+      if (!lastError.empty()) {
+        std::cout << "Last Error: " << db.getLastError(*connection)
+                  << std::endl;
+      }
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -202,8 +223,9 @@ bool MongoDBStorage::addClass(shared_ptr<Class> c) {
 shared_ptr<Class> MongoDBStorage::removeClass(Class *c) {
   if (_open) {
     try {
+          Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
-          getDatabase().createDeleteRequest("classes");
+          db.createDeleteRequest("classes");
       request->selector().add("id", std::to_string(c->getId()));
       connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
@@ -225,13 +247,19 @@ void MongoDBStorage::updateClass(shared_ptr<Class> theClass) {
     ClassStruct c_ = {std::to_string(theClass->getId()), theClass->getName()};
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
-          getDatabase().createUpdateRequest("classes");
+          db.createUpdateRequest("classes");
       request->selector().add("id", c_.id);
 
       request->update().addNewDocument("$set").add("name", c_.name);
 
       connection->sendRequest(*request);
+      std::string lastError = db.getLastError(*connection);
+      if (!lastError.empty()) {
+        std::cout << "Last Error: " << db.getLastError(*connection)
+                  << std::endl;
+      }
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -252,14 +280,20 @@ bool MongoDBStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
                        std::to_string(object->getClass()->getId())};
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
-          getDatabase().createInsertRequest("objects");
+          db.createInsertRequest("objects");
       insertRequest->addNewDocument()
           .add("id", o_.id)
           .add("name", o_.name)
           .add("class", o_._class);
 
       connection->sendRequest(*insertRequest);
+      std::string lastError = db.getLastError(*connection);
+      if (!lastError.empty()) {
+        std::cout << "Last Error: " << db.getLastError(*connection)
+                  << std::endl;
+      }
       insertOrUpdateObjectAttributes(object);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -273,8 +307,9 @@ shared_ptr<Object> MongoDBStorage::removeObject(unsigned long id,
                                                 bool remove_annotations) {
   if (_open) {
     try {
+          Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
-          getDatabase().createDeleteRequest("objects");
+          db.createDeleteRequest("objects");
       request->selector().add("id", std::to_string(id));
       connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
@@ -297,8 +332,9 @@ void MongoDBStorage::updateObject(shared_ptr<Object> object) {
                        std::to_string(object->getClass()->getId())};
 
     try {
+        Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
-          getDatabase().createUpdateRequest("objects");
+          db.createUpdateRequest("objects");
       request->selector().add("id", o_.id);
 
       request->update()
@@ -322,8 +358,9 @@ MongoDBStorage::~MongoDBStorage() {
 
 bool MongoDBStorage::open() {
   Poco::URI uri(path);
-  connection = new Poco::MongoDB::Connection(uri.getHost(), uri.getPort());
+  connection = new Poco::MongoDB::Connection(uri.getHost(), (uri.getPort()==0) ? 27017 : uri.getPort());
   dbname = uri.getPath();
+  dbname.erase(0,1);
 
   this->_open = true;
   return _open;
@@ -389,10 +426,6 @@ void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
       std::cout << e.message() << std::endl;
     }
   }
-}
-
-Poco::MongoDB::Database MongoDBStorage::getDatabase() {
-  return Poco::MongoDB::Database(dbname);
 }
 
 // static attributes (if any)

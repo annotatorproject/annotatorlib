@@ -6,23 +6,15 @@
  ************************************************************/
 
 // include associated header file
+#include <AnnotatorLib/Loader/MongoDBLoader.h>
 #include <AnnotatorLib/Storage/MongoDBStorage.h>
-
-#include <Poco/Data/MySQL/Connector.h>
-#include <Poco/Data/RecordSet.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/URI.h>
 
 #include <Poco/MongoDB/Array.h>
 #include <Poco/MongoDB/Connection.h>
 #include <Poco/MongoDB/Cursor.h>
 #include <Poco/MongoDB/Database.h>
 #include <Poco/MongoDB/MongoDB.h>
-
-using Poco::Data::Session;
-using Poco::Data::Statement;
-using namespace Poco::Data::Keywords;
+#include <Poco/URI.h>
 
 namespace AnnotatorLib {
 namespace Storage {
@@ -38,11 +30,11 @@ bool MongoDBStorage::addAnnotation(shared_ptr<Annotation> annotation,
   AnnotatorLib::Session::addAnnotation(annotation, add_associated_objects);
   if (_open) {
     struct AnnotationStruct {
-      std::string id;
-      std::string next;
-      std::string previous;
-      std::string object;
-      std::string frame;
+      long id;
+      long next;
+      long previous;
+      long object;
+      long frame;
       double x;
       double y;
       double width;
@@ -50,25 +42,23 @@ bool MongoDBStorage::addAnnotation(shared_ptr<Annotation> annotation,
       std::string type;
     };
     AnnotationStruct a_ = {
-        std::to_string(annotation->getId()),
-        "0",
-        "0",
-        std::to_string(annotation->getObject()->getId()),
-        "0",
+        (long)annotation->getId(),
+        0L,
+        0L,
+        (long)annotation->getObject()->getId(),
+        0L,
         annotation->getX(),
         annotation->getY(),
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext())
-      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getNext()) a_.next = annotation->getNext()->getId();
     if (annotation->getPrevious())
-      a_.previous = std::to_string(annotation->getPrevious()->getId());
-    if (annotation->getFrame())
-      a_.frame = std::to_string(annotation->getFrame()->getId());
+      a_.previous = annotation->getPrevious()->getId();
+    if (annotation->getFrame()) a_.frame = annotation->getFrame()->getId();
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
           db.createInsertRequest("annotations");
       insertRequest->addNewDocument()
@@ -105,10 +95,10 @@ shared_ptr<Annotation> MongoDBStorage::removeAnnotation(unsigned long id,
                                                         bool unregister) {
   if (_open) {
     try {
-          Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
           db.createDeleteRequest("annotations");
-      request->selector().add("id", std::to_string(id));
+      request->selector().add("id", (long)id);
 
       connection->sendRequest(*request);
       std::string lastError = db.getLastError(*connection);
@@ -129,11 +119,11 @@ void MongoDBStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
   AnnotatorLib::Session::updateAnnotation(annotation);
   if (_open && getAnnotation(annotation->getId())) {
     struct AnnotationStruct {
-      std::string id;
-      std::string next;
-      std::string previous;
-      std::string object;
-      std::string frame;
+      long id;
+      long next;
+      long previous;
+      long object;
+      long frame;
       double x;
       double y;
       double width;
@@ -141,25 +131,23 @@ void MongoDBStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
       std::string type;
     };
     AnnotationStruct a_ = {
-        std::to_string(annotation->getId()),
-        "0",
-        "0",
-        std::to_string(annotation->getObject()->getId()),
-        "0",
+        (long)annotation->getId(),
+        0L,
+        0L,
+        (long)annotation->getObject()->getId(),
+        0L,
         annotation->getX(),
         annotation->getY(),
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext())
-      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getNext()) a_.next = annotation->getNext()->getId();
     if (annotation->getPrevious())
-      a_.previous = std::to_string(annotation->getPrevious()->getId());
-    if (annotation->getFrame())
-      a_.frame = std::to_string(annotation->getFrame()->getId());
+      a_.previous = annotation->getPrevious()->getId();
+    if (annotation->getFrame()) a_.frame = annotation->getFrame()->getId();
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
           db.createUpdateRequest("annotations");
       request->selector().add("id", a_.id);
@@ -195,13 +183,13 @@ bool MongoDBStorage::addClass(shared_ptr<Class> c) {
   AnnotatorLib::Session::addClass(c);
   if (_open) {
     struct ClassStruct {
-      std::string id;
+      long id;
       std::string name;
     };
-    ClassStruct c_ = {std::to_string(c->getId()), c->getName()};
+    ClassStruct c_ = {(long)c->getId(), c->getName()};
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
           db.createInsertRequest("classes");
       insertRequest->addNewDocument().add("id", c_.id).add("name", c_.name);
@@ -223,10 +211,10 @@ bool MongoDBStorage::addClass(shared_ptr<Class> c) {
 shared_ptr<Class> MongoDBStorage::removeClass(Class *c) {
   if (_open) {
     try {
-          Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
           db.createDeleteRequest("classes");
-      request->selector().add("id", std::to_string(c->getId()));
+      request->selector().add("id", (long)c->getId());
       connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -241,13 +229,13 @@ void MongoDBStorage::updateClass(shared_ptr<Class> theClass) {
   AnnotatorLib::Session::updateClass(theClass);
   if (_open && getClass(theClass->getId())) {
     struct ClassStruct {
-      std::string id;
+      long id;
       std::string name;
     };
-    ClassStruct c_ = {std::to_string(theClass->getId()), theClass->getName()};
+    ClassStruct c_ = {(long)theClass->getId(), theClass->getName()};
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
           db.createUpdateRequest("classes");
       request->selector().add("id", c_.id);
@@ -272,15 +260,15 @@ bool MongoDBStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
   AnnotatorLib::Session::addObject(object, add_associated_objects);
   if (_open) {
     struct ObjectStruct {
-      std::string id;
+      long id;
       std::string name;
-      std::string _class;
+      long _class;
     };
-    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
-                       std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {(long)object->getId(), object->getName(),
+                       (long)object->getClass()->getId()};
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
           db.createInsertRequest("objects");
       insertRequest->addNewDocument()
@@ -307,10 +295,10 @@ shared_ptr<Object> MongoDBStorage::removeObject(unsigned long id,
                                                 bool remove_annotations) {
   if (_open) {
     try {
-          Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::DeleteRequest> request =
           db.createDeleteRequest("objects");
-      request->selector().add("id", std::to_string(id));
+      request->selector().add("id", (long)id);
       connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -324,15 +312,15 @@ void MongoDBStorage::updateObject(shared_ptr<Object> object) {
   AnnotatorLib::Session::updateObject(object);
   if (_open && getObject(object->getId())) {
     struct ObjectStruct {
-      std::string id;
+      long id;
       std::string name;
-      std::string _class;
+      long _class;
     };
-    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
-                       std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {(long)object->getId(), object->getName(),
+                       (long)object->getClass()->getId()};
 
     try {
-        Poco::MongoDB::Database db(dbname);
+      Poco::MongoDB::Database db(dbname);
       Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
           db.createUpdateRequest("objects");
       request->selector().add("id", o_.id);
@@ -358,9 +346,14 @@ MongoDBStorage::~MongoDBStorage() {
 
 bool MongoDBStorage::open() {
   Poco::URI uri(path);
-  connection = new Poco::MongoDB::Connection(uri.getHost(), (uri.getPort()==0) ? 27017 : uri.getPort());
+  connection = new Poco::MongoDB::Connection(
+      uri.getHost(), (uri.getPort() == 0) ? 27017 : uri.getPort());
   dbname = uri.getPath();
-  dbname.erase(0,1);
+  dbname.erase(0, 1);
+
+  AnnotatorLib::Loader::MongoDBLoader loader;
+  loader.setPath(this->path);
+  loader.loadSession(this);
 
   this->_open = true;
   return _open;
@@ -380,19 +373,19 @@ bool MongoDBStorage::close() {
 void MongoDBStorage::insertOrUpdateAnnotationAttributes(
     shared_ptr<Annotation> annotation) {
   struct AttributeStruct {
-    std::string id;
+    long id;
     std::string name;
     std::string type;
     std::string value;
-    std::string annotation_id;
+    long annotation_id;
   };
 
   for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
        annotation->getAttributes()) {
-    AttributeStruct a_ = {
-        std::to_string(attribute->getId()), attribute->getName(),
-        AttributeTypeToString(attribute->getType()),
-        attribute->getValue()->toString(), std::to_string(annotation->getId())};
+    AttributeStruct a_ = {(long)attribute->getId(), attribute->getName(),
+                          AttributeTypeToString(attribute->getType()),
+                          attribute->getValue()->toString(),
+                          (long)annotation->getId()};
 
     try {
       // TODO insert or update
@@ -405,19 +398,19 @@ void MongoDBStorage::insertOrUpdateAnnotationAttributes(
 
 void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
   struct AttributeStruct {
-    std::string id;
+    long id;
     std::string name;
     std::string type;
     std::string value;
-    std::string object_id;
+    long object_id;
   };
 
   for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
        object->getAttributes()) {
-    AttributeStruct a_ = {
-        std::to_string(attribute->getId()), attribute->getName(),
-        AttributeTypeToString(attribute->getType()),
-        attribute->getValue()->toString(), std::to_string(object->getId())};
+    AttributeStruct a_ = {(long)attribute->getId(), attribute->getName(),
+                          AttributeTypeToString(attribute->getType()),
+                          attribute->getValue()->toString(),
+                          (long)object->getId()};
 
     try {
       // TODO insert or update

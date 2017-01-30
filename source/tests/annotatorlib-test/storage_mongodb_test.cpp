@@ -15,15 +15,13 @@ class storage_mongodb_test : public testing::Test {
 
 TEST_F(storage_mongodb_test, createTables) {
   AnnotatorLib::Storage::MongoDBStorage storage;
-  storage.setPath(
-      "mongodb://localhost:27017/annotatortest");
+  storage.setPath("mongodb://localhost:27017/annotatortest");
   ASSERT_TRUE(storage.open());
 }
 
 TEST_F(storage_mongodb_test, objects) {
-    AnnotatorLib::Storage::MongoDBStorage storage;
-    storage.setPath(
-        "mongodb://localhost:27017/annotatortest");
+  AnnotatorLib::Storage::MongoDBStorage storage;
+  storage.setPath("mongodb://localhost:27017/annotatortest");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
 
@@ -38,20 +36,17 @@ TEST_F(storage_mongodb_test, objects) {
   shared_ptr<Object> o2 = storage.getObject(o->getId());
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testobject");
-/*
+
   AnnotatorLib::Storage::MongoDBStorage storage2;
-  storage2.setPath(
-      "mongodb://localhost/annotatortest");
+  storage2.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
   ASSERT_TRUE(o3->getName() == "testobject");
-  */
 }
 
 TEST_F(storage_mongodb_test, annotations) {
-    AnnotatorLib::Storage::MongoDBStorage storage;
-    storage.setPath(
-        "mongodb://localhost/annotatortest");
+  AnnotatorLib::Storage::MongoDBStorage storage;
+  storage.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
 
@@ -72,10 +67,9 @@ TEST_F(storage_mongodb_test, annotations) {
       Annotation::make_shared(f, o, AnnotationType::RECTANGLE);
   a->setPosition(0, 0, 1, 1);
   ASSERT_TRUE(storage.addAnnotation(a, true));
-/*
+
   AnnotatorLib::Storage::MongoDBStorage storage2;
-  storage2.setPath(
-      "mongodb://localhost/annotatortest");
+  storage2.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
   ASSERT_TRUE(o3->getName() == "testobject");
@@ -84,5 +78,4 @@ TEST_F(storage_mongodb_test, annotations) {
   ASSERT_TRUE(storage2.getAnnotations().size() > 0);
   ASSERT_TRUE(a2->getObject()->getName() == "testobject");
   ASSERT_TRUE(storage2.getFrames().size() == 1);
-  */
 }

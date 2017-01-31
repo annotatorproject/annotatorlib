@@ -389,17 +389,21 @@ void MongoDBStorage::insertOrUpdateAnnotationAttributes(
 
     try {
       Poco::MongoDB::Database db(dbname);
-      Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
-          db.createUpdateRequest("annotation_attributes");
-      request->selector().add("id", a_.id);
+      Poco::SharedPtr<Poco::MongoDB::DeleteRequest> delRequest =
+          db.createDeleteRequest("annotation_attributes");
+      delRequest->selector().add("id", (long)a_.id);
+      connection->sendRequest(*delRequest);
 
-      request->update()
-          .addNewDocument("$set")
+      Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
+          db.createInsertRequest("annotation_attributes");
+      insertRequest->addNewDocument()
+          .add("id", a_.id)
           .add("name", a_.name)
           .add("type", a_.type)
           .add("value", a_.value)
           .add("annotation", a_.annotation_id);
-      connection->sendRequest(*request);
+
+      connection->sendRequest(*insertRequest);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -425,17 +429,23 @@ void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
 
     try {
       Poco::MongoDB::Database db(dbname);
-      Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
-          db.createUpdateRequest("object_attributes");
-      request->selector().add("id", a_.id);
 
-      request->update()
-          .addNewDocument("$set")
+      Poco::SharedPtr<Poco::MongoDB::DeleteRequest> delRequest =
+          db.createDeleteRequest("object_attributes");
+      delRequest->selector().add("id", (long)a_.id);
+      connection->sendRequest(*delRequest);
+
+      Poco::SharedPtr<Poco::MongoDB::InsertRequest> insertRequest =
+          db.createInsertRequest("object_attributes");
+      insertRequest->addNewDocument()
+          .add("id", a_.id)
           .add("name", a_.name)
           .add("type", a_.type)
           .add("value", a_.value)
           .add("object", a_.object_id);
-      connection->sendRequest(*request);
+
+      connection->sendRequest(*insertRequest);
+
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;

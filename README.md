@@ -24,8 +24,7 @@ Annotator Library
 First install CMake, Qt5 and a c++11 compiler (gcc 5).
 
 ```
-sudo apt-get install libboost-system-dev libboost-filesystem-dev
-sudo apt-get install qtbase5-dev
+sudo apt-get install libboost-system-dev libboost-filesystem-dev libpoco-dev libmysqlclient-dev libmongo-client-dev
 ```
 
 Build LibPoco

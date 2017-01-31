@@ -39,6 +39,7 @@ addons:
    - libboost-all-dev
    - libpoco-dev
    - libmysqlclient-dev
+   - libmongo-client-dev
    - lcov
    - texlive-fonts-recommended
    - texlive-latex-extra

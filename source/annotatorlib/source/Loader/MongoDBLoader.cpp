@@ -81,7 +81,49 @@ void MongoDBLoader::loadAnnotations(Poco::MongoDB::Connection &connection,
 
 void MongoDBLoader::loadAnnotationAttributes(
     Poco::MongoDB::Connection &connection,
-    std::shared_ptr<Annotation> annotation) {}
+    std::shared_ptr<Annotation> annotation) {
+  Poco::MongoDB::Cursor cursor(dbname, "annotation_attributes");
+  cursor.query().selector().add("annotation", (long)annotation->getId());
+
+  Poco::MongoDB::ResponseMessage &response = cursor.next(connection);
+  while (1) {
+    for (Poco::MongoDB::Document::Vector::const_iterator it =
+             response.documents().begin();
+         it != response.documents().end(); ++it) {
+      unsigned long id = (*it)->get<long>("id");
+      std::string name = (*it)->get<std::string>("name");
+      std::string type = (*it)->get<std::string>("type");
+      std::string value = (*it)->get<std::string>("value");
+
+      AttributeType t = AttributeTypeFromString(type);
+      std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
+      std::shared_ptr<AttributeValue> av;
+      switch (t) {
+        case AttributeType::STRING:
+          av = std::make_shared<AttributeValue>(value);
+          break;
+        case AttributeType::INTEGER:
+          av = std::make_shared<AttributeValue>(std::stol(value));
+          break;
+        case AttributeType::FLOAT:
+          av = std::make_shared<AttributeValue>(std::stod(value));
+          break;
+        case AttributeType::BOOLEAN:
+          av = std::make_shared<AttributeValue>(value == "true" ||
+                                                value == "True");
+          break;
+        default:
+          av = std::make_shared<AttributeValue>(value);
+      };
+      a->setValue(av);
+      annotation->addAttribute(a);
+    }
+    if (response.cursorID() == 0) {
+      break;
+    }
+    response = cursor.next(connection);
+  };
+}
 
 void MongoDBLoader::loadClasses(Poco::MongoDB::Connection &connection,
                                 Session *session) {
@@ -105,7 +147,49 @@ void MongoDBLoader::loadClasses(Poco::MongoDB::Connection &connection,
 }
 
 void MongoDBLoader::loadObjectAttributes(Poco::MongoDB::Connection &connection,
-                                         std::shared_ptr<Object> object) {}
+                                         std::shared_ptr<Object> object) {
+  Poco::MongoDB::Cursor cursor(dbname, "object_attributes");
+  cursor.query().selector().add("object", (long)object->getId());
+
+  Poco::MongoDB::ResponseMessage &response = cursor.next(connection);
+  while (1) {
+    for (Poco::MongoDB::Document::Vector::const_iterator it =
+             response.documents().begin();
+         it != response.documents().end(); ++it) {
+      unsigned long id = (*it)->get<long>("id");
+      std::string name = (*it)->get<std::string>("name");
+      std::string type = (*it)->get<std::string>("type");
+      std::string value = (*it)->get<std::string>("value");
+
+      AttributeType t = AttributeTypeFromString(type);
+      std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
+      std::shared_ptr<AttributeValue> av;
+      switch (t) {
+        case AttributeType::STRING:
+          av = std::make_shared<AttributeValue>(value);
+          break;
+        case AttributeType::INTEGER:
+          av = std::make_shared<AttributeValue>(std::stol(value));
+          break;
+        case AttributeType::FLOAT:
+          av = std::make_shared<AttributeValue>(std::stod(value));
+          break;
+        case AttributeType::BOOLEAN:
+          av = std::make_shared<AttributeValue>(value == "true" ||
+                                                value == "True");
+          break;
+        default:
+          av = std::make_shared<AttributeValue>(value);
+      };
+      a->setValue(av);
+      object->addAttribute(a);
+    }
+    if (response.cursorID() == 0) {
+      break;
+    }
+    response = cursor.next(connection);
+  };
+}
 
 void MongoDBLoader::loadObjects(Poco::MongoDB::Connection &connection,
                                 Session *session) {

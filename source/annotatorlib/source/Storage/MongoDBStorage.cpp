@@ -388,7 +388,18 @@ void MongoDBStorage::insertOrUpdateAnnotationAttributes(
                           (long)annotation->getId()};
 
     try {
-      // TODO insert or update
+      Poco::MongoDB::Database db(dbname);
+      Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
+          db.createUpdateRequest("annotation_attributes");
+      request->selector().add("id", a_.id);
+
+      request->update()
+          .addNewDocument("$set")
+          .add("name", a_.name)
+          .add("type", a_.type)
+          .add("value", a_.value)
+          .add("annotation", a_.annotation_id);
+      connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;
@@ -413,7 +424,18 @@ void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
                           (long)object->getId()};
 
     try {
-      // TODO insert or update
+      Poco::MongoDB::Database db(dbname);
+      Poco::SharedPtr<Poco::MongoDB::UpdateRequest> request =
+          db.createUpdateRequest("object_attributes");
+      request->selector().add("id", a_.id);
+
+      request->update()
+          .addNewDocument("$set")
+          .add("name", a_.name)
+          .add("type", a_.type)
+          .add("value", a_.value)
+          .add("object", a_.object_id);
+      connection->sendRequest(*request);
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
       std::cout << e.message() << std::endl;

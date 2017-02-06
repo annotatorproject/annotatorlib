@@ -25,6 +25,13 @@ set(DEFAULT_PROJECT_OPTIONS
     CXX_VISIBILITY_PRESET     "hidden"
 )
 
+if( OPTION_CONAN_PACKAGES )
+	# run 'conan install ..' first
+	include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+	conan_basic_setup()
+	set(DEFAULT_LIBRARIES ${CONAN_LIBS})
+else( OPTION_CONAN_PACKAGES )
+
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Poco COMPONENTS Foundation Util Data Net DataSQLite DataMySQL MongoDB REQUIRED)
@@ -42,7 +49,7 @@ set(DEFAULT_INCLUDE_DIRECTORIES)
 
 set(DEFAULT_LIBRARIES ${Boost_LIBRARIES} ${OpenCV_LIBS} ${Poco_LIBRARIES})
 
-
+endif( OPTION_CONAN_PACKAGES )
 # 
 # Compile definitions
 # 

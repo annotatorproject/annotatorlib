@@ -46,8 +46,9 @@ void MySQLLoader::loadAttributes(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
                                   Session *session) {
-  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
-                      std::string, float, float, float, float, std::string>
+  typedef Poco::Tuple<unsigned long, unsigned long, unsigned long,
+                      unsigned long, unsigned long, float, float, float, float,
+                      std::string>
       AnnotationTuple;
   std::vector<AnnotationTuple> annotations;
 
@@ -59,8 +60,8 @@ void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
   statement.execute();
 
   for (AnnotationTuple at : annotations) {
-    unsigned long object_id = std::stol(at.get<3>());
-    unsigned long frame_id = std::stol(at.get<4>());
+    unsigned long object_id = at.get<3>();
+    unsigned long frame_id = at.get<4>();
 
     float x = at.get<5>();
     float y = at.get<6>();
@@ -82,20 +83,20 @@ void MySQLLoader::loadAnnotations(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadAnnotationAttributes(
     Poco::Data::Session &sqlSession, std::shared_ptr<Annotation> annotation) {
-  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
-                      std::string>
+  typedef Poco::Tuple<unsigned long, std::string, std::string, std::string,
+                      unsigned long>
       AttributeTuple;
   std::vector<AttributeTuple> attributes;
 
   Poco::Data::Statement statement(sqlSession);
-  std::string annotation_id = std::to_string(annotation->getId());
+  unsigned long annotation_id = annotation->getId();
   statement << "SELECT `id`,`name`, `type`, `value`, `annotation_id` FROM "
                "`annotation_attributes` WHERE `annotation_id`=?",
       use(annotation_id), into(attributes);
   statement.execute();
 
   for (AttributeTuple attribute : attributes) {
-    unsigned long id = std::stol(attribute.get<0>());
+    unsigned long id = attribute.get<0>();
     std::string name = attribute.get<1>();
     std::string type = attribute.get<2>();
     std::string value = attribute.get<3>();
@@ -127,7 +128,7 @@ void MySQLLoader::loadAnnotationAttributes(
 
 void MySQLLoader::loadClasses(Poco::Data::Session &sqlSession,
                               Session *session) {
-  typedef Poco::Tuple<std::string, std::string> ClassTuple;
+  typedef Poco::Tuple<unsigned long, std::string> ClassTuple;
   std::vector<ClassTuple> classes;
 
   Poco::Data::Statement statement(sqlSession);
@@ -135,7 +136,7 @@ void MySQLLoader::loadClasses(Poco::Data::Session &sqlSession,
   statement.execute();
 
   for (ClassTuple c : classes) {
-    unsigned long class_id = std::stol(c.get<0>());
+    unsigned long class_id = c.get<0>();
     AnnotatorLib::Class *c_ = new AnnotatorLib::Class(class_id, c.get<1>());
     session->addClass(shared_ptr<AnnotatorLib::Class>(c_));
   }
@@ -143,8 +144,8 @@ void MySQLLoader::loadClasses(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadObjectAttributes(Poco::Data::Session &sqlSession,
                                        std::shared_ptr<Object> object) {
-  typedef Poco::Tuple<std::string, std::string, std::string, std::string,
-                      std::string>
+  typedef Poco::Tuple<unsigned long, std::string, std::string, std::string,
+                      unsigned long>
       AttributeTuple;
   std::vector<AttributeTuple> attributes;
 
@@ -156,7 +157,7 @@ void MySQLLoader::loadObjectAttributes(Poco::Data::Session &sqlSession,
   statement.execute();
 
   for (AttributeTuple attribute : attributes) {
-    unsigned long id = std::stol(attribute.get<0>());
+    unsigned long id = attribute.get<0>();
     std::string name = attribute.get<1>();
     std::string type = attribute.get<2>();
     std::string value = attribute.get<3>();
@@ -188,16 +189,16 @@ void MySQLLoader::loadObjectAttributes(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadObjects(Poco::Data::Session &sqlSession,
                               Session *session) {
-  typedef Poco::Tuple<std::string, std::string, std::string> ObjectTuple;
+  typedef Poco::Tuple<unsigned long, std::string, unsigned long> ObjectTuple;
   std::vector<ObjectTuple> objects;
   Poco::Data::Statement statement(sqlSession);
   statement << "SELECT `id`,`name`,`class` FROM `objects`", into(objects);
   statement.execute();
 
   for (ObjectTuple o : objects) {
-    unsigned long object_id = std::stol(o.get<0>());
+    unsigned long object_id = o.get<0>();
     std::string object_name = o.get<1>();
-    unsigned long class_id = std::stol(o.get<2>());
+    unsigned long class_id = o.get<2>();
 
     std::shared_ptr<Object> object = std::make_shared<Object>(object_id);
     object->setName(object_name);
@@ -210,14 +211,13 @@ void MySQLLoader::loadObjects(Poco::Data::Session &sqlSession,
 
 void MySQLLoader::loadFrames(Poco::Data::Session &sqlSession,
                              Session *session) {
-  std::vector<std::string> frames;
+  std::vector<unsigned long> frames;
 
   Poco::Data::Statement statement(sqlSession);
   statement << "SELECT `frame` FROM `annotations`", into(frames);
   statement.execute();
 
-  for (std::string f : frames) {
-    unsigned long nmb = std::stol(f);
+  for (unsigned long nmb : frames) {
     Frame *frame = new Frame(nmb);
     session->addFrame(shared_ptr<Frame>(frame));
   }

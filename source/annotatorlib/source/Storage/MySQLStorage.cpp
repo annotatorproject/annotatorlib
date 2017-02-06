@@ -31,11 +31,11 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
   AnnotatorLib::Session::addAnnotation(annotation, add_associated_objects);
   if (_open) {
     struct AnnotationStruct {
-      std::string id;
-      std::string next;
-      std::string previous;
-      std::string object;
-      std::string frame;
+      unsigned long id;
+      unsigned long next;
+      unsigned long previous;
+      unsigned long object;
+      unsigned long frame;
       float x;
       float y;
       float width;
@@ -43,22 +43,20 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
       std::string type;
     };
     AnnotationStruct a_ = {
-        std::to_string(annotation->getId()),
-        "0",
-        "0",
-        std::to_string(annotation->getObject()->getId()),
-        "0",
+        annotation->getId(),
+        0L,
+        0L,
+        annotation->getObject()->getId(),
+        0L,
         annotation->getX(),
         annotation->getY(),
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext())
-      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getNext()) a_.next = annotation->getNext()->getId();
     if (annotation->getPrevious())
-      a_.previous = std::to_string(annotation->getPrevious()->getId());
-    if (annotation->getFrame())
-      a_.frame = std::to_string(annotation->getFrame()->getId());
+      a_.previous = annotation->getPrevious()->getId();
+    if (annotation->getFrame()) a_.frame = annotation->getFrame()->getId();
 
     Poco::Data::Statement statement = getStatement();
 
@@ -83,8 +81,8 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
-      statement << "DELETE FROM `annotations` WHERE `id`='" +
-                       std::to_string(id) + "';";
+      statement << "DELETE FROM `annotations` WHERE `id`=" +
+                       std::to_string(id) + ";";
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -98,11 +96,11 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
   AnnotatorLib::Session::updateAnnotation(annotation);
   if (_open && getAnnotation(annotation->getId())) {
     struct AnnotationStruct {
-      std::string id;
-      std::string next;
-      std::string previous;
-      std::string object;
-      std::string frame;
+      unsigned long id;
+      unsigned long next;
+      unsigned long previous;
+      unsigned long object;
+      unsigned long frame;
       float x;
       float y;
       float width;
@@ -110,22 +108,20 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
       std::string type;
     };
     AnnotationStruct a_ = {
-        std::to_string(annotation->getId()),
-        "0",
-        "0",
-        std::to_string(annotation->getObject()->getId()),
-        "0",
+        annotation->getId(),
+        0L,
+        0L,
+        annotation->getObject()->getId(),
+        0L,
         annotation->getX(),
         annotation->getY(),
         annotation->getWidth(),
         annotation->getHeight(),
         AnnotatorLib::AnnotationTypeToString(annotation->getType())};
-    if (annotation->getNext())
-      a_.next = std::to_string(annotation->getNext()->getId());
+    if (annotation->getNext()) a_.next = annotation->getNext()->getId();
     if (annotation->getPrevious())
-      a_.previous = std::to_string(annotation->getPrevious()->getId());
-    if (annotation->getFrame())
-      a_.frame = std::to_string(annotation->getFrame()->getId());
+      a_.previous = annotation->getPrevious()->getId();
+    if (annotation->getFrame()) a_.frame = annotation->getFrame()->getId();
 
     Poco::Data::Statement statement = getStatement();
 
@@ -150,10 +146,10 @@ bool MySQLStorage::addClass(shared_ptr<Class> c) {
   AnnotatorLib::Session::addClass(c);
   if (_open) {
     struct ClassStruct {
-      std::string id;
+      unsigned long id;
       std::string name;
     };
-    ClassStruct c_ = {std::to_string(c->getId()), c->getName()};
+    ClassStruct c_ = {c->getId(), c->getName()};
     Poco::Data::Statement statement = getStatement();
 
     try {
@@ -172,8 +168,8 @@ shared_ptr<Class> MySQLStorage::removeClass(Class *c) {
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
-      statement << "DELETE FROM `classes` WHERE `id`='" +
-                       std::to_string(c->getId()) + "';";
+      statement << "DELETE FROM `classes` WHERE `id`=" +
+                       std::to_string(c->getId()) + ";";
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -188,10 +184,10 @@ void MySQLStorage::updateClass(shared_ptr<Class> theClass) {
   AnnotatorLib::Session::updateClass(theClass);
   if (_open && getClass(theClass->getId())) {
     struct ClassStruct {
-      std::string id;
+      unsigned long id;
       std::string name;
     };
-    ClassStruct c_ = {std::to_string(theClass->getId()), theClass->getName()};
+    ClassStruct c_ = {theClass->getId(), theClass->getName()};
     Poco::Data::Statement statement = getStatement();
 
     try {
@@ -210,12 +206,12 @@ bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
   AnnotatorLib::Session::addObject(object, add_associated_objects);
   if (_open) {
     struct ObjectStruct {
-      std::string id;
+      unsigned long id;
       std::string name;
-      std::string _class;
+      unsigned long _class;
     };
-    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
-                       std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {object->getId(), object->getName(),
+                       object->getClass()->getId()};
     Poco::Data::Statement statement = getStatement();
 
     try {
@@ -236,8 +232,8 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
-      statement << "DELETE FROM `objects` WHERE `id`='" + std::to_string(id) +
-                       "';";
+      statement << "DELETE FROM `objects` WHERE `id`=" + std::to_string(id) +
+                       ";";
       statement.execute();
     } catch (Poco::Exception &e) {
       std::cout << e.what() << std::endl;
@@ -251,12 +247,12 @@ void MySQLStorage::updateObject(shared_ptr<Object> object) {
   AnnotatorLib::Session::updateObject(object);
   if (_open && getObject(object->getId())) {
     struct ObjectStruct {
-      std::string id;
+      unsigned long id;
       std::string name;
-      std::string _class;
+      unsigned long _class;
     };
-    ObjectStruct o_ = {std::to_string(object->getId()), object->getName(),
-                       std::to_string(object->getClass()->getId())};
+    ObjectStruct o_ = {object->getId(), object->getName(),
+                       object->getClass()->getId()};
     Poco::Data::Statement statement = getStatement();
 
     try {
@@ -309,19 +305,19 @@ Poco::Data::Statement MySQLStorage::getStatement() {
 void MySQLStorage::insertOrUpdateAnnotationAttributes(
     shared_ptr<Annotation> annotation) {
   struct AttributeStruct {
-    std::string id;
+    unsigned long id;
     std::string name;
     std::string type;
     std::string value;
-    std::string annotation_id;
+    unsigned long annotation_id;
   };
 
   for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
        annotation->getAttributes()) {
-    AttributeStruct a_ = {
-        std::to_string(attribute->getId()), attribute->getName(),
-        AttributeTypeToString(attribute->getType()),
-        attribute->getValue()->toString(), std::to_string(annotation->getId())};
+    AttributeStruct a_ = {attribute->getId(), attribute->getName(),
+                          AttributeTypeToString(attribute->getType()),
+                          attribute->getValue()->toString(),
+                          annotation->getId()};
 
     Poco::Data::Statement statement = getStatement();
 
@@ -341,19 +337,18 @@ void MySQLStorage::insertOrUpdateAnnotationAttributes(
 
 void MySQLStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
   struct AttributeStruct {
-    std::string id;
+    unsigned long id;
     std::string name;
     std::string type;
     std::string value;
-    std::string object_id;
+    unsigned long object_id;
   };
 
   for (std::shared_ptr<AnnotatorLib::Attribute> attribute :
        object->getAttributes()) {
-    AttributeStruct a_ = {
-        std::to_string(attribute->getId()), attribute->getName(),
-        AttributeTypeToString(attribute->getType()),
-        attribute->getValue()->toString(), std::to_string(object->getId())};
+    AttributeStruct a_ = {attribute->getId(), attribute->getName(),
+                          AttributeTypeToString(attribute->getType()),
+                          attribute->getValue()->toString(), object->getId()};
 
     Poco::Data::Statement statement = getStatement();
 
@@ -375,11 +370,11 @@ void MySQLStorage::createTables() {
   Poco::Data::Statement statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `annotations` ( \
-           `id` char(16) NOT NULL, \
-            `next` char(16) NOT NULL, \
-            `previous` char(16) NOT NULL, \
-            `object` char(16) NOT NULL, \
-            `frame` char(16) NOT NULL, \
+           `id` INT NOT NULL, \
+            `next` INT NOT NULL, \
+            `previous` INT NOT NULL, \
+            `object` INT NOT NULL, \
+            `frame` INT NOT NULL, \
             `x` float NOT NULL default 0, \
             `y` float NOT NULL default 0, \
            `width` float NOT NULL default 1, \
@@ -392,7 +387,7 @@ void MySQLStorage::createTables() {
   statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `classes` ("
-            << "`id` char(16) NOT NULL, "
+            << "`id` INT NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
             << "PRIMARY KEY (`id`)"
             << ") DEFAULT CHARSET=utf8;";
@@ -401,9 +396,9 @@ void MySQLStorage::createTables() {
   statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `objects` ("
-            << "`id` char(16) NOT NULL, "
+            << "`id` INT NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
-            << "`class` char(16) NOT NULL,"
+            << "`class` INT NOT NULL,"
             << "PRIMARY KEY (`id`)"
             << ") DEFAULT CHARSET=utf8;";
   statement.execute();
@@ -411,11 +406,11 @@ void MySQLStorage::createTables() {
   statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `object_attributes` ("
-            << "`id` char(16) NOT NULL, "
+            << "`id` INT NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
             << "`type` varchar(16) NOT NULL,"
             << "`value` varchar(4096) NOT NULL,"
-            << "`object_id` char(16) NOT NULL, "
+            << "`object_id` INT NOT NULL, "
             << "PRIMARY KEY (`id`)"
             << ") DEFAULT CHARSET=utf8;";
   statement.execute();
@@ -423,11 +418,11 @@ void MySQLStorage::createTables() {
   statement = getStatement();
 
   statement << "CREATE TABLE IF NOT EXISTS `annotation_attributes` ("
-            << "`id` char(16) NOT NULL, "
+            << "`id` INT NOT NULL, "
             << "`name` varchar(256) NOT NULL,"
             << "`type` varchar(16) NOT NULL,"
             << "`value` varchar(4096) NOT NULL,"
-            << "`annotation_id` char(16) NOT NULL, "
+            << "`annotation_id` INT NOT NULL, "
             << "PRIMARY KEY (`id`)"
             << ") DEFAULT CHARSET=utf8;";
   statement.execute();

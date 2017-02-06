@@ -7,11 +7,13 @@
  ************************************************************/
 
 #include "AnnotatorLib/Object.h"
-#include <assert.h>
-#include <algorithm>
-#include <boost/lexical_cast.hpp>
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Class.h"
+
+#include <assert.h>
+#include <algorithm>
+
+#include <boost/lexical_cast.hpp>
 
 // Derived includes directives
 

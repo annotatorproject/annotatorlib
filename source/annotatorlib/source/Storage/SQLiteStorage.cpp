@@ -52,16 +52,16 @@ void SQLiteStorage::createTables() {
   // statement.execute();
 
   statement << "CREATE TABLE IF NOT EXISTS `annotations` ( \
-           `id` varchar(16) NOT NULL, \
-            `next` varchar(16) NOT NULL, \
-            `previous` varchar(16) NOT NULL, \
-            `object` varchar(16) NOT NULL, \
-            `frame` varchar(16) NOT NULL, \
+           `id` INTEGER NOT NULL, \
+            `next` INTEGER NOT NULL, \
+            `previous` INTEGER NOT NULL, \
+            `object` INTEGER NOT NULL, \
+            `frame` INTEGER NOT NULL, \
             `x` REAL NOT NULL DEFAULT 0, \
             `y` REAL NOT NULL DEFAULT 0, \
            `width` REAL NOT NULL DEFAULT 1, \
             `height` REAL NOT NULL DEFAULT 1, \
-            `type` varchar(16) NOT NULL, \
+            `type` TEXT NOT NULL, \
             PRIMARY KEY (`id`) \
             );";
   statement.execute();
@@ -69,8 +69,8 @@ void SQLiteStorage::createTables() {
     statement = getStatement();
 
     statement << "CREATE TABLE IF NOT EXISTS `classes` ("
-              << "`id` char(16) NOT NULL, "
-              << "`name` varchar(256) NOT NULL,"
+              << "`id` INTEGER NOT NULL, "
+              << "`name` TEXT NOT NULL,"
               << "PRIMARY KEY (`id`)"
               << ");";
     statement.execute();
@@ -78,15 +78,13 @@ void SQLiteStorage::createTables() {
     statement = getStatement();
 
     statement << "CREATE TABLE IF NOT EXISTS `objects` ("
-              << "`id` char(16) NOT NULL, "
-              << "`name` varchar(256) NOT NULL,"
-              << "`class` char(16) NOT NULL,"
+              << "`id` INTEGER NOT NULL, "
+              << "`name` TEXT NOT NULL,"
+              << "`class` INTEGER NOT NULL,"
               << "PRIMARY KEY (`id`)"
               << ");";
     statement.execute();*/
 }
-
-// static attributes (if any)
 
 }  // of namespace Storage
 }  // of namespace AnnotatorLib

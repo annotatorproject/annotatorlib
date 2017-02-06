@@ -27,8 +27,10 @@ set(DEFAULT_PROJECT_OPTIONS
 
 if( OPTION_CONAN_PACKAGES )
 	# run 'conan install ..' first
-	include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-	conan_basic_setup()
+	include(cmake/conan.cmake)
+	conan_cmake_run(CONANFILE conanfile.txt
+                BASIC_SETUP
+                BUILD missing)
 	set(DEFAULT_LIBRARIES ${CONAN_LIBS})
 else( OPTION_CONAN_PACKAGES )
 

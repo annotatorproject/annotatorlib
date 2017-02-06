@@ -1,0 +1,37 @@
+version: 1.0.{build}
+os: Visual Studio 2015
+platform: Win32
+
+branches:
+  only:
+   - master
+
+environment:
+  BOOST_ROOT: C:\Libraries\boost_1_59_0
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
+
+clone_folder: c:\dev\src
+
+init:
+- env
+- set POCO_INSTALL_PREFIX=%PROGRAMFILES%\Poco
+- set PATH=C:\MinGW\bin;%PATH%;%POCO_INSTALL_PREFIX%\bin
+
+install:
+ - cmd: echo "Downloading conan..."
+ - cmd: set PATH=%PATH%;%PYTHON%/Scripts/
+ - cmd: pip.exe install conan
+ - cmd: conan user
+ - cmd: conan --version
+
+before_build:
+  - cd c:\dev\src
+  - md build
+  - cmd: conan install Poco/1.7.0@lasote/stable
+
+build_script:
+  - cd c:\dev\src\build
+  - cmake .. -G %makefiles% -DCMAKE_INSTALL_PREFIX="c:/dev/install"
+  - cmake --build . --config %CONFIGURATION%
+
+test: off

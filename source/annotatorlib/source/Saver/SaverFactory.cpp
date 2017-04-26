@@ -45,6 +45,17 @@ AbstractSaver *SaverFactory::createSaver(
   }
 }
 
+std::list<std::string> SaverFactory::availableSaver() {
+  std::list<std::string> savers;
+  savers.push_back("xml");
+  savers.push_back("json");
+  savers.push_back("mysql");
+#ifdef WITH_SQLITE3
+  savers.push_back("sqlite");
+#endif
+  return savers;
+}
+
 }  // of namespace Saver
 }  // of namespace AnnotatorLib
 

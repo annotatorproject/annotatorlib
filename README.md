@@ -1,7 +1,7 @@
 Annotator Library
 =================
 
-[![Stories in Ready] [waffle-image]] [waffle] [![Build Status] [travis-image] ] [travis] [![Coverage_Status] [coveralls-image] ] [coveralls]  [![Documentation] [codedocs-image] ] [codedocs] [![Gitter] [gitter-image] ] [gitter]
+[![Stories in Ready][waffle-image]][waffle][![Build Status][travis-image]][travis][![Coverage_Status][coveralls-image]][coveralls][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
 
 [travis-image]: https://travis-ci.org/lasmue/annotatorlib.png?branch=master

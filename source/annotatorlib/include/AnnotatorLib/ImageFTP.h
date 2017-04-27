@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
 #define ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
 
@@ -6,14 +6,15 @@
  ImageFolder class header
  ************************************************************/
 
-#include <boost/filesystem.hpp>
-#include <vector>
-
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/ImageSet.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include <AnnotatorLib/ImageSet.h>
+#include <string>
+#include <vector>
+
 #include <Poco/Net/FTPClientSession.h>
+#include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
 
@@ -39,6 +40,8 @@ class ANNOTATORLIB_API ImageFTP : public ImageSet {
    * @return
    */
   virtual Image getImage(unsigned long position) override;
+
+  virtual std::string getImagePath(unsigned long position) override;
 
   virtual bool gotoPosition(unsigned long position) override;
 

@@ -56,15 +56,9 @@ class ANNOTATORLIB_API Session {
    * Informs the session that internals of the Attribute have changed.
    * @param attribute
    */
-  virtual void updateAttribute(shared_ptr<Attribute> attribute) {}
+  virtual void updateAttribute(shared_ptr<Attribute> /* attribute */) {}
 
   // Annotations
-
-  //  virtual std::pair<std::unordered_map<unsigned long,
-  //  std::shared_ptr<Annotation>>::const_iterator,
-  //  std::unordered_map<unsigned long,
-  //  std::shared_ptr<Annotation>>::const_iterator> getAnnotationsIterator()
-  //  const;
 
   virtual std::unordered_map<unsigned long, std::shared_ptr<Annotation>> const&
   getAnnotations() const {
@@ -89,7 +83,7 @@ class ANNOTATORLIB_API Session {
    * Informs session that internals of the Annotation have changed.
    * @param annotation
    */
-  virtual void updateAnnotation(shared_ptr<Annotation> annotation) {}
+  virtual void updateAnnotation(shared_ptr<Annotation> /* annotation */) {}
 
   // Classes
   virtual std::unordered_map<std::string, std::shared_ptr<Class>> const&
@@ -126,7 +120,7 @@ class ANNOTATORLIB_API Session {
    * Informs session that internals of the Class have changed.
    * @param theClass
    */
-  virtual void updateClass(shared_ptr<Class> theClass) {}
+  virtual void updateClass(shared_ptr<Class> /* theClass */) {}
 
   // Frames
   virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const&
@@ -157,7 +151,7 @@ class ANNOTATORLIB_API Session {
    * Informs session that internals of the Frame have changed.
    * @param frame
    */
-  virtual void updateFrame(shared_ptr<Frame> frame) {}
+  virtual void updateFrame(shared_ptr<Frame> /* frame */) {}
 
   /**
    * @brief Will add the given object and all associated annotations, plus
@@ -177,7 +171,7 @@ class ANNOTATORLIB_API Session {
    * Informs session that internals of the Object have changed.
    * @param object
    */
-  virtual void updateObject(shared_ptr<Object> object) {}
+  virtual void updateObject(shared_ptr<Object> /* object */) {}
 
   virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const&
   getObjects() const {
@@ -205,8 +199,6 @@ class ANNOTATORLIB_API Session {
   unsigned int commandIndex = 0;
   std::mutex mtx;
   std::vector<std::shared_ptr<AnnotatorLib::Commands::Command>> commands;
-
-  AnnotatorAlgo::AnnotatorAlgoInterface* annotatorAlgo;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

@@ -35,6 +35,8 @@ Image Video::getImage(unsigned long position) {
   return img;
 }
 
+std::string Video::getImagePath(unsigned long frame) { return ""; }
+
 bool Video::gotoPosition(unsigned long position) {
   return capture->set(CV_CAP_PROP_POS_FRAMES, position);
 }

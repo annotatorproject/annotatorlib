@@ -7,6 +7,7 @@
  ImageFolder class header
  ************************************************************/
 
+#include <string>
 #include <vector>
 
 #include <opencv2/opencv.hpp>
@@ -30,16 +31,18 @@ class ANNOTATORLIB_API Camera : public ImageSet {
    *
    * @return type
    */
-  virtual ImageSetType getType();
+  virtual ImageSetType getType() override;
 
   /**
    *
    * @param frame
    * @return image
    */
-  virtual Image getImage(unsigned long /*in*/ frame) override;
+  virtual Image getImage(unsigned long /* frame */) override;
 
-  virtual bool gotoPosition(unsigned long position) override;
+  virtual std::string getImagePath(unsigned long /* frame */) override;
+
+  virtual bool gotoPosition(unsigned long /* position */) override;
 
   virtual long getPosition() override;
 
@@ -47,25 +50,25 @@ class ANNOTATORLIB_API Camera : public ImageSet {
    *
    * @return next
    */
-  virtual bool hasNext();
+  virtual bool hasNext() override;
 
   /**
    *
    * @return image
    */
-  virtual Image next();
+  virtual Image next() override;
 
   /**
    *
    * @return size
    */
-  virtual unsigned int size();
+  virtual unsigned int size() override;
 
   virtual unsigned int getFPS() override;
 
-  virtual std::string getPath();
+  virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other);
+  virtual bool equals(ImageSet *other) override;
 
  protected:
   void initCamera();

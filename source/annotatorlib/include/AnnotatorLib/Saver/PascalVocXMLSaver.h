@@ -26,11 +26,13 @@ namespace Saver {
 class ANNOTATORLIB_API PascalVocXMLSaver : public AbstractSaver {
  public:
   void saveFrame(const Session *session, const shared_ptr<Frame> frame);
-  void saveAnnotation(const Annotation annotation);
-  void setPath(std::string path);
-  StorageType getType();
-  void saveSession(const Session *session);
-  bool close();
+  void saveAnnotation(const Annotation annotation) override;
+  void setPath(std::string path) override;
+  StorageType getType() override;
+  void saveSession(const Session *session) override;
+  virtual void saveProject(
+      std::shared_ptr<AnnotatorLib::Project> project) override;
+  bool close() override;
 
  protected:
   Poco::AutoPtr<Poco::XML::Element> fromObject(const Session *session,
@@ -38,6 +40,8 @@ class ANNOTATORLIB_API PascalVocXMLSaver : public AbstractSaver {
                                                const shared_ptr<Frame> frame);
 
   std::string path;
+
+  std::shared_ptr<AnnotatorLib::Project> project;
 
   Poco::AutoPtr<Poco::XML::Document> document;
 };

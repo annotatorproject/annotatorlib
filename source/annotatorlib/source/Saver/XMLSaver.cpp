@@ -51,7 +51,7 @@ void XMLSaver::saveFrame(const Session *session,
   writer.writeNode(ostr, document);
 }
 
-void XMLSaver::saveAnnotation(Annotation annotation) {}
+void XMLSaver::saveAnnotation(Annotation /* annotation */) {}
 
 void XMLSaver::setPath(std::string path) { this->path = path; }
 
@@ -61,6 +61,10 @@ void XMLSaver::saveSession(const Session *session) {
   for (auto &pair : session->getFrames()) {
     saveFrame(session, pair.second);
   }
+}
+
+void XMLSaver::saveProject(std::shared_ptr<Project> project) {
+  saveSession(project->getSession().get());
 }
 
 bool XMLSaver::close() { return true; }

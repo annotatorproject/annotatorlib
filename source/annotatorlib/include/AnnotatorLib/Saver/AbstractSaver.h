@@ -12,6 +12,7 @@
 
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/Project.h>
 
 namespace AnnotatorLib {
 
@@ -45,6 +46,8 @@ class ANNOTATORLIB_API AbstractSaver {
   virtual AnnotatorLib::StorageType getType() = 0;
 
   virtual void saveSession(const AnnotatorLib::Session* session) = 0;
+
+  virtual void saveProject(std::shared_ptr<AnnotatorLib::Project> project) = 0;
 
   virtual bool close() = 0;
 

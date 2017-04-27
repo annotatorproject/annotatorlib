@@ -14,13 +14,17 @@
 namespace AnnotatorLib {
 namespace Saver {
 
-void MySQLSaver::saveAnnotation(const Annotation annotation) {}
+void MySQLSaver::saveAnnotation(const Annotation /* annotation */) {}
 
-void MySQLSaver::setPath(std::string path) {}
+void MySQLSaver::setPath(std::string /* path */) {}
 
 StorageType MySQLSaver::getType() { return AnnotatorLib::StorageType::MYSQL; }
 
-void MySQLSaver::saveSession(const Session *session) {}
+void MySQLSaver::saveSession(const Session *) {}
+
+void MySQLSaver::saveProject(std::shared_ptr<Project> project) {
+  saveSession(project->getSession().get());
+}
 
 bool MySQLSaver::close() { return true; }
 

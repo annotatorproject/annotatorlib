@@ -20,11 +20,12 @@ namespace Saver {
 class ANNOTATORLIB_API MySQLSaver : public AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveAnnotation(const Annotation annotation);
-  void setPath(std::string path);
-  StorageType getType();
-  void saveSession(const AnnotatorLib::Session* session);
-  bool close();
+  void saveAnnotation(const Annotation /* annotation */) override;
+  void setPath(std::string /* path */) override;
+  StorageType getType() override;
+  void saveSession(const AnnotatorLib::Session* /* session */) override;
+  void saveProject(std::shared_ptr<AnnotatorLib::Project> project) override;
+  bool close() override;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_VIDEO_H
 #define ANNOTATOR_ANNOTATORLIB_VIDEO_H
 
@@ -7,9 +7,10 @@
  ************************************************************/
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/ImageSet.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include <AnnotatorLib/ImageSet.h>
+#include <string>
 
 namespace cv {
 class VideoCapture;
@@ -35,7 +36,7 @@ class ANNOTATORLIB_API Video : public ImageSet {
    *
    * @return type
    */
-  virtual ImageSetType getType();
+  virtual ImageSetType getType() override;
 
   /**
    * @brief getImage
@@ -43,6 +44,8 @@ class ANNOTATORLIB_API Video : public ImageSet {
    * @return image at given position
    */
   virtual Image getImage(unsigned long position) override;
+
+  virtual std::string getImagePath(unsigned long /*in*/ frame) override;
 
   bool gotoPosition(unsigned long position) override;
 
@@ -52,25 +55,25 @@ class ANNOTATORLIB_API Video : public ImageSet {
    * @brief hasNext
    * @return true if index greater than size
    */
-  virtual bool hasNext();
+  virtual bool hasNext() override;
 
   /**
    *
    * @return image at next index
    */
-  virtual Image next();
+  virtual Image next() override;
 
   /**
    *
    * @return size
    */
-  virtual unsigned int size();
+  virtual unsigned int size() override;
 
   virtual unsigned int getFPS() override;
 
-  virtual std::string getPath();
+  virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other);
+  virtual bool equals(ImageSet *other) override;
 
  protected:
   void initCapture();

@@ -7,11 +7,13 @@
  ************************************************************/
 
 // include associated header file
-#include <opencv2/opencv.hpp>
+
+#include "AnnotatorLib/ImageFolder.h"
+
 #include <set>
 #include <stdexcept>
 
-#include "AnnotatorLib/ImageFolder.h"
+#include <opencv2/opencv.hpp>
 
 // Derived includes directives
 
@@ -36,6 +38,10 @@ Image ImageFolder::getImage(unsigned long position) {
   } catch (std::exception &e) {
   }
   return img;
+}
+
+std::string ImageFolder::getImagePath(unsigned long position) {
+  return (images.begin() + position)->string();
 }
 
 bool ImageFolder::gotoPosition(unsigned long position) {

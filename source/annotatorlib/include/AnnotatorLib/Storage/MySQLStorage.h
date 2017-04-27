@@ -23,15 +23,15 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
  public:
   virtual ~MySQLStorage();
 
-  virtual bool open();
+  virtual bool open() override;
 
-  bool isOpen();
+  bool isOpen() override;
 
-  bool flush();
+  bool flush() override;
 
-  bool isSaved();
+  bool isSaved() override;
 
-  virtual bool close();
+  virtual bool close() override;
 
   /**
    * @brief setPath

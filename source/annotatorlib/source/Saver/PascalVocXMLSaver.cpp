@@ -16,6 +16,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include <boost/filesystem.hpp>
+
 #include <Poco/DOM/DOMWriter.h>
 #include <Poco/DOM/Text.h>
 #include <Poco/XML/XMLWriter.h>
@@ -31,7 +33,10 @@ void PascalVocXMLSaver::saveFrame(const Session *session,
   // prepend zeros
   number = std::string(8 - number.length(), '0') + number;
 
-  std::string filename = path + "/" + number + ".xml";
+  boost::filesystem::path image_path(
+      project->getImageSet()->getImagePath(frame->getFrameNumber()));
+  std::string filename =
+      path + "/" + image_path.filename().stem().string() + ".xml";
 
   std::ofstream ostr(filename, std::ios::out);
   Poco::XML::DOMWriter writer;
@@ -42,25 +47,44 @@ void PascalVocXMLSaver::saveFrame(const Session *session,
   Poco::AutoPtr<Poco::XML::Element> root =
       document->createElement("annotation");
 
+  // folder
+  Poco::AutoPtr<Poco::XML::Element> folder = document->createElement("folder");
+  if (project) {
+    folder->appendChild(
+        document->createTextNode(image_path.parent_path().filename().string()));
+  } else
+    folder->appendChild(document->createTextNode("."));
+  root->appendChild(folder);
+
   // filename
   Poco::AutoPtr<Poco::XML::Element> f = document->createElement("filename");
-  f->appendChild(document->createTextNode(number));
+  if (project) {
+    f->appendChild(
+        document->createTextNode(image_path.filename().stem().string()));
+  } else
+    f->appendChild(document->createTextNode(number));
   root->appendChild(f);
 
   // path
   Poco::AutoPtr<Poco::XML::Element> p = document->createElement("path");
-  p->appendChild(document->createTextNode(path + "/" + number));
+  if (project)
+    p->appendChild(document->createTextNode(
+        project->getImageSet()->getImagePath(frame->getFrameNumber())));
+  else
+    p->appendChild(document->createTextNode(path + "/" + number));
   root->appendChild(p);
 
   // source
   Poco::AutoPtr<Poco::XML::Element> source = document->createElement("source");
-  Poco::AutoPtr<Poco::XML::Element> database = document->createElement("database");
+  Poco::AutoPtr<Poco::XML::Element> database =
+      document->createElement("database");
   database->appendChild(document->createTextNode("Unknown"));
   source->appendChild(database);
   root->appendChild(source);
 
   // segmented
-  Poco::AutoPtr<Poco::XML::Element> segmented = document->createElement("segmented");
+  Poco::AutoPtr<Poco::XML::Element> segmented =
+      document->createElement("segmented");
   segmented->appendChild(document->createTextNode("0"));
   root->appendChild(segmented);
 
@@ -75,16 +99,21 @@ void PascalVocXMLSaver::saveFrame(const Session *session,
   writer.writeNode(ostr, document);
 }
 
-void PascalVocXMLSaver::saveAnnotation(Annotation annotation) {}
+void PascalVocXMLSaver::saveAnnotation(Annotation) {}
 
 void PascalVocXMLSaver::setPath(std::string path) { this->path = path; }
 
-StorageType PascalVocXMLSaver::getType() { return StorageType::XML; }
+StorageType PascalVocXMLSaver::getType() { return StorageType::PASCALVOCXML; }
 
 void PascalVocXMLSaver::saveSession(const Session *session) {
   for (auto &pair : session->getFrames()) {
     saveFrame(session, pair.second);
   }
+}
+
+void PascalVocXMLSaver::saveProject(std::shared_ptr<Project> project) {
+  this->project = project;
+  saveSession(project->getSession().get());
 }
 
 bool PascalVocXMLSaver::close() { return true; }

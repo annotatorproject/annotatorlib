@@ -42,6 +42,10 @@ Image ImageFTP::getImage(unsigned long position) {
   return img;
 }
 
+std::string ImageFTP::getImagePath(unsigned long position) {
+  return (images.begin() + position)->string();
+}
+
 bool ImageFTP::gotoPosition(unsigned long position) {
   if (images.size() < position) return false;
   this->position = position;

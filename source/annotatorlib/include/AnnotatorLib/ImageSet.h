@@ -31,6 +31,13 @@ class ANNOTATORLIB_API ImageSet {
   virtual Image getImage(unsigned long position) = 0;
 
   /**
+ * @brief getImagePath
+ * @param position the position to get the image from. 0 is first image
+ * @return path to this image
+ */
+  virtual std::string getImagePath(unsigned long position) = 0;
+
+  /**
  * @brief gotoPosition
  * @param position to change to
  * @return position is withing set size

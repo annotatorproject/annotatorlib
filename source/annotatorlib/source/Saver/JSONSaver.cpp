@@ -40,6 +40,10 @@ void JSONSaver::saveSession(const Session* session) {
   this->session = sessionToJson(session);
 }
 
+void JSONSaver::saveProject(std::shared_ptr<Project> project) {
+  saveSession(project->getSession().get());
+}
+
 bool JSONSaver::close() {
   save();
   return true;

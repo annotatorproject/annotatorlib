@@ -59,6 +59,10 @@ enum class StorageType {
   /**
    *
    */
+  PASCALVOCXML,
+  /**
+   *
+   */
   MYSQL,
   /**
    *

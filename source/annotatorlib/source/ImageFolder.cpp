@@ -19,9 +19,9 @@
 
 namespace AnnotatorLib {
 
-const std::set<std::string> imagetypes = {(".bmp"), (".pbm"),  (".pgm"),
-                                          (".ppm"), (".jpg"),  (".jpeg"),
-                                          (".png"), (".tiff"), (".tif")};
+const std::set<std::string> imagetypes = {
+    (".bmp"), (".pbm"),  (".pgm"), (".ppm"), (".jpg"), (".jpeg"),
+    (".png"), (".tiff"), (".tif"), (".PNG"), (".JPG"), (".JPEG")};
 
 ImageFolder::ImageFolder(std::string path) {
   this->path = path;

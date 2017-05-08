@@ -82,6 +82,28 @@ void PascalVocXMLSaver::saveFrame(const Session *session,
   source->appendChild(database);
   root->appendChild(source);
 
+  // size
+  Poco::AutoPtr<Poco::XML::Element> size = document->createElement("size");
+  // width
+  Poco::AutoPtr<Poco::XML::Element> size_width =
+      document->createElement("width");
+  int w = project->getImageSet()->getImage(frame->getFrameNumber()).cols;
+  size_width->appendChild(document->createTextNode(std::to_string(w)));
+  size->appendChild(size_width);
+  // height
+  Poco::AutoPtr<Poco::XML::Element> size_height =
+      document->createElement("height");
+  int h = project->getImageSet()->getImage(frame->getFrameNumber()).rows;
+  size_height->appendChild(document->createTextNode(std::to_string(h)));
+  size->appendChild(size_height);
+  // depth
+  Poco::AutoPtr<Poco::XML::Element> size_depth =
+      document->createElement("depth");
+  int d = project->getImageSet()->getImage(frame->getFrameNumber()).channels();
+  size_depth->appendChild(document->createTextNode(std::to_string(d)));
+  size->appendChild(size_depth);
+  root->appendChild(size);
+
   // segmented
   Poco::AutoPtr<Poco::XML::Element> segmented =
       document->createElement("segmented");

@@ -126,20 +126,7 @@ Poco::AutoPtr<Poco::XML::Element> PascalVocXMLSaver::fromObject(
   Poco::AutoPtr<Poco::XML::Element> name = document->createElement("name");
   name->appendChild(document->createTextNode(object->getClass()->getName()));
   element->appendChild(name);
-  // pose
-  Poco::AutoPtr<Poco::XML::Element> pose = document->createElement("pose");
-  pose->appendChild(document->createTextNode("Unspecified"));
-  element->appendChild(pose);
-  // truncated
-  Poco::AutoPtr<Poco::XML::Element> truncated =
-      document->createElement("truncated");
-  truncated->appendChild(document->createTextNode("truncated"));
-  element->appendChild(truncated);
-  // difficult
-  Poco::AutoPtr<Poco::XML::Element> difficult =
-      document->createElement("difficult");
-  difficult->appendChild(document->createTextNode("0"));
-  element->appendChild(difficult);
+
   // bndbox
   shared_ptr<Annotation> annotation = session->getAnnotation(frame, object);
   Poco::AutoPtr<Poco::XML::Element> bndbox = document->createElement("bndbox");
@@ -163,6 +150,15 @@ Poco::AutoPtr<Poco::XML::Element> PascalVocXMLSaver::fromObject(
   bndbox->appendChild(ymax);
 
   element->appendChild(bndbox);
+
+  // attributes
+  for (shared_ptr<Attribute> attribute : annotation->getAttributes()) {
+    Poco::AutoPtr<Poco::XML::Element> attrElement =
+        document->createElement(attribute->getName());
+    attrElement->appendChild(
+        document->createTextNode(attribute->getValue()->toString()));
+    element->appendChild(attrElement);
+  }
 
   return element;
 }

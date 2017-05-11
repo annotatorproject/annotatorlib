@@ -4,20 +4,20 @@ Annotator Library
 [![Stories in Ready][waffle-image]][waffle][![Build Status][travis-image]][travis][![Coverage_Status][coveralls-image]][coveralls][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
 
-[travis-image]: https://travis-ci.org/lasmue/annotatorlib.png?branch=master
-[travis]: http://travis-ci.org/lasmue/annotatorlib
+[travis-image]: https://travis-ci.org/annotatorproject/annotatorlib.png?branch=master
+[travis]: http://travis-ci.org/annotatorproject/annotatorlib
 
-[coveralls-image]: https://img.shields.io/coveralls/lasmue/annotatorlib.svg?label=Coverage
-[coveralls]: https://coveralls.io/github/lasmue/annotatorlib
+[coveralls-image]: https://img.shields.io/coveralls/annotatorproject/annotatorlib.svg?label=Coverage
+[coveralls]: https://coveralls.io/github/annotatorproject/annotatorlib
 
-[codedocs-image]: https://codedocs.xyz/lasmue/annotatorlib.svg
-[codedocs]: https://codedocs.xyz/lasmue/annotatorlib/
+[codedocs-image]: https://codedocs.xyz/annotatorproject/annotatorlib.svg
+[codedocs]: https://codedocs.xyz/annotatorproject/annotatorlib/
 
 [gitter-image]: https://badges.gitter.im/Join%20Chat.svg
-[gitter]: https://gitter.im/lasmue/annotatorlib
+[gitter]: https://gitter.im/annotatorproject/annotatorlib
 
-[waffle-image]: https://badge.waffle.io/lasmue/annotatorlib.svg?label=ready&title=Ready
-[waffle]: http://waffle.io/lasmue/annotatorlib
+[waffle-image]: https://badge.waffle.io/annotatorproject/annotatorlib.svg?label=ready&title=Ready
+[waffle]: http://waffle.io/annotatorproject/annotatorlib
 
 ### Quick start
 
@@ -40,7 +40,7 @@ make -j2
 Then build.
 
 ```sh
-git clone https://github.com/lasmue/annotatorlib
+git clone https://github.com/annotatorproject/annotatorlib
 git submodule update --init --recursive
 cd annotatorlib
 mkdir build
@@ -51,7 +51,7 @@ make
 
 ## Build coverage
 ```sh
-git clone https://github.com/lasmue/annotatorlib
+git clone https://github.com/annotatorproject/annotatorlib
 git submodule update --init --recursive
 cd annotatorlib
 mkdir build

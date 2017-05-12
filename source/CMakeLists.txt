@@ -16,6 +16,8 @@ configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/AnnotatorLib/${M
 set(IDE_FOLDER "")
 add_subdirectory(annotatorlib)
 
+add_subdirectory(storages)
+
 # Tests
 set(IDE_FOLDER "Tests")
 add_subdirectory(tests)

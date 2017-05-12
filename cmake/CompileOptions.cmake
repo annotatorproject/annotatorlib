@@ -36,7 +36,7 @@ else( OPTION_CONAN_PACKAGES )
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenCV 3 REQUIRED)
-find_package(Poco COMPONENTS Foundation Util Data Net DataSQLite DataMySQL MongoDB REQUIRED)
+find_package(Poco COMPONENTS Foundation Util Data Net DataSQLite DataMySQL REQUIRED)
 
 # 
 # Include directories

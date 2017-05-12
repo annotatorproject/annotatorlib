@@ -12,18 +12,16 @@
 
 #include <Poco/MongoDB/Connection.h>
 
-namespace AnnotatorLib {
-namespace Loader {
 
 /************************************************************/
 /**
  * @brief The MongoDBLoader class
  * Loads saved data from mysql database
  */
-class ANNOTATORLIB_API MongoDBLoader : public AbstractLoader {
+class ANNOTATORLIB_API MongoDBLoader : public AnnotatorLib::Loader::AbstractLoader {
  public:
   void setPath(std::string path) override;
-  StorageType getType() override;
+  AnnotatorLib::StorageType getType() override;
   void loadSession(AnnotatorLib::Session *session) override;
 
  protected:
@@ -46,9 +44,6 @@ class ANNOTATORLIB_API MongoDBLoader : public AbstractLoader {
   void loadFrames(Poco::MongoDB::Connection &connection,
                   AnnotatorLib::Session *session);
 };
-
-}  // of namespace Loader
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MongoDBLoader class header

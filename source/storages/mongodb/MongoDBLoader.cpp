@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/MongoDBLoader.h>
+#include "MongoDBLoader.h"
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
 
@@ -17,16 +17,13 @@
 
 using std::shared_ptr;
 
-namespace AnnotatorLib {
-namespace Loader {
-
 void MongoDBLoader::setPath(std::string path) { this->path = path; }
 
-StorageType MongoDBLoader::getType() {
+AnnotatorLib::StorageType MongoDBLoader::getType() {
   return AnnotatorLib::StorageType::MONGODB;
 }
 
-void MongoDBLoader::loadSession(Session *session) {
+void MongoDBLoader::loadSession(AnnotatorLib::Session *session) {
   Poco::URI uri(path);
   Poco::MongoDB::Connection connection(
       uri.getHost(), (uri.getPort() == 0) ? 27017 : uri.getPort());
@@ -41,10 +38,10 @@ void MongoDBLoader::loadSession(Session *session) {
 }
 
 void MongoDBLoader::loadAttributes(Poco::MongoDB::Connection &connection,
-                                   Session *session) {}
+                                   AnnotatorLib::Session *session) {}
 
 void MongoDBLoader::loadAnnotations(Poco::MongoDB::Connection &connection,
-                                    Session *session) {
+                                    AnnotatorLib::Session *session) {
   Poco::MongoDB::Cursor cursor(dbname, "annotations");
 
   Poco::MongoDB::ResponseMessage &response = cursor.next(connection);
@@ -59,14 +56,14 @@ void MongoDBLoader::loadAnnotations(Poco::MongoDB::Connection &connection,
       float y = (*it)->get<double>("y");
       float width = (*it)->get<double>("width");
       float height = (*it)->get<double>("height");
-      AnnotationType type =
-          AnnotationTypeFromString((*it)->get<std::string>("type"));
+      AnnotatorLib::AnnotationType type =
+          AnnotatorLib::AnnotationTypeFromString((*it)->get<std::string>("type"));
 
-      shared_ptr<Object> o = session->getObject(object_id);
-      shared_ptr<Frame> f = session->getFrame(frame_id);
+      shared_ptr<AnnotatorLib::Object> o = session->getObject(object_id);
+      shared_ptr<AnnotatorLib::Frame> f = session->getFrame(frame_id);
 
       if (o && f) {
-        shared_ptr<Annotation> a = Annotation::make_shared(f, o, type);
+        shared_ptr<AnnotatorLib::Annotation> a = AnnotatorLib::Annotation::make_shared(f, o, type);
         a->setPosition(x, y, width, height);
         session->addAnnotation(a);
         loadAnnotationAttributes(connection, a);
@@ -81,7 +78,7 @@ void MongoDBLoader::loadAnnotations(Poco::MongoDB::Connection &connection,
 
 void MongoDBLoader::loadAnnotationAttributes(
     Poco::MongoDB::Connection &connection,
-    std::shared_ptr<Annotation> annotation) {
+    std::shared_ptr<AnnotatorLib::Annotation> annotation) {
   Poco::MongoDB::Cursor cursor(dbname, "annotation_attributes");
   cursor.query().selector().add("annotation", (long)annotation->getId());
 
@@ -95,25 +92,25 @@ void MongoDBLoader::loadAnnotationAttributes(
       std::string type = (*it)->get<std::string>("type");
       std::string value = (*it)->get<std::string>("value");
 
-      AttributeType t = AttributeTypeFromString(type);
-      std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
-      std::shared_ptr<AttributeValue> av;
+      AnnotatorLib::AttributeType t = AnnotatorLib::AttributeTypeFromString(type);
+      std::shared_ptr<AnnotatorLib::Attribute> a = std::make_shared<AnnotatorLib::Attribute>(id, t, name);
+      std::shared_ptr<AnnotatorLib::AttributeValue> av;
       switch (t) {
-        case AttributeType::STRING:
-          av = std::make_shared<AttributeValue>(value);
+        case AnnotatorLib::AttributeType::STRING:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value);
           break;
-        case AttributeType::INTEGER:
-          av = std::make_shared<AttributeValue>(std::stol(value));
+        case AnnotatorLib::AttributeType::INTEGER:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(std::stol(value));
           break;
-        case AttributeType::FLOAT:
-          av = std::make_shared<AttributeValue>(std::stod(value));
+        case AnnotatorLib::AttributeType::FLOAT:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(std::stod(value));
           break;
-        case AttributeType::BOOLEAN:
-          av = std::make_shared<AttributeValue>(value == "true" ||
+        case AnnotatorLib::AttributeType::BOOLEAN:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value == "true" ||
                                                 value == "True");
           break;
         default:
-          av = std::make_shared<AttributeValue>(value);
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value);
       };
       a->setValue(av);
       annotation->addAttribute(a);
@@ -126,7 +123,7 @@ void MongoDBLoader::loadAnnotationAttributes(
 }
 
 void MongoDBLoader::loadClasses(Poco::MongoDB::Connection &connection,
-                                Session *session) {
+                                AnnotatorLib::Session *session) {
   Poco::MongoDB::Cursor cursor(dbname, "classes");
 
   Poco::MongoDB::ResponseMessage &response = cursor.next(connection);
@@ -147,7 +144,7 @@ void MongoDBLoader::loadClasses(Poco::MongoDB::Connection &connection,
 }
 
 void MongoDBLoader::loadObjectAttributes(Poco::MongoDB::Connection &connection,
-                                         std::shared_ptr<Object> object) {
+                                         std::shared_ptr<AnnotatorLib::Object> object) {
   Poco::MongoDB::Cursor cursor(dbname, "object_attributes");
   cursor.query().selector().add("object", (long)object->getId());
 
@@ -161,25 +158,25 @@ void MongoDBLoader::loadObjectAttributes(Poco::MongoDB::Connection &connection,
       std::string type = (*it)->get<std::string>("type");
       std::string value = (*it)->get<std::string>("value");
 
-      AttributeType t = AttributeTypeFromString(type);
-      std::shared_ptr<Attribute> a = std::make_shared<Attribute>(id, t, name);
-      std::shared_ptr<AttributeValue> av;
+      AnnotatorLib::AttributeType t = AnnotatorLib::AttributeTypeFromString(type);
+      std::shared_ptr<AnnotatorLib::Attribute> a = std::make_shared<AnnotatorLib::Attribute>(id, t, name);
+      std::shared_ptr<AnnotatorLib::AttributeValue> av;
       switch (t) {
-        case AttributeType::STRING:
-          av = std::make_shared<AttributeValue>(value);
+        case AnnotatorLib::AttributeType::STRING:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value);
           break;
-        case AttributeType::INTEGER:
-          av = std::make_shared<AttributeValue>(std::stol(value));
+        case AnnotatorLib::AttributeType::INTEGER:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(std::stol(value));
           break;
-        case AttributeType::FLOAT:
-          av = std::make_shared<AttributeValue>(std::stod(value));
+        case AnnotatorLib::AttributeType::FLOAT:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(std::stod(value));
           break;
-        case AttributeType::BOOLEAN:
-          av = std::make_shared<AttributeValue>(value == "true" ||
+        case AnnotatorLib::AttributeType::BOOLEAN:
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value == "true" ||
                                                 value == "True");
           break;
         default:
-          av = std::make_shared<AttributeValue>(value);
+          av = std::make_shared<AnnotatorLib::AttributeValue>(value);
       };
       a->setValue(av);
       object->addAttribute(a);
@@ -192,7 +189,7 @@ void MongoDBLoader::loadObjectAttributes(Poco::MongoDB::Connection &connection,
 }
 
 void MongoDBLoader::loadObjects(Poco::MongoDB::Connection &connection,
-                                Session *session) {
+                                AnnotatorLib::Session *session) {
   Poco::MongoDB::Cursor cursor(dbname, "objects");
 
   Poco::MongoDB::ResponseMessage &response = cursor.next(connection);
@@ -204,7 +201,7 @@ void MongoDBLoader::loadObjects(Poco::MongoDB::Connection &connection,
       std::string object_name = (*it)->get<std::string>("name");
       unsigned long class_id = (*it)->get<long>("class");
 
-      std::shared_ptr<Object> object = std::make_shared<Object>(object_id);
+      std::shared_ptr<AnnotatorLib::Object> object = std::make_shared<AnnotatorLib::Object>(object_id);
       object->setName(object_name);
 
       object->setClass(session->getClass(class_id));
@@ -219,7 +216,7 @@ void MongoDBLoader::loadObjects(Poco::MongoDB::Connection &connection,
 }
 
 void MongoDBLoader::loadFrames(Poco::MongoDB::Connection &connection,
-                               Session *session) {
+                               AnnotatorLib::Session *session) {
   Poco::MongoDB::Database db(dbname);
   Poco::SharedPtr<Poco::MongoDB::QueryRequest> command = db.createCommand();
 
@@ -232,13 +229,10 @@ void MongoDBLoader::loadFrames(Poco::MongoDB::Connection &connection,
         response.documents()[0]->get<Poco::MongoDB::Array::Ptr>("values");
     for (unsigned int i = 0; i < values->size(); ++i) {
       unsigned long nmb = values->get<long>(i);
-      session->addFrame(std::make_shared<Frame>(nmb));
+      session->addFrame(std::make_shared<AnnotatorLib::Frame>(nmb));
     }
   }
 }
-
-}  // of namespace Loader
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MongoDBLoader class body

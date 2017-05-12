@@ -7,7 +7,6 @@
 
 #include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/JSONStorage.h"
-#include "AnnotatorLib/Storage/MongoDBStorage.h"
 #include "AnnotatorLib/Storage/MySQLStorage.h"
 #include "AnnotatorLib/Storage/SQLiteStorage.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
@@ -38,8 +37,8 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(
       return std::make_shared<MySQLStorage>();
     case StorageType::SQLITE:
       return std::make_shared<SQLiteStorage>();
-    case StorageType::MONGODB:
-      return std::make_shared<MongoDBStorage>();
+//    case StorageType::MONGODB:
+//      return std::make_shared<MongoDBStorage>();
     default:
       return nullptr;
   }

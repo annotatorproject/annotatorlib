@@ -13,8 +13,16 @@
 
 #include <memory>
 
+#include <Poco/ClassLoader.h>
+#include <Poco/Manifest.h>
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
+
 namespace AnnotatorLib {
 namespace Storage {
+
+typedef Poco::ClassLoader<StoragePlugin> PLoader;
+typedef Poco::Manifest<StoragePlugin> PManifest;
 
 shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
   if ("xml" == type) return createStorage(AnnotatorLib::StorageType::XML);
@@ -41,6 +49,39 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(
     //      return std::make_shared<MongoDBStorage>();
     default:
       return nullptr;
+  }
+}
+
+void StorageFactory::loadPlugins(std::string dir) {
+  boost::filesystem::path pluginsDir(dir);
+  if (!boost::filesystem::exists(pluginsDir)) return;
+  PLoader loader;
+
+  boost::filesystem::directory_iterator dit(pluginsDir), eod;
+  BOOST_FOREACH (boost::filesystem::path const &p, std::make_pair(dit, eod)) {
+    if (boost::filesystem::is_regular_file(p)) {
+      // skip non library files
+      if (!(p.extension().string() == Poco::SharedLibrary::suffix())) continue;
+      std::string fileName = boost::filesystem::absolute(p).string();
+      try {
+        loader.loadLibrary(fileName);
+      } catch (Poco::Exception &e) {
+      }
+    }
+  }
+
+  PLoader::Iterator it(loader.begin());
+  PLoader::Iterator end(loader.end());
+  for (; it != end; ++it) {
+    PManifest::Iterator itMan(it->second->begin());
+    PManifest::Iterator endMan(it->second->end());
+    for (; itMan != endMan; ++itMan) {
+      StoragePlugin *plugin = itMan->create();
+      std::shared_ptr<StoragePlugin> sharedPlugin(plugin);
+      plugins.insert(plugins.begin(),
+                     std::pair<std::string, std::shared_ptr<StoragePlugin>>(
+                         plugin->name(), sharedPlugin));
+    }
   }
 }
 

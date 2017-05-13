@@ -120,7 +120,8 @@ void Project::load() {
 
 void Project::loadSession() {
   shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage =
-      AnnotatorLib::Storage::StorageFactory::createStorage(this->storageType);
+      AnnotatorLib::Storage::StorageFactory::instance()->createStorage(
+          this->storageType);
   storage->setPath(this->storagePath);
   storage->open();
   this->session = std::static_pointer_cast<AnnotatorLib::Session>(storage);

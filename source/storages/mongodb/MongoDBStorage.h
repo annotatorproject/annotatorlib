@@ -16,7 +16,8 @@
 /**
  * @brief The MongoDBStorage class
  */
-class ANNOTATORLIB_API MongoDBStorage : public AnnotatorLib::Storage::AbstractStorage {
+class ANNOTATORLIB_API MongoDBStorage
+    : public AnnotatorLib::Storage::AbstractStorage {
  public:
   virtual ~MongoDBStorage();
 
@@ -62,7 +63,8 @@ class ANNOTATORLIB_API MongoDBStorage : public AnnotatorLib::Storage::AbstractSt
    * Informs session that internals of the Annotation have changed.
    * @param annotation
    */
-  virtual void updateAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) override;
+  virtual void updateAnnotation(
+      shared_ptr<AnnotatorLib::Annotation> annotation) override;
 
   /**
    * @brief addClass
@@ -77,7 +79,8 @@ class ANNOTATORLIB_API MongoDBStorage : public AnnotatorLib::Storage::AbstractSt
    * @param c
    * @return
    */
-  virtual shared_ptr<AnnotatorLib::Class> removeClass(AnnotatorLib::Class* c) override;
+  virtual shared_ptr<AnnotatorLib::Class> removeClass(
+      AnnotatorLib::Class* c) override;
 
   virtual void updateClass(shared_ptr<AnnotatorLib::Class> theClass) override;
 
@@ -108,7 +111,8 @@ class ANNOTATORLIB_API MongoDBStorage : public AnnotatorLib::Storage::AbstractSt
   bool _open = false;
   bool _save = true;
 
-  void insertOrUpdateAnnotationAttributes(shared_ptr<AnnotatorLib::Annotation> annotation);
+  void insertOrUpdateAnnotationAttributes(
+      shared_ptr<AnnotatorLib::Annotation> annotation);
   void insertOrUpdateObjectAttributes(shared_ptr<AnnotatorLib::Object> object);
 };
 /************************************************************/
@@ -116,7 +120,6 @@ class ANNOTATORLIB_API MongoDBStorage : public AnnotatorLib::Storage::AbstractSt
 /************************************************************/
 
 /* Inline functions                                         */
-
 
 /************************************************************
  End of MongoDBStorage class header

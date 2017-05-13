@@ -6,8 +6,8 @@
  ************************************************************/
 
 // include associated header file
-#include "MongoDBLoader.h"
 #include "MongoDBStorage.h"
+#include "MongoDBLoader.h"
 
 #include <Poco/MongoDB/Array.h>
 #include <Poco/MongoDB/Connection.h>
@@ -22,8 +22,9 @@ AnnotatorLib::StorageType MongoDBStorage::getType() {
   return AnnotatorLib::StorageType::MONGODB;
 }
 
-bool MongoDBStorage::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
-                                   bool add_associated_objects) {
+bool MongoDBStorage::addAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation,
+    bool add_associated_objects) {
   AnnotatorLib::Session::addAnnotation(annotation, add_associated_objects);
   if (_open) {
     struct AnnotationStruct {
@@ -88,8 +89,8 @@ bool MongoDBStorage::addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotati
   return true;
 }
 
-shared_ptr<AnnotatorLib::Annotation> MongoDBStorage::removeAnnotation(unsigned long id,
-                                                        bool unregister) {
+shared_ptr<AnnotatorLib::Annotation> MongoDBStorage::removeAnnotation(
+    unsigned long id, bool unregister) {
   if (_open) {
     try {
       Poco::MongoDB::Database db(dbname);
@@ -112,7 +113,8 @@ shared_ptr<AnnotatorLib::Annotation> MongoDBStorage::removeAnnotation(unsigned l
   return AnnotatorLib::Session::removeAnnotation(id, unregister);
 }
 
-void MongoDBStorage::updateAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation) {
+void MongoDBStorage::updateAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation) {
   AnnotatorLib::Session::updateAnnotation(annotation);
   if (_open && getAnnotation(annotation->getId())) {
     struct AnnotationStruct {
@@ -205,7 +207,8 @@ bool MongoDBStorage::addClass(shared_ptr<AnnotatorLib::Class> c) {
   return true;
 }
 
-shared_ptr<AnnotatorLib::Class> MongoDBStorage::removeClass(AnnotatorLib::Class *c) {
+shared_ptr<AnnotatorLib::Class> MongoDBStorage::removeClass(
+    AnnotatorLib::Class *c) {
   if (_open) {
     try {
       Poco::MongoDB::Database db(dbname);
@@ -288,8 +291,8 @@ bool MongoDBStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
   return true;
 }
 
-shared_ptr<AnnotatorLib::Object> MongoDBStorage::removeObject(unsigned long id,
-                                                bool remove_annotations) {
+shared_ptr<AnnotatorLib::Object> MongoDBStorage::removeObject(
+    unsigned long id, bool remove_annotations) {
   if (_open) {
     try {
       Poco::MongoDB::Database db(dbname);
@@ -408,7 +411,8 @@ void MongoDBStorage::insertOrUpdateAnnotationAttributes(
   }
 }
 
-void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<AnnotatorLib::Object> object) {
+void MongoDBStorage::insertOrUpdateObjectAttributes(
+    shared_ptr<AnnotatorLib::Object> object) {
   struct AttributeStruct {
     long id;
     std::string name;
@@ -451,7 +455,6 @@ void MongoDBStorage::insertOrUpdateObjectAttributes(shared_ptr<AnnotatorLib::Obj
 }
 
 // static attributes (if any)
-
 
 /************************************************************
  End of MySQLStorage class body

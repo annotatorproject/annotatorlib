@@ -12,13 +12,13 @@
 
 #include <Poco/MongoDB/Connection.h>
 
-
 /************************************************************/
 /**
  * @brief The MongoDBLoader class
  * Loads saved data from mysql database
  */
-class ANNOTATORLIB_API MongoDBLoader : public AnnotatorLib::Loader::AbstractLoader {
+class ANNOTATORLIB_API MongoDBLoader
+    : public AnnotatorLib::Loader::AbstractLoader {
  public:
   void setPath(std::string path) override;
   AnnotatorLib::StorageType getType() override;

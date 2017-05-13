@@ -11,6 +11,7 @@
 #include "AnnotatorLib/Storage/SQLiteStorage.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
 
+#include <algorithm>
 #include <memory>
 
 #include <Poco/ClassLoader.h>
@@ -52,6 +53,10 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(
   }
 }
 
+std::list<std::string> StorageFactory::availableStorages() {
+  return _availableStorages;
+}
+
 void StorageFactory::loadPlugins(std::string dir) {
   boost::filesystem::path pluginsDir(dir);
   if (!boost::filesystem::exists(pluginsDir)) return;
@@ -82,6 +87,16 @@ void StorageFactory::loadPlugins(std::string dir) {
                      std::pair<std::string, std::shared_ptr<StoragePlugin>>(
                          plugin->name(), sharedPlugin));
     }
+  }
+}
+
+void StorageFactory::addAvailableStorage(StoragePlugin *plugin) {
+  if (plugin->hasStorage()) {
+    bool found =
+        (std::find(_availableStorages.begin(), _availableStorages.end(),
+                   plugin->name()) != _availableStorages.end());
+    if (!found)
+      _availableStorages.insert(_availableStorages.end(), plugin->name());
   }
 }
 

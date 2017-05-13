@@ -5,6 +5,8 @@
 /************************************************************
  StorageFactory class header
  ************************************************************/
+
+#include <list>
 #include <map>
 #include <string>
 
@@ -38,6 +40,8 @@ class ANNOTATORLIB_API StorageFactory {
    */
   shared_ptr<AbstractStorage> createStorage(AnnotatorLib::StorageType type);
 
+  std::list<std::string> availableStorages();
+
   /**
    * @brief loadPlugins
    * @param dir the path to plugins
@@ -55,10 +59,14 @@ class ANNOTATORLIB_API StorageFactory {
 
   ~StorageFactory() { _instance = 0; }
 
+ protected:
+  void addAvailableStorage(StoragePlugin* plugin);
+
  private:
   static StorageFactory* _instance;
   StorageFactory() {}
 
+  std::list<std::string> _availableStorages{"json", "xml"};
   std::map<std::string, std::shared_ptr<StoragePlugin>> plugins;
 };
 /************************************************************/

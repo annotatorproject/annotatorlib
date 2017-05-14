@@ -1,16 +1,16 @@
 // Copyright 2017 Annotator Team
 
-#ifndef SQLITEPLUGIN_H
-#define SQLITEPLUGIN_H
+#ifndef MYSQLPLUGIN_H
+#define MYSQLPLUGIN_H
 
 #include <AnnotatorLib/Storage/StoragePlugin.h>
 
-class SQLitePlugin : public AnnotatorLib::Storage::StoragePlugin {
+class MySQLPlugin : public AnnotatorLib::Storage::StoragePlugin {
  public:
-  SQLitePlugin();
+  MySQLPlugin();
 
-  virtual const std::string name() { return "sqlite"; }
-  virtual const std::string description() { return "SQLite Storage"; }
+  virtual const std::string name() { return "mysql"; }
+  virtual const std::string description() { return "MySQL Storage"; }
 
   virtual bool hasLoader();
   virtual bool hasSaver();
@@ -21,4 +21,4 @@ class SQLitePlugin : public AnnotatorLib::Storage::StoragePlugin {
   virtual shared_ptr<AnnotatorLib::Storage::AbstractStorage> createStorage();
 };
 
-#endif  // SQLITEPLUGIN_H
+#endif  // MYSQLPLUGIN_H

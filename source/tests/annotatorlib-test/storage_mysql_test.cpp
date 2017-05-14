@@ -1,10 +1,10 @@
 // Copyright 2016 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Session.h>
-#include <AnnotatorLib/Storage/MySQLStorage.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <string>
+#include "../../storages/mysql/MySQLStorage.h"
 
 using namespace AnnotatorLib;
 using std::shared_ptr;
@@ -14,7 +14,7 @@ class storage_mysql_test : public testing::Test {
 };
 
 TEST_F(storage_mysql_test, createTables) {
-  AnnotatorLib::Storage::MySQLStorage storage;
+  MySQLStorage storage;
   storage.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -22,7 +22,7 @@ TEST_F(storage_mysql_test, createTables) {
 }
 
 TEST_F(storage_mysql_test, objects) {
-  AnnotatorLib::Storage::MySQLStorage storage;
+  MySQLStorage storage;
   storage.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -41,7 +41,7 @@ TEST_F(storage_mysql_test, objects) {
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testobject");
 
-  AnnotatorLib::Storage::MySQLStorage storage2;
+  MySQLStorage storage2;
   storage2.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -51,7 +51,7 @@ TEST_F(storage_mysql_test, objects) {
 }
 
 TEST_F(storage_mysql_test, annotations) {
-  AnnotatorLib::Storage::MySQLStorage storage;
+  MySQLStorage storage;
   storage.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -76,7 +76,7 @@ TEST_F(storage_mysql_test, annotations) {
   a->setPosition(0, 0, 1, 1);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  AnnotatorLib::Storage::MySQLStorage storage2;
+  MySQLStorage storage2;
   storage2.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -91,7 +91,7 @@ TEST_F(storage_mysql_test, annotations) {
 }
 
 TEST_F(storage_mysql_test, attributes) {
-  AnnotatorLib::Storage::MySQLStorage storage;
+  MySQLStorage storage;
   storage.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");
@@ -125,7 +125,7 @@ TEST_F(storage_mysql_test, attributes) {
   a->addAttribute(attr);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  AnnotatorLib::Storage::MySQLStorage storage2;
+  MySQLStorage storage2;
   storage2.setPath(
       "host=localhost;user=annotator;password=annotator;db=annotatortestdb;"
       "auto-reconnect=true");

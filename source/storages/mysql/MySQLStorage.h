@@ -11,14 +11,12 @@
 
 #include <Poco/Data/SessionPool.h>
 
-namespace AnnotatorLib {
-namespace Storage {
-
 /************************************************************/
 /**
  * @brief The MySQLStorage class
  */
-class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
+class ANNOTATORLIB_API MySQLStorage
+    : public AnnotatorLib::Storage::AbstractStorage {
   // AbstractStorage interface
  public:
   virtual ~MySQLStorage();
@@ -41,7 +39,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    */
   void setPath(std::string path) override;
 
-  StorageType getType() override;
+  AnnotatorLib::StorageType getType() override;
 
   /**
    * @brief addAnnotation
@@ -49,7 +47,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param add_associated_objects
    * @return
    */
-  virtual bool addAnnotation(shared_ptr<Annotation> annotation,
+  virtual bool addAnnotation(shared_ptr<AnnotatorLib::Annotation> annotation,
                              bool add_associated_objects = true) override;
   /**
    * @brief removeAnnotation
@@ -57,7 +55,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param unregister
    * @return
    */
-  virtual shared_ptr<Annotation> removeAnnotation(
+  virtual shared_ptr<AnnotatorLib::Annotation> removeAnnotation(
       unsigned long id, bool unregister = true) override;
 
   /**
@@ -65,7 +63,8 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * Informs session that internals of the Annotation have changed.
    * @param annotation
    */
-  virtual void updateAnnotation(shared_ptr<Annotation> annotation) override;
+  virtual void updateAnnotation(
+      shared_ptr<AnnotatorLib::Annotation> annotation) override;
 
   /**
    * @brief addClass
@@ -73,16 +72,17 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param c
    * @return
    */
-  virtual bool addClass(shared_ptr<Class> c) override;
+  virtual bool addClass(shared_ptr<AnnotatorLib::Class> c) override;
   /**
    * @brief removeClass
    * removes class from database if open
    * @param c
    * @return
    */
-  virtual shared_ptr<Class> removeClass(Class* c) override;
+  virtual shared_ptr<AnnotatorLib::Class> removeClass(
+      AnnotatorLib::Class* c) override;
 
-  virtual void updateClass(shared_ptr<Class> theClass) override;
+  virtual void updateClass(shared_ptr<AnnotatorLib::Class> theClass) override;
 
   /**
    * @brief addObject
@@ -90,7 +90,7 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param add_associated_objects
    * @return
    */
-  virtual bool addObject(shared_ptr<Object> object,
+  virtual bool addObject(shared_ptr<AnnotatorLib::Object> object,
                          bool add_associated_objects = true) override;
   /**
    * @brief removeObject
@@ -98,10 +98,10 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
    * @param remove_annotations
    * @return
    */
-  virtual shared_ptr<Object> removeObject(
+  virtual shared_ptr<AnnotatorLib::Object> removeObject(
       unsigned long id, bool remove_annotations = true) override;
 
-  virtual void updateObject(shared_ptr<Object> object) override;
+  virtual void updateObject(shared_ptr<AnnotatorLib::Object> object) override;
 
  protected:
   std::string path;
@@ -117,17 +117,15 @@ class ANNOTATORLIB_API MySQLStorage : public AbstractStorage {
   virtual void createTables();
   Poco::Data::Statement getStatement();
 
-  void insertOrUpdateAnnotationAttributes(shared_ptr<Annotation> annotation);
-  void insertOrUpdateObjectAttributes(shared_ptr<Object> object);
+  void insertOrUpdateAnnotationAttributes(
+      shared_ptr<AnnotatorLib::Annotation> annotation);
+  void insertOrUpdateObjectAttributes(shared_ptr<AnnotatorLib::Object> object);
 };
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/
 
 /* Inline functions                                         */
-
-}  // of namespace Storage
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLStorage class header

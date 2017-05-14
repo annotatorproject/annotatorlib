@@ -82,8 +82,9 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorlib
-    ${META_PROJECT_NAME}::sqlitestorage
+    ${META_PROJECT_NAME}::mysqlstorage
     ${META_PROJECT_NAME}::mongodbstorage
+    ${META_PROJECT_NAME}::sqlitestorage
     libgmock
     ${libgcov}
 )

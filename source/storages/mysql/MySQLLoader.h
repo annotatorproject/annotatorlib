@@ -11,19 +11,17 @@
 
 #include <Poco/Data/Session.h>
 
-namespace AnnotatorLib {
-namespace Storage {
-
 /************************************************************/
 /**
  * @brief The MySQLLoader class
  * Loads saved data from mysql database
  */
-class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
+class ANNOTATORLIB_API MySQLLoader
+    : public AnnotatorLib::Storage::AbstractLoader {
   // AbstractLoader interface
  public:
   void setPath(std::string path);
-  StorageType getType();
+  AnnotatorLib::StorageType getType();
   void loadSession(AnnotatorLib::Session *session);
 
  protected:
@@ -50,9 +48,6 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
 /************************************************************/
 
 /* Inline functions                                         */
-
-}  // of namespace Loader
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLLoader class header

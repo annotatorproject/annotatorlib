@@ -6,9 +6,9 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Storage/MySQLLoader.h>
-#include <AnnotatorLib/Storage/MySQLSaver.h>
-#include <AnnotatorLib/Storage/MySQLStorage.h>
+#include "MySQLStorage.h"
+#include "MySQLLoader.h"
+#include "MySQLSaver.h"
 
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/RecordSet.h>
@@ -19,15 +19,15 @@ using Poco::Data::Session;
 using Poco::Data::Statement;
 using namespace Poco::Data::Keywords;
 
-namespace AnnotatorLib {
-namespace Storage {
-
 void MySQLStorage::setPath(std::string path) { this->path = path; }
 
-StorageType MySQLStorage::getType() { return AnnotatorLib::StorageType::MYSQL; }
+AnnotatorLib::StorageType MySQLStorage::getType() {
+  return AnnotatorLib::StorageType::MYSQL;
+}
 
-bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
-                                 bool add_associated_objects) {
+bool MySQLStorage::addAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation,
+    bool add_associated_objects) {
   AnnotatorLib::Session::addAnnotation(annotation, add_associated_objects);
   if (_open) {
     struct AnnotationStruct {
@@ -76,8 +76,8 @@ bool MySQLStorage::addAnnotation(shared_ptr<Annotation> annotation,
   return true;
 }
 
-shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
-                                                      bool unregister) {
+shared_ptr<AnnotatorLib::Annotation> MySQLStorage::removeAnnotation(
+    unsigned long id, bool unregister) {
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
@@ -92,7 +92,8 @@ shared_ptr<Annotation> MySQLStorage::removeAnnotation(unsigned long id,
   return AnnotatorLib::Session::removeAnnotation(id, unregister);
 }
 
-void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
+void MySQLStorage::updateAnnotation(
+    shared_ptr<AnnotatorLib::Annotation> annotation) {
   AnnotatorLib::Session::updateAnnotation(annotation);
   if (_open && getAnnotation(annotation->getId())) {
     struct AnnotationStruct {
@@ -142,7 +143,7 @@ void MySQLStorage::updateAnnotation(shared_ptr<Annotation> annotation) {
   }
 }
 
-bool MySQLStorage::addClass(shared_ptr<Class> c) {
+bool MySQLStorage::addClass(shared_ptr<AnnotatorLib::Class> c) {
   AnnotatorLib::Session::addClass(c);
   if (_open) {
     struct ClassStruct {
@@ -164,7 +165,8 @@ bool MySQLStorage::addClass(shared_ptr<Class> c) {
   return true;
 }
 
-shared_ptr<Class> MySQLStorage::removeClass(Class *c) {
+shared_ptr<AnnotatorLib::Class> MySQLStorage::removeClass(
+    AnnotatorLib::Class *c) {
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
@@ -180,7 +182,7 @@ shared_ptr<Class> MySQLStorage::removeClass(Class *c) {
   return AnnotatorLib::Session::removeClass(c);
 }
 
-void MySQLStorage::updateClass(shared_ptr<Class> theClass) {
+void MySQLStorage::updateClass(shared_ptr<AnnotatorLib::Class> theClass) {
   AnnotatorLib::Session::updateClass(theClass);
   if (_open && getClass(theClass->getId())) {
     struct ClassStruct {
@@ -227,8 +229,8 @@ bool MySQLStorage::addObject(shared_ptr<AnnotatorLib::Object> object,
   return true;
 }
 
-shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
-                                              bool remove_annotations) {
+shared_ptr<AnnotatorLib::Object> MySQLStorage::removeObject(
+    unsigned long id, bool remove_annotations) {
   if (_open) {
     Poco::Data::Statement statement = getStatement();
     try {
@@ -243,7 +245,7 @@ shared_ptr<Object> MySQLStorage::removeObject(unsigned long id,
   return AnnotatorLib::Session::removeObject(id, remove_annotations);
 }
 
-void MySQLStorage::updateObject(shared_ptr<Object> object) {
+void MySQLStorage::updateObject(shared_ptr<AnnotatorLib::Object> object) {
   AnnotatorLib::Session::updateObject(object);
   if (_open && getObject(object->getId())) {
     struct ObjectStruct {
@@ -278,7 +280,7 @@ bool MySQLStorage::open() {
   pool = new Poco::Data::SessionPool("MySQL", this->path);
   createTables();
 
-  AnnotatorLib::Storage::MySQLLoader loader;
+  MySQLLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
 
@@ -303,7 +305,7 @@ Poco::Data::Statement MySQLStorage::getStatement() {
 }
 
 void MySQLStorage::insertOrUpdateAnnotationAttributes(
-    shared_ptr<Annotation> annotation) {
+    shared_ptr<AnnotatorLib::Annotation> annotation) {
   struct AttributeStruct {
     unsigned long id;
     std::string name;
@@ -335,7 +337,8 @@ void MySQLStorage::insertOrUpdateAnnotationAttributes(
   }
 }
 
-void MySQLStorage::insertOrUpdateObjectAttributes(shared_ptr<Object> object) {
+void MySQLStorage::insertOrUpdateObjectAttributes(
+    shared_ptr<AnnotatorLib::Object> object) {
   struct AttributeStruct {
     unsigned long id;
     std::string name;
@@ -427,11 +430,6 @@ void MySQLStorage::createTables() {
             << ") DEFAULT CHARSET=utf8;";
   statement.execute();
 }
-
-// static attributes (if any)
-
-}  // of namespace Storage
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLStorage class body

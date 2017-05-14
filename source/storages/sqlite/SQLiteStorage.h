@@ -6,9 +6,9 @@
  MySQLStorage class header
  ************************************************************/
 #include <AnnotatorLib/Storage/AbstractStorage.h>
-#include <AnnotatorLib/Storage/MySQLStorage.h>
 #include <AnnotatorLib/Storage/Pkg_Storage.h>
 #include <AnnotatorLib/annotatorlib_api.h>
+#include "../mysql/MySQLStorage.h"
 
 #include <Poco/Data/SessionPool.h>
 
@@ -16,8 +16,7 @@
 /**
  * @brief The SQLiteStorage class
  */
-class ANNOTATORLIB_API SQLiteStorage
-    : public AnnotatorLib::Storage::MySQLStorage {
+class ANNOTATORLIB_API SQLiteStorage : public MySQLStorage {
  public:
   ~SQLiteStorage();
 

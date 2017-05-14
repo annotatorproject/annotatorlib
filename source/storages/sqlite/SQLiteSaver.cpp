@@ -1,45 +1,28 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Saver_SQLiteSaver_BODY
 
-#ifdef WITH_SQLITE3
 /************************************************************
  SQLSaver class body
  ************************************************************/
 
 // include associated header file
-#include "AnnotatorLib/Saver/SQLiteSaver.h"
+#include "SQLiteSaver.h"
 #include "AnnotatorLib/Session.h"
 
 // Derived includes directives
 
-namespace AnnotatorLib {
-namespace Saver {
-
-void SQLiteSaver::saveAnnotation(Annotation annotation) {}
+void SQLiteSaver::saveAnnotation(AnnotatorLib::Annotation annotation) {}
 
 void SQLiteSaver::setPath(std::string path) { this->path = path; }
 
-StorageType SQLiteSaver::getType() { return AnnotatorLib::sqlite; }
+AnnotatorLib::StorageType SQLiteSaver::getType() {
+  return AnnotatorLib::StorageType::SQLITE;
+}
 
-void SQLiteSaver::saveSession(Session *session) {
-  int rc = rc = sqlite3_open(path.c_str(), &db);
-  if (rc) {
-    sqlite3_close(db);
-    return;
-  }
+void SQLiteSaver::saveSession(const AnnotatorLib::Session *session) {}
 
-  createObjectsTable(db);
-
-  for (Object *object : session->getObjects()) {
-  }
-
-  createAttributesTable(db);
-  for (Attribute *attribute : session->getAttributes()) {
-  }
-
-  createAnnotationsTable(db);
-  for (Annotation *annotation : session->getAnnotations()) {
-  }
+void SQLiteSaver::saveProject(std::shared_ptr<AnnotatorLib::Project> project) {
+  saveSession(project->getSession().get());
 }
 
 bool SQLiteSaver::close() {
@@ -76,12 +59,6 @@ int SQLiteSaver::createAnnotationsTable(sqlite3 *db) {
   return rc;
 }
 
-// static attributes (if any)
-
-}  // of namespace Saver
-}  // of namespace AnnotatorLib
-
 /************************************************************
  End of SQLSaver class body
  ************************************************************/
-#endif  // WITH_SQLITE3

@@ -2,6 +2,7 @@
 
 #include "SQLitePlugin.h"
 #include "SQLiteLoader.h"
+#include "SQLiteSaver.h"
 #include "SQLiteStorage.h"
 
 #include <Poco/ClassLibrary.h>
@@ -19,7 +20,7 @@ shared_ptr<AnnotatorLib::Storage::AbstractLoader> SQLitePlugin::createLoader() {
 }
 
 shared_ptr<AnnotatorLib::Storage::AbstractSaver> SQLitePlugin::createSaver() {
-  return nullptr;
+  return std::make_shared<SQLiteSaver>();
 }
 
 shared_ptr<AnnotatorLib::Storage::AbstractStorage>

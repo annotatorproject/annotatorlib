@@ -9,19 +9,17 @@
 
 #include "AnnotatorLib/Storage/AbstractSaver.h"
 
-namespace AnnotatorLib {
-namespace Storage {
-
 /************************************************************/
 /**
  *
  */
-class ANNOTATORLIB_API MySQLSaver : public AbstractSaver {
+class ANNOTATORLIB_API MySQLSaver
+    : public AnnotatorLib::Storage::AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveAnnotation(const Annotation /* annotation */) override;
+  void saveAnnotation(const AnnotatorLib::Annotation /* annotation */) override;
   void setPath(std::string /* path */) override;
-  StorageType getType() override;
+  AnnotatorLib::StorageType getType() override;
   void saveSession(const AnnotatorLib::Session* /* session */) override;
   void saveProject(std::shared_ptr<AnnotatorLib::Project> project) override;
   bool close() override;
@@ -31,9 +29,6 @@ class ANNOTATORLIB_API MySQLSaver : public AbstractSaver {
 /************************************************************/
 
 /* Inline functions                                         */
-
-}  // of namespace Saver
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of MySQLSaver class header

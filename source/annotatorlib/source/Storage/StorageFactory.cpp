@@ -38,31 +38,13 @@ typedef Poco::Manifest<StoragePlugin> PManifest;
 static StorageFactory *_instance;
 
 shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
-  if ("xml" == type) return createStorage(AnnotatorLib::StorageType::XML);
-  if ("json" == type) return createStorage(AnnotatorLib::StorageType::JSON);
-  if ("mysql" == type) return createStorage(AnnotatorLib::StorageType::MYSQL);
-  if ("sqlite" == type) return createStorage(AnnotatorLib::StorageType::SQLITE);
-  if ("mongodb" == type)
-    return createStorage(AnnotatorLib::StorageType::MONGODB);
-  return createStorage(AnnotatorLib::StorageType::UNKNOWN);
-}
-
-shared_ptr<AbstractStorage> StorageFactory::createStorage(
-    AnnotatorLib::StorageType type) {
-  switch (type) {
-    case StorageType::XML:
-      return std::make_shared<XMLStorage>();
-    case StorageType::JSON:
-      return std::make_shared<JSONStorage>();
-    case StorageType::MYSQL:
-      return std::make_shared<MySQLStorage>();
-    case StorageType::SQLITE:
-      return std::make_shared<SQLiteStorage>();
-    //    case StorageType::MONGODB:
-    //      return std::make_shared<MongoDBStorage>();
-    default:
-      return nullptr;
-  }
+  if ("xml" == type) return std::make_shared<XMLStorage>();
+  if ("json" == type) return std::make_shared<JSONStorage>();
+  if ("mysql" == type) return std::make_shared<MySQLStorage>();
+  if ("sqlite" == type) return std::make_shared<SQLiteStorage>();
+  std::shared_ptr<StoragePlugin> plugin = this->plugins[type];
+  if (plugin && plugin->hasStorage()) return plugin->createStorage();
+  return nullptr;
 }
 
 std::list<std::string> StorageFactory::availableStorages() {
@@ -110,7 +92,8 @@ void StorageFactory::loadPlugins(std::string dir) {
   BOOST_FOREACH (boost::filesystem::path const &p, std::make_pair(dit, eod)) {
     if (boost::filesystem::is_regular_file(p)) {
       // skip non library files
-      if (!(p.extension().string() == Poco::SharedLibrary::suffix())) continue;
+      // if (!(p.extension().string() == Poco::SharedLibrary::suffix()))
+      // continue;
       std::string fileName = boost::filesystem::absolute(p).string();
       try {
         loader.loadLibrary(fileName);

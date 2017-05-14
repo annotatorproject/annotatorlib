@@ -33,7 +33,7 @@ namespace AnnotatorLib {
 Project::Project() {}
 
 Project::Project(std::string name, ImageSetType imageSetType,
-                 std::string imageSetPath, StorageType storageType,
+                 std::string imageSetPath, std::string storageType,
                  std::string storagePath) {
   this->name = name;
   this->imageSetType = imageSetType;
@@ -104,8 +104,7 @@ void Project::load() {
       config->getString("ImageSet[@type]"));
   std::string imageSetPath = config->getString("ImageSet[@path]");
 
-  this->storageType =
-      AnnotatorLib::StorageTypeFromString(config->getString("Storage[@type]"));
+  this->storageType = config->getString("Storage[@type]");
   this->storagePath = config->getString("Storage[@path]");
 
   this->total_duration_sec = config->getUInt64("Statistics[@duration]");
@@ -122,6 +121,9 @@ void Project::loadSession() {
   shared_ptr<AnnotatorLib::Storage::AbstractStorage> storage =
       AnnotatorLib::Storage::StorageFactory::instance()->createStorage(
           this->storageType);
+  if (storage == nullptr)
+    throw std::runtime_error("Storage " + this->storageType +
+                             " is not available.");
   storage->setPath(this->storagePath);
   storage->open();
   this->session = std::static_pointer_cast<AnnotatorLib::Session>(storage);
@@ -143,8 +145,7 @@ void Project::saveConfig() {
   config->setString("ImageSet[@type]",
                     AnnotatorLib::ImageSetTypeToString(this->imageSetType));
   config->setString("ImageSet[@path]", imageSet->getPath());
-  config->setString("Storage[@type]",
-                    AnnotatorLib::StorageTypeToString(this->storageType));
+  config->setString("Storage[@type]", this->storageType);
   config->setString("Storage[@path]", this->storagePath);
   config->setUInt64("Statistics[@duration]", this->total_duration_sec);
   config->setBool("Settings[@active]", this->active);
@@ -172,11 +173,11 @@ void Project::saveSession() {
 
 std::shared_ptr<AnnotatorLib::Project> Project::create(
     std::string name, ImageSetType imageSetType, std::string imageSetPath,
-    StorageType storageType, std::string storagePath) {
+    std::string storageType, std::string storagePath) {
   if (name == "") throw std::runtime_error("Project name is empty");
   if (imageSetType == ImageSetType::UNKNOWN)
     throw std::runtime_error("ImageSetType is unknown");
-  if (storageType == StorageType::UNKNOWN)
+  if (storageType == "unknown")
     throw std::runtime_error("StorageType is unknown");
   return std::shared_ptr<AnnotatorLib::Project>(
       new Project(name, imageSetType, imageSetPath, storageType, storagePath));
@@ -187,10 +188,7 @@ std::shared_ptr<AnnotatorLib::Project> Project::create(
     std::string storageType, std::string storagePath) {
   AnnotatorLib::ImageSetType iType =
       AnnotatorLib::ImageSetTypeFromString(imageSetType);
-  AnnotatorLib::StorageType sType =
-      AnnotatorLib::StorageTypeFromString(storageType);
-
-  return create(name, iType, imageSetPath, sType, storagePath);
+  return create(name, iType, imageSetPath, storageType, storagePath);
 }
 
 bool Project::equals(Project *other) const {

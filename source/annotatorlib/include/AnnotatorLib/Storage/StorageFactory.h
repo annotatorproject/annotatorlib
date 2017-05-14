@@ -44,13 +44,6 @@ class ANNOTATORLIB_API StorageFactory {
  */
   shared_ptr<AbstractStorage> createStorage(std::string type);
 
-  /**
-   * @brief createStorage
-   * @param type
-   * @return
-   */
-  shared_ptr<AbstractStorage> createStorage(AnnotatorLib::StorageType type);
-
   std::list<std::string> availableStorages();
 
   /**

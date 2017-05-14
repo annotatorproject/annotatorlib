@@ -38,7 +38,7 @@ class ANNOTATORLIB_API Project {
    */
   static std::shared_ptr<AnnotatorLib::Project> create(
       std::string name, ImageSetType imageSetType, std::string imageSetPath,
-      StorageType storageType, std::string storagePath);
+      std::string storageType, std::string storagePath);
 
   /**
    * @brief create
@@ -150,7 +150,7 @@ class ANNOTATORLIB_API Project {
   Project();
 
   Project(std::string name, ImageSetType imageSetType, std::string imageSetPath,
-          StorageType storageType, std::string storagePath);
+          std::string storageType, std::string storagePath);
 
   /**
    * @brief loadSession
@@ -184,7 +184,7 @@ class ANNOTATORLIB_API Project {
 
   ImageSet *imageSet = nullptr;
 
-  StorageType storageType = StorageType::UNKNOWN;
+  std::string storageType = "unknown";
 
   std::string storagePath = "";
 

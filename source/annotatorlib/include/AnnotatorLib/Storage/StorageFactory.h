@@ -14,6 +14,8 @@
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <AnnotatorLib/Saver/AbstractSaver.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/Storage/StoragePlugin.h>
 
@@ -26,17 +28,26 @@ namespace Storage {
  */
 class ANNOTATORLIB_API StorageFactory {
  public:
-  /**
-   *
-   * @return loader
-   * @param type
-   */
-  shared_ptr<AbstractStorage> createStorage(std::string /*in*/ type);
+  shared_ptr<AnnotatorLib::Loader::AbstractLoader> createLoader(
+      std::string type);
+
+  std::list<std::string> availableLoader();
+
+  shared_ptr<AnnotatorLib::Saver::AbstractSaver> createSaver(std::string type);
+
+  std::list<std::string> availableSaver();
 
   /**
-   *
+ * @brief createStorage
+ * @param type
+ * @return
+ */
+  shared_ptr<AbstractStorage> createStorage(std::string type);
+
+  /**
+   * @brief createStorage
    * @param type
-   * @return loader
+   * @return
    */
   shared_ptr<AbstractStorage> createStorage(AnnotatorLib::StorageType type);
 
@@ -52,21 +63,22 @@ class ANNOTATORLIB_API StorageFactory {
    * @brief instance
    * @return singleton for StorageFactory
    */
-  static StorageFactory* instance() {
-    if (!_instance) _instance = new StorageFactory();
-    return _instance;
-  }
+  static StorageFactory* instance();
 
-  ~StorageFactory() { _instance = 0; }
+  ~StorageFactory();
 
  protected:
+  void addAvailableLoader(StoragePlugin* plugin);
+  void addAvailableSaver(StoragePlugin* plugin);
   void addAvailableStorage(StoragePlugin* plugin);
 
  private:
-  static StorageFactory* _instance;
   StorageFactory() {}
 
-  std::list<std::string> _availableStorages{"json", "xml"};
+  std::list<std::string> _availableLoader{"json", "xml", "mysql"};
+  std::list<std::string> _availableSaver{"json", "xml", "mysql"};
+  std::list<std::string> _availableStorages{"json", "xml", "mysql"};
+
   std::map<std::string, std::shared_ptr<StoragePlugin>> plugins;
 };
 /************************************************************/

@@ -68,9 +68,9 @@ class ANNOTATORLIB_API StorageFactory {
  private:
   StorageFactory() {}
 
-  std::list<std::string> _availableLoader{"json", "xml", "mysql"};
-  std::list<std::string> _availableSaver{"json", "xml", "mysql"};
-  std::list<std::string> _availableStorages{"json", "xml", "mysql"};
+  std::list<std::string> _availableLoader{"json", "xml"};
+  std::list<std::string> _availableSaver{"json", "xml"};
+  std::list<std::string> _availableStorages{"json", "xml"};
 
   std::map<std::string, std::shared_ptr<StoragePlugin>> plugins;
 };

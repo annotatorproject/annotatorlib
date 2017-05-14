@@ -10,11 +10,10 @@
 #include <map>
 #include <string>
 
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/Storage/StoragePlugin.h>
@@ -28,7 +27,7 @@ namespace Storage {
  */
 class ANNOTATORLIB_API StorageFactory {
  public:
-  shared_ptr<AnnotatorLib::Loader::AbstractLoader> createLoader(
+  shared_ptr<AnnotatorLib::Storage::AbstractLoader> createLoader(
       std::string type);
 
   std::list<std::string> availableLoader();

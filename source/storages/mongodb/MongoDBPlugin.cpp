@@ -12,7 +12,8 @@ bool MongoDBPlugin::hasSaver() { return false; }
 
 bool MongoDBPlugin::hasStorage() { return true; }
 
-shared_ptr<AnnotatorLib::Loader::AbstractLoader> MongoDBPlugin::createLoader() {
+shared_ptr<AnnotatorLib::Storage::AbstractLoader>
+MongoDBPlugin::createLoader() {
   return std::make_shared<MongoDBLoader>();
 }
 

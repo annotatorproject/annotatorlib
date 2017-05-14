@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Storage_JSONStorage_BODY
 
 /************************************************************
@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/JSONLoader.h>
+#include <AnnotatorLib/Storage/JSONLoader.h>
 #include <AnnotatorLib/Storage/JSONSaver.h>
 #include <AnnotatorLib/Storage/JSONStorage.h>
 
@@ -20,7 +20,7 @@ void JSONStorage::setPath(std::string path) { this->path = path; }
 StorageType JSONStorage::getType() { return AnnotatorLib::StorageType::JSON; }
 
 bool JSONStorage::open() {
-  AnnotatorLib::Loader::JSONLoader loader;
+  AnnotatorLib::Storage::JSONLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
   this->_open = true;

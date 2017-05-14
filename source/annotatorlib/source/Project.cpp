@@ -7,7 +7,6 @@
 
 // include associated header file
 #include <AnnotatorLib/ImageSetFactory.h>
-#include <AnnotatorLib/Loader/LoaderFactory.h>
 #include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/Storage/StorageFactory.h>
 

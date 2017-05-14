@@ -6,9 +6,9 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/JSONLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/JSONLoader.h>
 
 #include <memory>
 
@@ -25,7 +25,7 @@
 using std::shared_ptr;
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
 void JSONLoader::setPath(std::string path) { this->path = path; }
 
@@ -94,7 +94,7 @@ void JSONLoader::loadAttributes(Poco::JSON::Object::Ptr json,
   if (!json->has("attributes")) return;
   Poco::JSON::Array::Ptr array = json->getArray("attributes");
 
-  for (int i = 0; i < array->size(); ++i) {
+  for (std::size_t i = 0; i < array->size(); ++i) {
     Poco::JSON::Object::Ptr value = array->getObject(i);
     session->addAttribute(loadAttribute(value));
   }
@@ -105,7 +105,7 @@ void JSONLoader::loadAnnotations(Poco::JSON::Object::Ptr json,
   if (!json->has("annotations")) return;
   Poco::JSON::Array::Ptr array = json->getArray("annotations");
 
-  for (int i = 0; i < array->size(); ++i) {
+  for (std::size_t i = 0; i < array->size(); ++i) {
     Poco::JSON::Object::Ptr value = array->getObject(i);
     unsigned long object =
         std::stoul(value->get("object").extract<std::string>());
@@ -128,7 +128,7 @@ void JSONLoader::loadAnnotations(Poco::JSON::Object::Ptr json,
       if (value->has("attributes") && !value->isNull("attributes")) {
         Poco::JSON::Array::Ptr attrArray = value->getArray("attributes");
 
-        for (int i = 0; i < attrArray->size(); ++i) {
+        for (std::size_t i = 0; i < attrArray->size(); ++i) {
           Poco::JSON::Object::Ptr attrValue = attrArray->getObject(i);
           a->addAttribute(loadAttribute(attrValue));
         }
@@ -142,7 +142,7 @@ void JSONLoader::loadClasses(Poco::JSON::Object::Ptr json, Session *session) {
   if (!json->has("classes")) return;
   Poco::JSON::Array::Ptr array = json->getArray("classes");
 
-  for (int i = 0; i < array->size(); ++i) {
+  for (std::size_t i = 0; i < array->size(); ++i) {
     Poco::JSON::Object::Ptr value = array->getObject(i);
     unsigned long id = std::stoul(value->get("id").extract<std::string>());
     std::string name = value->get("name").extract<std::string>();
@@ -155,7 +155,7 @@ void JSONLoader::loadObjects(Poco::JSON::Object::Ptr json, Session *session) {
   if (!json->has("objects")) return;
   Poco::JSON::Array::Ptr array = json->getArray("objects");
 
-  for (int i = 0; i < array->size(); ++i) {
+  for (std::size_t i = 0; i < array->size(); ++i) {
     Poco::JSON::Object::Ptr value = array->getObject(i);
     unsigned long id = std::stoul(value->get("id").extract<std::string>());
     std::string name = value->get("name").extract<std::string>();
@@ -174,7 +174,7 @@ void JSONLoader::loadObjects(Poco::JSON::Object::Ptr json, Session *session) {
     if (value->has("attributes") && !value->isNull("attributes")) {
       Poco::JSON::Array::Ptr attrArray = value->getArray("attributes");
 
-      for (int i = 0; i < attrArray->size(); ++i) {
+      for (std::size_t i = 0; i < attrArray->size(); ++i) {
         Poco::JSON::Object::Ptr attrValue = attrArray->getObject(i);
         o->addAttribute(loadAttribute(attrValue));
       }
@@ -188,7 +188,7 @@ void JSONLoader::loadFrames(Poco::JSON::Object::Ptr json, Session *session) {
   if (!json->has("frames")) return;
   Poco::JSON::Array::Ptr array = json->getArray("frames");
 
-  for (int i = 0; i < array->size(); ++i) {
+  for (std::size_t i = 0; i < array->size(); ++i) {
     Poco::JSON::Object::Ptr value = array->getObject(i);
     unsigned long number =
         std::stoul(value->get("number").extract<std::string>());
@@ -197,7 +197,7 @@ void JSONLoader::loadFrames(Poco::JSON::Object::Ptr json, Session *session) {
   }
 }
 
-}  // of namespace Loader
+}  // of namespace Storage
 }  // of namespace AnnotatorLib
 
 /************************************************************

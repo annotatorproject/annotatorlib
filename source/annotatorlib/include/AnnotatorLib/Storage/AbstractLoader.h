@@ -6,7 +6,6 @@
  AbstractLoader class header
  ************************************************************/
 
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <AnnotatorLib/Annotation.h>
@@ -16,7 +15,7 @@ namespace AnnotatorLib {
 
 class Session;
 
-namespace Loader {
+namespace Storage {
 
 /************************************************************/
 /**

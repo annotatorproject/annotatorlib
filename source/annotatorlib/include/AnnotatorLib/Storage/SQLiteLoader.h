@@ -1,40 +1,28 @@
 // Copyright 2016 Annotator Team
-#ifndef ANNOTATOR_ANNOTATORLIB_LOADER_LOADERFACTORY_H
-#define ANNOTATOR_ANNOTATORLIB_LOADER_LOADERFACTORY_H
+#ifndef ANNOTATOR_ANNOTATORLIB_LOADER_SQLITELOADER_H
+#define ANNOTATOR_ANNOTATORLIB_LOADER_SQLITELOADER_H
 
 /************************************************************
- LoaderFactory class header
+ MySQLLoader class header
  ************************************************************/
-#include <string>
-
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
+#include <AnnotatorLib/Storage/MySQLLoader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/Loader/AbstractLoader.h>
+#include <Poco/Data/Session.h>
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
 /************************************************************/
 /**
- *
+ * @brief The SQLiteLoader class
+ * Loads saved data from sqlite database
  */
-class ANNOTATORLIB_API LoaderFactory {
+class ANNOTATORLIB_API SQLiteLoader : public MySQLLoader {
  public:
-  /**
-   *
-   * @return loader
-   * @param type
-   */
-  static AbstractLoader *createLoader(std::string /*in*/ type);
-
-  /**
-   *
-   * @param type
-   * @return loader
-   */
-  static AbstractLoader *createLoader(AnnotatorLib::StorageType type);
+  StorageType getType() override;
+  void loadSession(AnnotatorLib::Session *session) override;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -46,7 +34,7 @@ class ANNOTATORLIB_API LoaderFactory {
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of LoaderFactory class header
+ End of SQLiteLoader class header
  ************************************************************/
 
 #endif

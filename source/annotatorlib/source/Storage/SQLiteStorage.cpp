@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Storage_SQLiteStorage_BODY
 
 /************************************************************
@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/SQLiteLoader.h>
+#include <AnnotatorLib/Storage/SQLiteLoader.h>
 #include <AnnotatorLib/Storage/SQLiteSaver.h>
 #include <AnnotatorLib/Storage/SQLiteStorage.h>
 
@@ -35,7 +35,7 @@ bool SQLiteStorage::open() {
   pool = new Poco::Data::SessionPool("SQLite", this->path);
   createTables();
 
-  AnnotatorLib::Loader::SQLiteLoader loader;
+  AnnotatorLib::Storage::SQLiteLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
 

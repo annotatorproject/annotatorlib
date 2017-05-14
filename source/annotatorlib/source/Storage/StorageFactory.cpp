@@ -5,9 +5,9 @@
  LoaderFactory class body
  ************************************************************/
 
-#include "AnnotatorLib/Loader/JSONLoader.h"
-#include "AnnotatorLib/Loader/MySQLLoader.h"
-#include "AnnotatorLib/Loader/XMLLoader.h"
+#include "AnnotatorLib/Storage/JSONLoader.h"
+#include "AnnotatorLib/Storage/MySQLLoader.h"
+#include "AnnotatorLib/Storage/XMLLoader.h"
 
 #include "AnnotatorLib/Storage/JSONSaver.h"
 #include "AnnotatorLib/Storage/MySQLSaver.h"
@@ -50,13 +50,14 @@ std::list<std::string> StorageFactory::availableStorages() {
   return _availableStorages;
 }
 
-shared_ptr<Loader::AbstractLoader> StorageFactory::createLoader(
+shared_ptr<Storage::AbstractLoader> StorageFactory::createLoader(
     std::string type) {
-  if ("xml" == type) return std::make_shared<AnnotatorLib::Loader::XMLLoader>();
+  if ("xml" == type)
+    return std::make_shared<AnnotatorLib::Storage::XMLLoader>();
   if ("json" == type)
-    return std::make_shared<AnnotatorLib::Loader::JSONLoader>();
+    return std::make_shared<AnnotatorLib::Storage::JSONLoader>();
   if ("mysql" == type)
-    return std::make_shared<AnnotatorLib::Loader::MySQLLoader>();
+    return std::make_shared<AnnotatorLib::Storage::MySQLLoader>();
 
   std::shared_ptr<StoragePlugin> plugin = this->plugins[type];
   if (plugin && plugin->hasLoader()) return plugin->createLoader();

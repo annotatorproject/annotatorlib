@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/MySQLLoader.h>
+#include <AnnotatorLib/Storage/MySQLLoader.h>
 #include <AnnotatorLib/Storage/MySQLSaver.h>
 #include <AnnotatorLib/Storage/MySQLStorage.h>
 
@@ -278,7 +278,7 @@ bool MySQLStorage::open() {
   pool = new Poco::Data::SessionPool("MySQL", this->path);
   createTables();
 
-  AnnotatorLib::Loader::MySQLLoader loader;
+  AnnotatorLib::Storage::MySQLLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
 

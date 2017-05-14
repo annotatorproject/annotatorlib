@@ -6,9 +6,9 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/SQLiteLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/SQLiteLoader.h>
 
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -20,7 +20,7 @@ using std::shared_ptr;
 using namespace Poco::Data::Keywords;
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
 StorageType SQLiteLoader::getType() {
   return AnnotatorLib::StorageType::SQLITE;

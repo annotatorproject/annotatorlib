@@ -5,9 +5,8 @@
 /************************************************************
  MongoDBLoader class header
  ************************************************************/
-#include <AnnotatorLib/Loader/AbstractLoader.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
 #include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/MongoDB/Connection.h>
@@ -18,7 +17,7 @@
  * Loads saved data from mysql database
  */
 class ANNOTATORLIB_API MongoDBLoader
-    : public AnnotatorLib::Loader::AbstractLoader {
+    : public AnnotatorLib::Storage::AbstractLoader {
  public:
   void setPath(std::string path) override;
   AnnotatorLib::StorageType getType() override;

@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/XMLLoader.h>
+#include <AnnotatorLib/Storage/XMLLoader.h>
 #include <AnnotatorLib/Storage/XMLSaver.h>
 #include <AnnotatorLib/Storage/XMLStorage.h>
 
@@ -20,7 +20,7 @@ void XMLStorage::setPath(std::string path) { this->path = path; }
 StorageType XMLStorage::getType() { return AnnotatorLib::StorageType::XML; }
 
 bool XMLStorage::open() {
-  AnnotatorLib::Loader::XMLLoader loader;
+  AnnotatorLib::Storage::XMLLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
   this->_open = true;

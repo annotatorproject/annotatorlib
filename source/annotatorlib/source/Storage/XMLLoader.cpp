@@ -6,9 +6,9 @@
  ************************************************************/
 // include associated header file
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/Loader/XMLLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/XMLLoader.h>
 
 #include <fstream>
 #include <memory>
@@ -28,13 +28,13 @@
 // Derived includes directives
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
-void AnnotatorLib::Loader::XMLLoader::setPath(std::string path) {
+void AnnotatorLib::Storage::XMLLoader::setPath(std::string path) {
   this->path = path;
 }
 
-AnnotatorLib::StorageType AnnotatorLib::Loader::XMLLoader::getType() {
+AnnotatorLib::StorageType AnnotatorLib::Storage::XMLLoader::getType() {
   return AnnotatorLib::StorageType::XML;
 }
 

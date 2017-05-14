@@ -6,9 +6,9 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Loader/MySQLLoader.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/MySQLLoader.h>
 
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/RecordSet.h>
@@ -20,7 +20,7 @@ using std::shared_ptr;
 using namespace Poco::Data::Keywords;
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
 void MySQLLoader::setPath(std::string path) { this->path = path; }
 

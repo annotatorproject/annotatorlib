@@ -5,8 +5,7 @@
 /************************************************************
  XMLLoader class header
  ************************************************************/
-#include <AnnotatorLib/Loader/AbstractLoader.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <vector>
@@ -14,7 +13,7 @@
 #include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
-namespace Loader {
+namespace Storage {
 
 /************************************************************/
 /**

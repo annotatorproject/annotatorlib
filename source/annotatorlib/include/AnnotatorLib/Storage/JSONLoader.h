@@ -1,26 +1,28 @@
 // Copyright 2016-2017 Annotator Team
-#ifndef ANNOTATOR_ANNOTATORLIB_LOADER_MYSQLLOADER_H
-#define ANNOTATOR_ANNOTATORLIB_LOADER_MYSQLLOADER_H
+#ifndef ANNOTATOR_ANNOTATORLIB_LOADER_JSONLOADER_H
+#define ANNOTATOR_ANNOTATORLIB_LOADER_JSONLOADER_H
 
 /************************************************************
- MySQLLoader class header
+ JSONLoader class header
  ************************************************************/
-#include <AnnotatorLib/Loader/AbstractLoader.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
-#include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include <Poco/Data/Session.h>
+#include <Poco/JSON/Object.h>
 
 namespace AnnotatorLib {
-namespace Loader {
+
+class Session;
+class Attribute;
+
+namespace Storage {
 
 /************************************************************/
 /**
- * @brief The MySQLLoader class
- * Loads saved data from mysql database
+ * @brief The JSONLoader class
+ * loads session from json file format.
  */
-class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
+class ANNOTATORLIB_API JSONLoader : public AbstractLoader {
   // AbstractLoader interface
  public:
   void setPath(std::string path);
@@ -30,21 +32,18 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
  protected:
   std::string path;
 
-  void loadAttributes(Poco::Data::Session &sqlSession,
+  std::shared_ptr<AnnotatorLib::Attribute> loadAttribute(
+      Poco::JSON::Object::Ptr value);
+
+  void loadAttributes(Poco::JSON::Object::Ptr json,
                       AnnotatorLib::Session *session);
-  void loadAnnotations(Poco::Data::Session &sqlSession,
+  void loadAnnotations(Poco::JSON::Object::Ptr json,
                        AnnotatorLib::Session *session);
-  void loadAnnotationAttributes(
-      Poco::Data::Session &sqlSession,
-      std::shared_ptr<AnnotatorLib::Annotation> annotation);
-  void loadClasses(Poco::Data::Session &sqlSession,
+  void loadClasses(Poco::JSON::Object::Ptr json,
                    AnnotatorLib::Session *session);
-  void loadObjects(Poco::Data::Session &sqlSession,
+  void loadObjects(Poco::JSON::Object::Ptr json,
                    AnnotatorLib::Session *session);
-  void loadObjectAttributes(Poco::Data::Session &sqlSession,
-                            std::shared_ptr<AnnotatorLib::Object> object);
-  void loadFrames(Poco::Data::Session &sqlSession,
-                  AnnotatorLib::Session *session);
+  void loadFrames(Poco::JSON::Object::Ptr json, AnnotatorLib::Session *session);
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -56,7 +55,7 @@ class ANNOTATORLIB_API MySQLLoader : public AbstractLoader {
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of MySQLLoader class header
+ End of JSONLoader class header
  ************************************************************/
 
 #endif

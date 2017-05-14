@@ -3,8 +3,7 @@
 
 #include <string>
 
-#include <AnnotatorLib/Loader/AbstractLoader.h>
-#include <AnnotatorLib/Loader/Pkg_Loader.h>
+#include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/annotatorlib_api.h>
@@ -55,7 +54,7 @@ class ANNOTATORLIB_API StoragePlugin {
    * @brief createLoader
    * @return new instance of loader
    */
-  virtual shared_ptr<AnnotatorLib::Loader::AbstractLoader> createLoader() = 0;
+  virtual shared_ptr<AnnotatorLib::Storage::AbstractLoader> createLoader() = 0;
 
   /**
    * @brief createSaver

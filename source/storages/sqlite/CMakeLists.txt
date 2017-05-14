@@ -197,18 +197,6 @@ install(TARGETS ${target}
     ARCHIVE DESTINATION ${INSTALL_LIB}    COMPONENT dev
 )
 
-# Header files
-install(DIRECTORY
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/${META_PROJECT_NAME}/storages/${target} DESTINATION ${INSTALL_INCLUDE}
-    COMPONENT dev
-)
-
-# Generated header files
-install(DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR}/include/${META_PROJECT_NAME}/storages/${target} DESTINATION ${INSTALL_INCLUDE}
-    COMPONENT dev
-)
-
 # CMake config
 install(EXPORT ${target}-export
     NAMESPACE   ${META_PROJECT_NAME}::

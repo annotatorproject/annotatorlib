@@ -9,7 +9,6 @@
 #include "AnnotatorLib/Saver/SaverFactory.h"
 #include "AnnotatorLib/Saver/JSONSaver.h"
 #include "AnnotatorLib/Saver/MySQLSaver.h"
-#include "AnnotatorLib/Saver/PascalVocXMLSaver.h"
 #include "AnnotatorLib/Saver/SQLiteSaver.h"
 #include "AnnotatorLib/Saver/XMLSaver.h"
 
@@ -35,8 +34,6 @@ AbstractSaver *SaverFactory::createSaver(
   switch (type) {
     case StorageType::XML:
       return new XMLSaver();
-    case StorageType::PASCALVOCXML:
-      return new PascalVocXMLSaver();
     case StorageType::JSON:
       return new JSONSaver();
     case StorageType::MYSQL:

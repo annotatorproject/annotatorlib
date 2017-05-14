@@ -11,7 +11,6 @@
 
 #include "AnnotatorLib/Saver/JSONSaver.h"
 #include "AnnotatorLib/Saver/MySQLSaver.h"
-#include "AnnotatorLib/Saver/PascalVocXMLSaver.h"
 #include "AnnotatorLib/Saver/SQLiteSaver.h"
 #include "AnnotatorLib/Saver/XMLSaver.h"
 
@@ -113,6 +112,9 @@ void StorageFactory::loadPlugins(std::string dir) {
       plugins.insert(plugins.begin(),
                      std::pair<std::string, std::shared_ptr<StoragePlugin>>(
                          plugin->name(), sharedPlugin));
+      addAvailableLoader(plugin);
+      addAvailableSaver(plugin);
+      addAvailableStorage(plugin);
     }
   }
 }

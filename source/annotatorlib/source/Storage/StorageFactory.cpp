@@ -11,12 +11,10 @@
 
 #include "AnnotatorLib/Storage/JSONSaver.h"
 #include "AnnotatorLib/Storage/MySQLSaver.h"
-#include "AnnotatorLib/Storage/SQLiteSaver.h"
 #include "AnnotatorLib/Storage/XMLSaver.h"
 
 #include "AnnotatorLib/Storage/JSONStorage.h"
 #include "AnnotatorLib/Storage/MySQLStorage.h"
-#include "AnnotatorLib/Storage/SQLiteStorage.h"
 #include "AnnotatorLib/Storage/StorageFactory.h"
 #include "AnnotatorLib/Storage/XMLStorage.h"
 
@@ -40,7 +38,6 @@ shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
   if ("xml" == type) return std::make_shared<XMLStorage>();
   if ("json" == type) return std::make_shared<JSONStorage>();
   if ("mysql" == type) return std::make_shared<MySQLStorage>();
-  if ("sqlite" == type) return std::make_shared<SQLiteStorage>();
   std::shared_ptr<StoragePlugin> plugin = this->plugins[type];
   if (plugin && plugin->hasStorage()) return plugin->createStorage();
   return nullptr;

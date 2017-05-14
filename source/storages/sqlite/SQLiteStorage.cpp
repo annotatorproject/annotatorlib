@@ -6,9 +6,9 @@
  ************************************************************/
 
 // include associated header file
-#include <AnnotatorLib/Storage/SQLiteLoader.h>
-#include <AnnotatorLib/Storage/SQLiteSaver.h>
-#include <AnnotatorLib/Storage/SQLiteStorage.h>
+#include "SQLiteStorage.h"
+#include "SQLiteLoader.h"
+#include "SQLiteSaver.h"
 
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -19,12 +19,9 @@ using Poco::Data::Session;
 using Poco::Data::Statement;
 using namespace Poco::Data::Keywords;
 
-namespace AnnotatorLib {
-namespace Storage {
-
 void SQLiteStorage::setPath(std::string path) { this->path = path; }
 
-StorageType SQLiteStorage::getType() {
+AnnotatorLib::StorageType SQLiteStorage::getType() {
   return AnnotatorLib::StorageType::SQLITE;
 }
 
@@ -35,7 +32,7 @@ bool SQLiteStorage::open() {
   pool = new Poco::Data::SessionPool("SQLite", this->path);
   createTables();
 
-  AnnotatorLib::Storage::SQLiteLoader loader;
+  SQLiteLoader loader;
   loader.setPath(this->path);
   loader.loadSession(this);
 
@@ -85,9 +82,6 @@ void SQLiteStorage::createTables() {
               << ");";
     statement.execute();*/
 }
-
-}  // of namespace Storage
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLiteStorage class body

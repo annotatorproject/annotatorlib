@@ -26,7 +26,7 @@ set(sources
     saver_test.cpp
     session_test.cpp
     storage_json_test.cpp
-    #storage_mongodb_test.cpp
+    storage_mongodb_test.cpp
     storage_mysql_test.cpp
     storage_sqlite_test.cpp
     storage_xml_test.cpp
@@ -82,6 +82,8 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorlib
+    ${META_PROJECT_NAME}::sqlitestorage
+    ${META_PROJECT_NAME}::mongodbstorage
     libgmock
     ${libgcov}
 )

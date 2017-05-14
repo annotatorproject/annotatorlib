@@ -5,10 +5,10 @@
 
 # find_package(THIRDPARTY REQUIRED)
 
-find_package(Poco COMPONENTS MongoDB)
+find_package(Poco COMPONENTS DataSQLite)
 
 if(NOT Poco_FOUND)
-    message(WARNING "Mongodbstorage will not be build because Poco MongoDB is not found!")
+    message(WARNING "SQLiteStorage will not be build because Poco DataSQLite is not found!")
     return()
 endif()
 
@@ -17,7 +17,7 @@ endif()
 #
 
 # Target name
-set(target mongodbstorage)
+set(target sqlitestorage)
 
 # Exit here if required dependencies are not met
 message(STATUS "Lib ${target}")

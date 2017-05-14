@@ -1,7 +1,7 @@
 // Copyright 2016 Annotator Team
+#include <../../storages/sqlite/SQLiteStorage.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Session.h>
-#include <AnnotatorLib/Storage/SQLiteStorage.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <string>
@@ -14,13 +14,13 @@ class storage_sqlite_test : public testing::Test {
 };
 
 TEST_F(storage_sqlite_test, createTables) {
-  AnnotatorLib::Storage::SQLiteStorage storage;
+  SQLiteStorage storage;
   storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
 }
 
 TEST_F(storage_sqlite_test, objects) {
-  AnnotatorLib::Storage::SQLiteStorage storage;
+  SQLiteStorage storage;
   storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
@@ -37,7 +37,7 @@ TEST_F(storage_sqlite_test, objects) {
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testobject");
 
-  AnnotatorLib::Storage::SQLiteStorage storage2;
+  SQLiteStorage storage2;
   storage2.setPath("annotator.db");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
@@ -45,7 +45,7 @@ TEST_F(storage_sqlite_test, objects) {
 }
 
 TEST_F(storage_sqlite_test, annotations) {
-  AnnotatorLib::Storage::SQLiteStorage storage;
+  SQLiteStorage storage;
   storage.setPath("annotator.db");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
@@ -68,7 +68,7 @@ TEST_F(storage_sqlite_test, annotations) {
   a->setPosition(0, 0, 1, 1);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  AnnotatorLib::Storage::SQLiteStorage storage2;
+  SQLiteStorage storage2;
   storage2.setPath("annotator.db");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());

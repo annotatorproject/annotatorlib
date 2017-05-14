@@ -1,9 +1,9 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_LOADER_SQLITELOADER_H
 #define ANNOTATOR_ANNOTATORLIB_LOADER_SQLITELOADER_H
 
 /************************************************************
- MySQLLoader class header
+ SQLiteLoader class header
  ************************************************************/
 #include <AnnotatorLib/Storage/AbstractLoader.h>
 #include <AnnotatorLib/Storage/MySQLLoader.h>
@@ -11,17 +11,15 @@
 
 #include <Poco/Data/Session.h>
 
-namespace AnnotatorLib {
-namespace Storage {
-
 /************************************************************/
 /**
  * @brief The SQLiteLoader class
  * Loads saved data from sqlite database
  */
-class ANNOTATORLIB_API SQLiteLoader : public MySQLLoader {
+class ANNOTATORLIB_API SQLiteLoader
+    : public AnnotatorLib::Storage::MySQLLoader {
  public:
-  StorageType getType() override;
+  AnnotatorLib::StorageType getType() override;
   void loadSession(AnnotatorLib::Session *session) override;
 };
 /************************************************************/
@@ -29,9 +27,6 @@ class ANNOTATORLIB_API SQLiteLoader : public MySQLLoader {
 /************************************************************/
 
 /* Inline functions                                         */
-
-}  // of namespace Loader
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLiteLoader class header

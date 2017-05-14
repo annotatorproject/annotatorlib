@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #define Annotator_AnnotatorLib_Loader_SQLiteLoader_BODY
 
 /************************************************************
@@ -6,9 +6,10 @@
  ************************************************************/
 
 // include associated header file
+#include "SQLiteLoader.h"
+
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Session.h>
-#include <AnnotatorLib/Storage/SQLiteLoader.h>
 
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -19,14 +20,11 @@
 using std::shared_ptr;
 using namespace Poco::Data::Keywords;
 
-namespace AnnotatorLib {
-namespace Storage {
-
-StorageType SQLiteLoader::getType() {
+AnnotatorLib::StorageType SQLiteLoader::getType() {
   return AnnotatorLib::StorageType::SQLITE;
 }
 
-void SQLiteLoader::loadSession(Session *session) {
+void SQLiteLoader::loadSession(AnnotatorLib::Session *session) {
   Poco::Data::SQLite::Connector::registerConnector();
   Poco::Data::SessionPool pool("SQLite", this->path);
 
@@ -38,11 +36,6 @@ void SQLiteLoader::loadSession(Session *session) {
   loadFrames(sess, session);
   loadAnnotations(sess, session);
 }
-
-// static attributes (if any)
-
-}  // of namespace Loader
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLiteLoader class body

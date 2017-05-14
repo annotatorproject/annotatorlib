@@ -1,7 +1,7 @@
 // Copyright 2017 Annotator Team
+#include <../../storages/mongodb/MongoDBStorage.h>
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Session.h>
-#include <AnnotatorLib/Storage/MongoDBStorage.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <string>
@@ -14,13 +14,13 @@ class storage_mongodb_test : public testing::Test {
 };
 
 TEST_F(storage_mongodb_test, createTables) {
-  AnnotatorLib::Storage::MongoDBStorage storage;
+  MongoDBStorage storage;
   storage.setPath("mongodb://localhost:27017/annotatortest");
   ASSERT_TRUE(storage.open());
 }
 
 TEST_F(storage_mongodb_test, objects) {
-  AnnotatorLib::Storage::MongoDBStorage storage;
+  MongoDBStorage storage;
   storage.setPath("mongodb://localhost:27017/annotatortest");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
@@ -37,7 +37,7 @@ TEST_F(storage_mongodb_test, objects) {
   ASSERT_TRUE(o == o2);
   ASSERT_TRUE(o2->getName() == "testobject");
 
-  AnnotatorLib::Storage::MongoDBStorage storage2;
+  MongoDBStorage storage2;
   storage2.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
@@ -45,7 +45,7 @@ TEST_F(storage_mongodb_test, objects) {
 }
 
 TEST_F(storage_mongodb_test, annotations) {
-  AnnotatorLib::Storage::MongoDBStorage storage;
+  MongoDBStorage storage;
   storage.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
@@ -68,7 +68,7 @@ TEST_F(storage_mongodb_test, annotations) {
   a->setPosition(0, 0, 1, 1);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  AnnotatorLib::Storage::MongoDBStorage storage2;
+  MongoDBStorage storage2;
   storage2.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());
@@ -81,7 +81,7 @@ TEST_F(storage_mongodb_test, annotations) {
 }
 
 TEST_F(storage_mongodb_test, attributes) {
-  AnnotatorLib::Storage::MongoDBStorage storage;
+  MongoDBStorage storage;
   storage.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage.open());
   auto c = std::make_shared<Class>("testclass");
@@ -113,7 +113,7 @@ TEST_F(storage_mongodb_test, attributes) {
   a->addAttribute(attr);
   ASSERT_TRUE(storage.addAnnotation(a, true));
 
-  AnnotatorLib::Storage::MongoDBStorage storage2;
+  MongoDBStorage storage2;
   storage2.setPath("mongodb://localhost/annotatortest");
   ASSERT_TRUE(storage2.open());
   shared_ptr<Object> o3 = storage2.getObject(o->getId());

@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_STORAGE_SQLITESTORAGE_H
 #define ANNOTATOR_ANNOTATORLIB_STORAGE_SQLITESTORAGE_H
 
@@ -12,14 +12,12 @@
 
 #include <Poco/Data/SessionPool.h>
 
-namespace AnnotatorLib {
-namespace Storage {
-
 /************************************************************/
 /**
  * @brief The SQLiteStorage class
  */
-class ANNOTATORLIB_API SQLiteStorage : public MySQLStorage {
+class ANNOTATORLIB_API SQLiteStorage
+    : public AnnotatorLib::Storage::MySQLStorage {
  public:
   ~SQLiteStorage();
 
@@ -33,7 +31,7 @@ class ANNOTATORLIB_API SQLiteStorage : public MySQLStorage {
    */
   void setPath(std::string path) override;
 
-  StorageType getType() override;
+  AnnotatorLib::StorageType getType() override;
 
   void createTables() override;
 };
@@ -42,9 +40,6 @@ class ANNOTATORLIB_API SQLiteStorage : public MySQLStorage {
 /************************************************************/
 
 /* Inline functions                                         */
-
-}  // of namespace Storage
-}  // of namespace AnnotatorLib
 
 /************************************************************
  End of SQLiteStorage class header

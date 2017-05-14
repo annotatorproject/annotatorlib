@@ -7,7 +7,7 @@
 
 // include associated header file
 #include <AnnotatorLib/Loader/MySQLLoader.h>
-#include <AnnotatorLib/Saver/MySQLSaver.h>
+#include <AnnotatorLib/Storage/MySQLSaver.h>
 #include <AnnotatorLib/Storage/MySQLStorage.h>
 
 #include <Poco/Data/MySQL/Connector.h>

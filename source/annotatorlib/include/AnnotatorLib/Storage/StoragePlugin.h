@@ -5,7 +5,7 @@
 
 #include <AnnotatorLib/Loader/AbstractLoader.h>
 #include <AnnotatorLib/Loader/Pkg_Loader.h>
-#include <AnnotatorLib/Saver/AbstractSaver.h>
+#include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
@@ -61,7 +61,7 @@ class ANNOTATORLIB_API StoragePlugin {
    * @brief createSaver
    * @return new instance of saver
    */
-  virtual shared_ptr<AnnotatorLib::Saver::AbstractSaver> createSaver() = 0;
+  virtual shared_ptr<AnnotatorLib::Storage::AbstractSaver> createSaver() = 0;
 
   /**
    * @brief createStorage

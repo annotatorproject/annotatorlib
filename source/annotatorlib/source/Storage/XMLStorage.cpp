@@ -7,7 +7,7 @@
 
 // include associated header file
 #include <AnnotatorLib/Loader/XMLLoader.h>
-#include <AnnotatorLib/Saver/XMLSaver.h>
+#include <AnnotatorLib/Storage/XMLSaver.h>
 #include <AnnotatorLib/Storage/XMLStorage.h>
 
 // Derived includes directives
@@ -30,7 +30,7 @@ bool XMLStorage::open() {
 bool XMLStorage::isOpen() { return _open; }
 
 bool XMLStorage::flush() {
-  AnnotatorLib::Saver::XMLSaver saver;
+  AnnotatorLib::Storage::XMLSaver saver;
   saver.setPath(this->path);
   saver.saveSession(this);
   _save = saver.close();

@@ -7,7 +7,7 @@
 
 // include associated header file
 
-#include "AnnotatorLib/Saver/JSONSaver.h"
+#include "AnnotatorLib/Storage/JSONSaver.h"
 #include "AnnotatorLib/Annotation.h"
 #include "AnnotatorLib/Attribute.h"
 #include "AnnotatorLib/Frame.h"
@@ -28,7 +28,7 @@ using std::pair;
 using std::unordered_map;
 
 namespace AnnotatorLib {
-namespace Saver {
+namespace Storage {
 
 void JSONSaver::saveAnnotation(const Annotation annotation) {}
 

@@ -6,7 +6,7 @@
  ************************************************************/
 
 // include associated header file
-#include "AnnotatorLib/Saver/XMLSaver.h"
+#include "AnnotatorLib/Storage/XMLSaver.h"
 #include "AnnotatorLib/Algo/InterpolateAnnotation.h"
 #include "AnnotatorLib/Frame.h"
 #include "AnnotatorLib/Object.h"
@@ -23,7 +23,7 @@
 using namespace std;
 
 namespace AnnotatorLib {
-namespace Saver {
+namespace Storage {
 
 void XMLSaver::saveFrame(const Session *session,
                          const shared_ptr<Frame> frame) {

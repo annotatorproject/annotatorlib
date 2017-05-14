@@ -7,12 +7,12 @@
 
 // include associated header file
 
-#include "AnnotatorLib/Saver/MySQLSaver.h"
+#include "AnnotatorLib/Storage/MySQLSaver.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
-namespace Saver {
+namespace Storage {
 
 void MySQLSaver::saveAnnotation(const Annotation /* annotation */) {}
 

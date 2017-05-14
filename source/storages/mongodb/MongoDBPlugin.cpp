@@ -16,7 +16,7 @@ shared_ptr<AnnotatorLib::Loader::AbstractLoader> MongoDBPlugin::createLoader() {
   return std::make_shared<MongoDBLoader>();
 }
 
-shared_ptr<AnnotatorLib::Saver::AbstractSaver> MongoDBPlugin::createSaver() {
+shared_ptr<AnnotatorLib::Storage::AbstractSaver> MongoDBPlugin::createSaver() {
   return nullptr;
 }
 

@@ -6,14 +6,13 @@
  JSONSaver class header
  ************************************************************/
 #include <AnnotatorLib/Class.h>
-#include <AnnotatorLib/Saver/AbstractSaver.h>
-#include <AnnotatorLib/Saver/Pkg_Saver.h>
+#include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/JSON/Object.h>
 
 namespace AnnotatorLib {
-namespace Saver {
+namespace Storage {
 
 /************************************************************/
 /**

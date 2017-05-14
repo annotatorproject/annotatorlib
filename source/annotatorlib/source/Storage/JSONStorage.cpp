@@ -7,7 +7,7 @@
 
 // include associated header file
 #include <AnnotatorLib/Loader/JSONLoader.h>
-#include <AnnotatorLib/Saver/JSONSaver.h>
+#include <AnnotatorLib/Storage/JSONSaver.h>
 #include <AnnotatorLib/Storage/JSONStorage.h>
 
 // Derived includes directives
@@ -30,7 +30,7 @@ bool JSONStorage::open() {
 bool JSONStorage::isOpen() { return _open; }
 
 bool JSONStorage::flush() {
-  AnnotatorLib::Saver::JSONSaver saver;
+  AnnotatorLib::Storage::JSONSaver saver;
   saver.setPath(this->path);
   saver.saveSession(this);
   _save = saver.close();

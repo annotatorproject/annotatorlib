@@ -7,7 +7,7 @@
 
 // include associated header file
 #include <AnnotatorLib/Loader/SQLiteLoader.h>
-#include <AnnotatorLib/Saver/SQLiteSaver.h>
+#include <AnnotatorLib/Storage/SQLiteSaver.h>
 #include <AnnotatorLib/Storage/SQLiteStorage.h>
 
 #include <Poco/Data/RecordSet.h>

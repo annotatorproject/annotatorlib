@@ -9,7 +9,6 @@
 #include <AnnotatorLib/ImageSetFactory.h>
 #include <AnnotatorLib/Loader/LoaderFactory.h>
 #include <AnnotatorLib/Project.h>
-#include <AnnotatorLib/Saver/SaverFactory.h>
 #include <AnnotatorLib/Storage/StorageFactory.h>
 
 #include <fstream>

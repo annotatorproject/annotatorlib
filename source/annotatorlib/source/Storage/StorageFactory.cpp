@@ -9,10 +9,10 @@
 #include "AnnotatorLib/Loader/MySQLLoader.h"
 #include "AnnotatorLib/Loader/XMLLoader.h"
 
-#include "AnnotatorLib/Saver/JSONSaver.h"
-#include "AnnotatorLib/Saver/MySQLSaver.h"
-#include "AnnotatorLib/Saver/SQLiteSaver.h"
-#include "AnnotatorLib/Saver/XMLSaver.h"
+#include "AnnotatorLib/Storage/JSONSaver.h"
+#include "AnnotatorLib/Storage/MySQLSaver.h"
+#include "AnnotatorLib/Storage/SQLiteSaver.h"
+#include "AnnotatorLib/Storage/XMLSaver.h"
 
 #include "AnnotatorLib/Storage/JSONStorage.h"
 #include "AnnotatorLib/Storage/MySQLStorage.h"
@@ -67,11 +67,13 @@ std::list<std::string> StorageFactory::availableLoader() {
   return _availableLoader;
 }
 
-shared_ptr<Saver::AbstractSaver> StorageFactory::createSaver(std::string type) {
-  if ("xml" == type) return std::make_shared<AnnotatorLib::Saver::XMLSaver>();
-  if ("json" == type) return std::make_shared<AnnotatorLib::Saver::JSONSaver>();
+shared_ptr<Storage::AbstractSaver> StorageFactory::createSaver(
+    std::string type) {
+  if ("xml" == type) return std::make_shared<AnnotatorLib::Storage::XMLSaver>();
+  if ("json" == type)
+    return std::make_shared<AnnotatorLib::Storage::JSONSaver>();
   if ("mysql" == type)
-    return std::make_shared<AnnotatorLib::Saver::MySQLSaver>();
+    return std::make_shared<AnnotatorLib::Storage::MySQLSaver>();
 
   std::shared_ptr<StoragePlugin> plugin = this->plugins[type];
   if (plugin && plugin->hasSaver()) return plugin->createSaver();

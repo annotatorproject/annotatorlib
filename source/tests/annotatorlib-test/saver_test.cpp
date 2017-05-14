@@ -1,8 +1,8 @@
 // Copyright 2016 Annotator Team
 #include <AnnotatorLib/Object.h>
-#include <AnnotatorLib/Saver/AbstractSaver.h>
-#include <AnnotatorLib/Saver/SaverFactory.h>
 #include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/AbstractSaver.h>
+#include <AnnotatorLib/Storage/StorageFactory.h>
 #include <gmock/gmock.h>
 #include <memory>
 #include <string>
@@ -68,33 +68,34 @@ Session* initSession() {
 
 TEST_F(saver_test, saveJson) {
   Session* session = initSession();
-  Saver::AbstractSaver* saver = Saver::SaverFactory::createSaver("json");
+  std::shared_ptr<Storage::AbstractSaver> saver =
+      Storage::StorageFactory::instance()->createSaver("json");
   saver->setPath("savertest.json");
   saver->saveSession(session);
-
   saver->close();
-  delete saver;
   delete session;
 }
 
 TEST_F(saver_test, saveXML) {
   Session* session = initSession();
-  Saver::AbstractSaver* saver = Saver::SaverFactory::createSaver("xml");
+  std::shared_ptr<Storage::AbstractSaver> saver =
+      Storage::StorageFactory::instance()->createSaver("xml");
   saver->setPath("xml/");
   saver->saveSession(session);
   saver->close();
-  delete saver;
+  delete session;
 }
 
 #ifdef WITH_SQLITE3
 TEST_F(saver_test, saveSQLite) {
   Session session = initSession();
-  Saver::AbstractSaver* saver = Saver::SaverFactory::createSaver("sqlite");
+  std::shared_ptr<Storage::AbstractSaver> saver =
+      Storage::StorageFactory::instance()->createSaver("sqlite");
   saver->setPath("savertest.sqlite");
 
   saver->saveSession(&session);
 
   saver->close();
-  delete saver;
+  delete session;
 }
 #endif

@@ -6,7 +6,6 @@
  AbstractSaver class header
  ************************************************************/
 
-#include <AnnotatorLib/Saver/Pkg_Saver.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <string>
 
@@ -18,7 +17,7 @@ namespace AnnotatorLib {
 
 class Session;
 
-namespace Saver {
+namespace Storage {
 
 /************************************************************/
 /**

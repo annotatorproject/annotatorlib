@@ -5,8 +5,7 @@
 /************************************************************
  XMLSaver class header
  ************************************************************/
-#include <AnnotatorLib/Saver/AbstractSaver.h>
-#include <AnnotatorLib/Saver/Pkg_Saver.h>
+#include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <Poco/AutoPtr.h>
@@ -17,7 +16,7 @@ namespace AnnotatorLib {
 
 class Frame;
 
-namespace Saver {
+namespace Storage {
 
 /************************************************************/
 /**

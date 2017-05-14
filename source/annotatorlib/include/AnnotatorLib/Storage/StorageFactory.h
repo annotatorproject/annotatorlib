@@ -15,7 +15,7 @@
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/Loader/AbstractLoader.h>
-#include <AnnotatorLib/Saver/AbstractSaver.h>
+#include <AnnotatorLib/Storage/AbstractSaver.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
 #include <AnnotatorLib/Storage/StoragePlugin.h>
 
@@ -33,7 +33,8 @@ class ANNOTATORLIB_API StorageFactory {
 
   std::list<std::string> availableLoader();
 
-  shared_ptr<AnnotatorLib::Saver::AbstractSaver> createSaver(std::string type);
+  shared_ptr<AnnotatorLib::Storage::AbstractSaver> createSaver(
+      std::string type);
 
   std::list<std::string> availableSaver();
 

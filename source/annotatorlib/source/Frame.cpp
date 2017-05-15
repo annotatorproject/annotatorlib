@@ -65,6 +65,8 @@ bool Frame::addAnnotation(const weak_ptr<Annotation> annotation) {
   return false;
 }
 
+std::vector<shared_ptr<Attribute>> Frame::getAttributes() { return attributes; }
+
 bool Frame::removeAnnotation(const shared_ptr<Annotation> annotation) {
   if (annotation->getFrame().get() == this) return false;
   return removeAnnotation(annotation->getId());
@@ -79,17 +81,26 @@ bool Frame::removeAnnotation(unsigned int id) {
   return annotations.erase(id) > 0;
 }
 
-std::unordered_map<unsigned long, shared_ptr<Attribute>> const &
-Frame::getAttributes() const {
-  return attributes;
+bool Frame::hasAttributes() const { return !attributes.empty(); }
+
+bool Frame::addAttribute(shared_ptr<Attribute> attribute) {
+  if (attribute &&
+      std::find(attributes.begin(), attributes.end(), attribute) ==
+          attributes.end()) {
+    attributes.push_back(attribute);
+    return true;
+  }
+  return false;
 }
 
-bool Frame::addAttribute(const shared_ptr<Attribute> attr) {
-  return attributes.insert(std::make_pair(attr->getId(), attr)).second;
-}
-
-bool Frame::removeAttribute(const shared_ptr<Attribute> attr) {
-  return attributes.erase(attr->getId()) > 0;
+bool Frame::removeAttribute(shared_ptr<Attribute> attribute) {
+  std::vector<shared_ptr<Attribute>>::iterator position =
+      std::find(attributes.begin(), attributes.end(), attribute);
+  if (position != attributes.end()) {
+    attributes.erase(position);
+    return true;
+  }
+  return false;
 }
 
 unsigned long Frame::getFrameNumber() const { return frame_number; }

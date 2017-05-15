@@ -83,7 +83,8 @@ Poco::JSON::Object::Ptr JSONSaver::sessionToJson(const Session* session) {
   // insert list of frames
   Poco::JSON::Array::Ptr frames = new Poco::JSON::Array;
   for (auto& pair : session->getFrames()) {
-    if (pair.second->hasAnnotations()) frames->add(frameToJson(pair.second));
+    if (pair.second->hasAnnotations() || pair.second->hasAttributes())
+      frames->add(frameToJson(pair.second));
   }
   json->set("frames", frames);
 
@@ -136,8 +137,8 @@ Poco::JSON::Object::Ptr JSONSaver::frameToJson(const shared_ptr<Frame> frame) {
   json->set("number", std::to_string(frame->getFrameNumber()));
 
   Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
-  for (auto& pair : frame->getAttributes()) {
-    attributes->add(std::to_string(pair.second->getId()));
+  for (std::shared_ptr<Attribute> attribute : frame->getAttributes()) {
+    attributes->add(attributeToJson(attribute));
   }
   json->set("attributes", attributes);
 

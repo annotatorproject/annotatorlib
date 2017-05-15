@@ -100,6 +100,7 @@ TEST_F(storage_json_test, attributes) {
   ASSERT_TRUE(o2->getName() == "testobject");
 
   shared_ptr<Frame> f = std::make_shared<Frame>(1);
+
   shared_ptr<Annotation> a =
       Annotation::make_shared(f, o, AnnotationType::RECTANGLE);
   a->setPosition(0, 0, 1, 1);
@@ -111,6 +112,14 @@ TEST_F(storage_json_test, attributes) {
           AnnotatorLib::AttributeType::BOOLEAN, "light");
   attr->getValue()->setValue(true);
   a->addAttribute(attr);
+
+  std::shared_ptr<AnnotatorLib::Attribute> attr2 =
+      std::make_shared<AnnotatorLib::Attribute>(
+          AnnotatorLib::Attribute::genId(), AnnotatorLib::AttributeType::STRING,
+          "scene");
+  attr2->getValue()->setValue(std::string("coast"));
+  storage.getFrame(1)->addAttribute(attr2);
+
   storage.flush();
 
   AnnotatorLib::Storage::JSONStorage storage2;

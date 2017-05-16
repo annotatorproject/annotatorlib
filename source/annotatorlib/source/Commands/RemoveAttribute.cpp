@@ -23,14 +23,24 @@ AnnotatorLib::Commands::RemoveAttribute::RemoveAttribute(
   this->attribute_ = attribute;
 }
 
+AnnotatorLib::Commands::RemoveAttribute::RemoveAttribute(
+    std::shared_ptr<AnnotatorLib::Session> session,
+    shared_ptr<AnnotatorLib::Frame> frame,
+    std::shared_ptr<AnnotatorLib::Attribute> attribute)
+    : session(session), frame(frame) {
+  this->attribute_ = attribute;
+}
+
 bool AnnotatorLib::Commands::RemoveAttribute::execute(
     AnnotatorLib::Session *informSession) {
   if (object) {
     object->removeAttribute(attribute_);
     // TODO also remove attributes from annotations
+  } else if (frame) {
+    frame->removeAttribute(attribute_);
   } else {
     throw std::runtime_error(
-        "No object or annotation given to NewAttribute Command.");
+        "No frame, object or annotation given to RemoveAttribute Command.");
   }
   if (informSession) {
     informSession->updateObject(object);
@@ -40,11 +50,16 @@ bool AnnotatorLib::Commands::RemoveAttribute::execute(
 
 bool AnnotatorLib::Commands::RemoveAttribute::undo(
     AnnotatorLib::Session *informSession) {
-  object->addAttribute(attribute_);
-
-  if (informSession) {
-    informSession->updateObject(object);
+  if (object) {
+    if (informSession) {
+      informSession->updateObject(object);
+    }
+    object->addAttribute(attribute_);
+  } else if (frame) {
+    frame->addAttribute(attribute_);
+    informSession->updateFrame(frame);
   }
+
   return true;
 }
 

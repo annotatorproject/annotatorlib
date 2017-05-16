@@ -134,4 +134,5 @@ TEST_F(storage_json_test, attributes) {
   ASSERT_TRUE(storage2.getFrames().size() == 1);
   ASSERT_TRUE(storage2.getFrames().size() == 1);
   ASSERT_TRUE(a2->getAttribute("light")->getValue()->getBoolean());
+  ASSERT_TRUE(storage2.getFrame(1)->hasAttributes());
 }

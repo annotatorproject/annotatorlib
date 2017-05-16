@@ -14,6 +14,7 @@ namespace AnnotatorLib {
 class Object;
 class Session;
 class Attribute;
+class Frame;
 
 namespace Commands {
 
@@ -28,6 +29,10 @@ class ANNOTATORLIB_API RemoveAttribute : public Command {
                   shared_ptr<AnnotatorLib::Object> object,
                   std::shared_ptr<Attribute> attribute);
 
+  RemoveAttribute(std::shared_ptr<Session> session,
+                  shared_ptr<AnnotatorLib::Frame> frame,
+                  std::shared_ptr<Attribute> attribute);
+
   virtual bool execute(Session *informSession = 0) override;
 
   virtual bool undo(Session *informSession = 0) override;
@@ -38,6 +43,7 @@ class ANNOTATORLIB_API RemoveAttribute : public Command {
   shared_ptr<Attribute> attribute_;
   const std::shared_ptr<AnnotatorLib::Session> session;
   const shared_ptr<AnnotatorLib::Object> object;
+  const shared_ptr<AnnotatorLib::Frame> frame;
 };
 }
 }

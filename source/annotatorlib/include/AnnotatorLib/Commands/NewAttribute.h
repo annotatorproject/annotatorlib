@@ -33,6 +33,9 @@ class ANNOTATORLIB_API NewAttribute : public Command {
                shared_ptr<Annotation> annotation,
                std::shared_ptr<Attribute> attribute);
 
+  NewAttribute(std::shared_ptr<Session> session, shared_ptr<Frame> frame,
+               std::shared_ptr<Attribute> attribute);
+
   NewAttribute(const NewAttribute &other) = delete;
 
   ~NewAttribute() {}
@@ -48,6 +51,7 @@ class ANNOTATORLIB_API NewAttribute : public Command {
   const std::shared_ptr<AnnotatorLib::Session> session;
   const shared_ptr<AnnotatorLib::Object> object;
   const shared_ptr<AnnotatorLib::Annotation> annotation;
+  const shared_ptr<AnnotatorLib::Frame> frame;
   std::string type;
   std::string name;
   std::string value;

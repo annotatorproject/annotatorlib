@@ -35,10 +35,20 @@ AnnotatorLib::Commands::NewAttribute::NewAttribute(
   attribute_ = attribute;
 }
 
+AnnotatorLib::Commands::NewAttribute::NewAttribute(
+    std::shared_ptr<AnnotatorLib::Session> session,
+    shared_ptr<AnnotatorLib::Frame> frame,
+    std::shared_ptr<AnnotatorLib::Attribute> attribute)
+    : session(session), frame(frame) {
+  attribute_ = attribute;
+}
+
 bool AnnotatorLib::Commands::NewAttribute::execute(
     AnnotatorLib::Session *informSession) {
   if (object)
     object->addAttribute(attribute_);
+  else if (frame)
+    frame->addAttribute(attribute_);
   else if (annotation) {
     annotation->addAttribute(attribute_);
     if (!annotation->getObject()->getAttribute(attribute_->getName())) {
@@ -47,7 +57,7 @@ bool AnnotatorLib::Commands::NewAttribute::execute(
     }
   } else {
     throw std::runtime_error(
-        "No object or annotation given to NewAttribute Command.");
+        "No frame, object or annotation given to NewAttribute Command.");
   }
   if (informSession) {
     if (this->object) informSession->updateObject(this->object);
@@ -61,6 +71,8 @@ bool AnnotatorLib::Commands::NewAttribute::execute(
 
 bool AnnotatorLib::Commands::NewAttribute::undo(
     AnnotatorLib::Session *informSession) {
+  if (frame) frame->removeAttribute(attribute_);
+  return true;
   // TODO
 }
 

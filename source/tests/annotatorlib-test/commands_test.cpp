@@ -225,6 +225,25 @@ TEST_F(commands_test, newAttribute) {
       new Commands::NewAttribute(session, o, "string", "testattribute", "test");
   session->execute(shared_ptr<Commands::Command>(nAttr));
   ASSERT_EQ(annotation->getAttributes().size(), 1);
+
+  std::shared_ptr<AnnotatorLib::Attribute> attribute_ =
+      std::make_shared<AnnotatorLib::Attribute>("string", "scene");
+  std::shared_ptr<AnnotatorLib::AttributeValue> av =
+      AnnotatorLib::Attribute::createAttributeValue(
+          AnnotatorLib::AttributeType::STRING, std::string("coast"));
+  attribute_->setValue(av);
+
+  Commands::NewAttribute *nfAttr =
+      new Commands::NewAttribute(session, session->getFrame(1), attribute_);
+
+  session->execute(shared_ptr<Commands::Command>(nfAttr));
+  ASSERT_EQ(session->getFrame(1)->getAttributes().size(), 1);
+
+  session->undo();
+  ASSERT_EQ(session->getFrame(1)->getAttributes().size(), 0);
+
+  delete nAttr;
+  delete nfAttr;
 }
 
 TEST_F(commands_test, updateAttribute) {

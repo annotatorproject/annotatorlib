@@ -193,6 +193,16 @@ void JSONLoader::loadFrames(Poco::JSON::Object::Ptr json, Session *session) {
     unsigned long number =
         std::stoul(value->get("number").extract<std::string>());
     shared_ptr<Frame> f = std::make_shared<Frame>(number);
+
+    if (value->has("attributes") && !value->isNull("attributes")) {
+      Poco::JSON::Array::Ptr attrArray = value->getArray("attributes");
+
+      for (std::size_t i = 0; i < attrArray->size(); ++i) {
+        Poco::JSON::Object::Ptr attrValue = attrArray->getObject(i);
+        f->addAttribute(loadAttribute(attrValue));
+      }
+    }
+
     session->addFrame(f);
   }
 }

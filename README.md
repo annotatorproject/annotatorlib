@@ -49,6 +49,16 @@ cmake -DPoco_DIR= ../../poco/build/Poco ..
 make
 ```
 
+Add PascalVoc storage support.
+
+```sh
+cd annotatorlib/source/storages
+git clone https://github.com/annotatorproject/annotatorstorage_pascalvocxml
+cd ../../build
+cmake ..
+make
+```
+
 ## Build coverage
 ```sh
 git clone https://github.com/annotatorproject/annotatorlib

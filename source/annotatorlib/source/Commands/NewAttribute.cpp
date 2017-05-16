@@ -47,9 +47,11 @@ bool AnnotatorLib::Commands::NewAttribute::execute(
     AnnotatorLib::Session *informSession) {
   if (object)
     object->addAttribute(attribute_);
-  else if (frame)
+  else if (frame) {
     frame->addAttribute(attribute_);
-  else if (annotation) {
+    if (session->getFrame(frame->getFrameNumber()) != frame)
+      session->addFrame(frame);
+  } else if (annotation) {
     annotation->addAttribute(attribute_);
     if (!annotation->getObject()->getAttribute(attribute_->getName())) {
       annotation->getObject()->addAttribute(
@@ -71,7 +73,12 @@ bool AnnotatorLib::Commands::NewAttribute::execute(
 
 bool AnnotatorLib::Commands::NewAttribute::undo(
     AnnotatorLib::Session *informSession) {
-  if (frame) frame->removeAttribute(attribute_);
+  if (frame) {
+    frame->removeAttribute(attribute_);
+    if (session->getFrame(frame->getFrameNumber()) == frame &&
+        !frame->hasAnnotations() && !frame->hasAttributes())
+      session->removeFrame(frame->getFrameNumber());
+  }
   return true;
   // TODO
 }

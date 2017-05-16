@@ -31,7 +31,7 @@ class ANNOTATORLIB_API Frame {
  public:
   Frame() = delete;
   Frame(unsigned long frame_nmb);
-  ~Frame() {}
+  ~Frame();
 
   bool operator>(const Frame& right) const;
   bool operator>=(const Frame& right) const;
@@ -46,10 +46,11 @@ class ANNOTATORLIB_API Frame {
   bool addAnnotation(const std::shared_ptr<Annotation> annotation);
   bool addAnnotation(const std::weak_ptr<Annotation> annotation);
 
-  std::vector<std::shared_ptr<Attribute>> getAttributes();
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const&
+  getAttributes() const;
+  bool addAttribute(const std::shared_ptr<Attribute> attr);
+  bool removeAttribute(const std::shared_ptr<Attribute> attr);
   bool hasAttributes() const;
-  bool addAttribute(std::shared_ptr<Attribute> attribute);
-  bool removeAttribute(std::shared_ptr<Attribute> attribute);
 
   unsigned long getFrameNumber() const;
   unsigned long getId() const;
@@ -68,8 +69,9 @@ class ANNOTATORLIB_API Frame {
   bool removeAnnotation(unsigned int id);
 
   const unsigned long frame_number;
-  std::vector<std::shared_ptr<Attribute>> attributes;
+
   std::unordered_map<unsigned long, std::weak_ptr<Annotation>> annotations;
+  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> attributes;
 };
 
 /************************************************************/

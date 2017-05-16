@@ -30,7 +30,7 @@ using std::unordered_map;
 namespace AnnotatorLib {
 namespace Storage {
 
-void JSONSaver::saveAnnotation(const Annotation annotation) {}
+void JSONSaver::saveAnnotation(const Annotation) {}
 
 void JSONSaver::setPath(std::string path) { this->path = path; }
 
@@ -137,8 +137,8 @@ Poco::JSON::Object::Ptr JSONSaver::frameToJson(const shared_ptr<Frame> frame) {
   json->set("number", std::to_string(frame->getFrameNumber()));
 
   Poco::JSON::Array::Ptr attributes = new Poco::JSON::Array;
-  for (std::shared_ptr<Attribute> attribute : frame->getAttributes()) {
-    attributes->add(attributeToJson(attribute));
+  for (auto attribute : frame->getAttributes()) {
+    attributes->add(attributeToJson(attribute.second));
   }
   json->set("attributes", attributes);
 

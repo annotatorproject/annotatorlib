@@ -22,7 +22,7 @@ namespace Storage {
 class ANNOTATORLIB_API JSONSaver : public AbstractSaver {
   // AbstractSaver interface
  public:
-  void saveAnnotation(const Annotation annotation) override;
+  void saveAnnotation(const Annotation) override;
   void setPath(std::string path) override;
   StorageType getType() override;
   void saveSession(const AnnotatorLib::Session* session) override;

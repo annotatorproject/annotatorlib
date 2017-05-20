@@ -48,6 +48,8 @@ addons:
    - texlive-full
 
 install:
+before_install:
+ - if [ $TRAVIS_OS_NAME == linux ]; then eval "$(curl -sL https://raw.githubusercontent.com/ryuichis/oclint-cpp-travis-ci-examples/master/oclint-ci-install.sh)"; fi
  - sudo pip install cpp-coveralls
  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
          sudo apt-get update -qq
@@ -97,7 +99,7 @@ before_script:
 
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER=$CXX -DOPTION_BUILD_TESTS=1 -DOPTION_BUILD_DOCS=1 -DCMAKE_BUILD_TYPE=Coverage ..
+ - cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DOPTION_BUILD_TESTS=1 -DOPTION_BUILD_DOCS=1 -DCMAKE_BUILD_TYPE=Coverage ..
 script:
  - make -j4
  - make pack
@@ -106,6 +108,8 @@ after_success:
   - make annotatorlib_coverage
   - cd ..
   - coveralls --root "." -E ".*/cmake-3.6.0/.*" -E ".*/opencv-3.1.0/.*" -E ".*/poco/.*" -E ".*/build/gtest/.*" -E ".*CMakeFiles.*" -E ".*tests/.*.cpp.*"
+  - cp build/compile_commands.json .
+  - oclint-json-compilation-database
 
 deploy:
   provider: releases

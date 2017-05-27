@@ -9,7 +9,21 @@ compiler:
      - gcc
      - clang
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "addQ5v77eMIlPUb3gT1XXS+ZFsjPk9VdJEhifAaPjgv4yLo2HdKJ31+S009+luPVvgWMbd6Rjl40XpymPU85QPNm1mCIJQ7JCWGnZW0UNvtGdFfi7TegtXrBUjb1tWdKi2mhumS93Zi5adoPP27aJpZj0+8apNvqbtarV657U931FJw6Zn1DK2PKjVDDujFjejX9t33AWXggjB4xOIgPELmZ7OTxWFSTvHWNNQThcRkwd3d5i3a3f/YnPCids5cwyQG5eKHdT9DmEeFbKIdFhV9oZoukW5E4dcdnAXWPYYIkRyoOqwo/Kb6ynu6o5SCfLX+ijSKsqShi0d7mAAGzAPhePQxSwDbsD7ueuK6jDeCMElJQifwJ/dr2r93rPf+sriwdOsozy1Mkhrg6NB+QJe2n/CfffgKw5na+ImkQQ2Giybbvl261Z8pbBx1H9GswlfS5H4XKnLgueF9VYChqre5qarzTI4F8/Qimb67XPASxWJ9/hvFy8D5LLr/oADDoZpX8SeZnJ7IWWQcoDNrsgZxMbKnArr96nHRNdxcp5PdmrZi37BJsyRhrY4niu7WY+w7c7L9lGCtn9s4u3QLLls4KYiFsXlE9gzL3qGcBlonN6W/pk1Ew/lP1HxHBHzD2eugo8qs+t9WqpCFj1DzrYbtnaG5w6k32+jX6x09qBUk="
+
 addons:
+ coverity_scan:
+    project:
+      name: "annotatorproject/annotatorlib"
+      description: "Build submitted via Travis CI"
+    notification_email: chriamue@gmail.com
+    build_command_prepend: "cmake -DCMAKE_BUILD_TYPE=Debug ."
+    build_command:   "cmake --build ."
+    branch_pattern: coverity_scan
  apt:
   sources:
    - ubuntu-toolchain-r-test
@@ -49,6 +63,8 @@ addons:
 
 install:
 before_install:
+ - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
  - if [ $TRAVIS_OS_NAME == linux ]; then eval "$(curl -sL https://raw.githubusercontent.com/ryuichis/oclint-cpp-travis-ci-examples/master/oclint-ci-install.sh)"; fi
  - sudo pip install cpp-coveralls
  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then

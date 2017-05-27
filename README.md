@@ -1,14 +1,20 @@
 Annotator Library
 =================
 
-[![Stories in Ready][waffle-image]][waffle][![Build Status][travis-image]][travis][![Coverage_Status][coveralls-image]][coveralls][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
-
+[![Stories in Ready][waffle-image]][waffle]
+[![Build Status][travis-image]][travis]
+[![Coverage_Status][coveralls-image]][coveralls]
+[![Coverity Scan Build Status][coverity-image]][coverity]
+[![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
 [travis-image]: https://travis-ci.org/annotatorproject/annotatorlib.png?branch=master
 [travis]: http://travis-ci.org/annotatorproject/annotatorlib
 
 [coveralls-image]: https://img.shields.io/coveralls/annotatorproject/annotatorlib.svg?label=Coverage
 [coveralls]: https://coveralls.io/github/annotatorproject/annotatorlib
+
+[coverity-image]: https://img.shields.io/coverity/scan/12802.svg
+[coverity]: https://scan.coverity.com/projects/annotatorproject-annotatorlib
 
 [codedocs-image]: https://codedocs.xyz/annotatorproject/annotatorlib.svg
 [codedocs]: https://codedocs.xyz/annotatorproject/annotatorlib/

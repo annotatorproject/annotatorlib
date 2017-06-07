@@ -10,8 +10,6 @@ clone_folder: c:\dev\src
 
 init:
 - env
-- set POCO_INSTALL_PREFIX=%PROGRAMFILES%\Poco
-- set PATH=C:\MinGW\bin;%PATH%;%POCO_INSTALL_PREFIX%\bin
 
 install:
  - cmd: echo "Downloading conan..."

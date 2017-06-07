@@ -1,14 +1,14 @@
 [requires]
-Boost/1.60.0@lasote/stable
-Poco/1.7.3@lasote/stable
-OpenCV/3.2.0@fmiguelgarcia/stable
+Boost/1.62.0@lasote/stable
+OpenCV/3.2.0@ohhi/stable
+Poco/1.7.5@lasote/stable
 
 [options]
 Boost:shared=True
+OpenCV:shared=True
 Poco:shared=True
 Poco:enable_data=True
 Poco:enable_data_sqlite=True
-Poco:enable_data_mysql=True
-Poco:enable_mongodb=True
+
 [generators]
 cmake

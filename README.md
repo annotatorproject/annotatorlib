@@ -1,7 +1,7 @@
 Annotator Library
 =================
 
-[![Stories in Ready][waffle-image]][waffle][![Build Status Linux][travis-image]][travis][![Build Status Windows][appveyor-image]][appveyor][![Coverage_Status][coveralls-image]][coveralls][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
+[![Stories in Ready][waffle-image]][waffle][![Build Status Linux][travis-image]][travis][![Build Status Windows][appveyor-image]][appveyor][![Coverage Status Coveralls][coveralls-image]][coveralls][![Coverage Status Codecov][codecov-image]][codecov][![Code Analysis Status Coverity][coverity-image]][coverity][![Documentation][codedocs-image]][codedocs][![Gitter][gitter-image]][gitter]
 
 
 [travis-image]: https://travis-ci.org/annotatorproject/annotatorlib.png?branch=master
@@ -13,8 +13,14 @@ Annotator Library
 [coveralls-image]: https://img.shields.io/coveralls/annotatorproject/annotatorlib.svg?label=Coverage
 [coveralls]: https://coveralls.io/github/annotatorproject/annotatorlib
 
+[codecov-image]: https://img.shields.io/codecov/c/github/annotatorproject/annotatorlib.svg
+[codecov]: https://codecov.io/gh/annotatorproject/annotatorlib
+
 [codedocs-image]: https://codedocs.xyz/annotatorproject/annotatorlib.svg
 [codedocs]: https://codedocs.xyz/annotatorproject/annotatorlib/
+
+[coverity-image]: https://img.shields.io/coverity/scan/12802.svg
+[coverity]: https://scan.coverity.com/projects/annotatorproject-annotatorlib
 
 [gitter-image]: https://badges.gitter.im/Join%20Chat.svg
 [gitter]: https://gitter.im/annotatorproject/annotatorlib

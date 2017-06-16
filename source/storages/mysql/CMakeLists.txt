@@ -5,7 +5,7 @@
 
 # find_package(THIRDPARTY REQUIRED)
 
-find_package(Poco COMPONENTS DataMySQL)
+find_package(Poco COMPONENTS DataMySQL QUIET)
 
 if(NOT Poco_FOUND)
     message(WARNING "MySQLStorage will not be build because Poco DataMySQL is not found!")

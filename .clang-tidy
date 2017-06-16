@@ -1,5 +1,5 @@
 ---
-Checks:          'google-*,modernize-*'
+Checks:          'google-*,modernize-*,clang-analyzer-*,-clang-analyzer-cplusplus*'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 CheckOptions:    

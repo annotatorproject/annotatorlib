@@ -6,8 +6,9 @@
 # find_package(THIRDPARTY REQUIRED)
 
 find_package(Poco COMPONENTS DataSQLite)
+find_package (SQLite3 QUIET)
 
-if(NOT Poco_FOUND)
+if(NOT Poco_FOUND OR NOT SQLITE3_FOUND)
     message(WARNING "SQLiteStorage will not be build because Poco DataSQLite is not found!")
     return()
 endif()
@@ -118,7 +119,7 @@ target_include_directories(${target}
     ${PROJECT_BINARY_DIR}/source/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}/include
-
+    ${SQLITE3_INCLUDE_DIR}
     PUBLIC
     ${DEFAULT_INCLUDE_DIRECTORIES}
     INTERFACE
@@ -138,6 +139,7 @@ target_link_libraries(${target}
     ${DEFAULT_LIBRARIES}
     ${META_PROJECT_NAME}::annotatorlib
     ${Poco_LIBRARIES}
+    ${SQLITE3_LIBRARIES}
     INTERFACE
 )
 

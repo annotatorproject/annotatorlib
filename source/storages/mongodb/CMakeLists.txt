@@ -5,7 +5,7 @@
 
 # find_package(THIRDPARTY REQUIRED)
 
-find_package(Poco COMPONENTS MongoDB)
+find_package(Poco COMPONENTS MongoDB QUIET)
 
 if(NOT Poco_FOUND)
     message(WARNING "Mongodbstorage will not be build because Poco MongoDB is not found!")

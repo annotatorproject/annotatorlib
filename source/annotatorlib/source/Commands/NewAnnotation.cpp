@@ -7,7 +7,7 @@
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
     const unsigned long newObjectId, const shared_ptr<Class> newObjectClass,
     std::shared_ptr<Session> session, shared_ptr<Frame> frame, float x, float y,
-    float width, float height, float confidence)
+    float width, float height, float confidence, bool objectActive)
     : newObjectId(newObjectId),
       newObjectClass(newObjectClass),
       createNewObject(true) {
@@ -18,6 +18,7 @@ AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
   this->width = width;
   this->height = height;
   this->confidence = confidence;
+  this->objectActive = objectActive;
 }
 
 AnnotatorLib::Commands::NewAnnotation::NewAnnotation(
@@ -46,6 +47,7 @@ bool AnnotatorLib::Commands::NewAnnotation::execute(
   bool success = session->addAnnotation(
       annotation_, true);  // adds annotation and register to them
   if (createNewObject && success) createdNewObject = true;
+  if (!objectActive) object->setActive(false);
   if (informSession) {
     informSession->updateAnnotation(this->annotation_);
   }

@@ -26,7 +26,7 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
                 const shared_ptr<Class> newObjectClass,
                 std::shared_ptr<Session> session, shared_ptr<Frame> frame,
                 float x, float y, float width, float height,
-                float confidence = 1.0);
+                float confidence = 1.0, bool objectActive = true);
 
   NewAnnotation(std::shared_ptr<Session> session, shared_ptr<Object> object_,
                 shared_ptr<Frame> frame_, float x, float y, float width,
@@ -53,6 +53,7 @@ class ANNOTATORLIB_API NewAnnotation : public Command {
   const shared_ptr<Class> newObjectClass;
   shared_ptr<Annotation> annotation_;
   const bool createNewObject;
+  bool objectActive = true;
   bool createdNewObject = false;
 };
 }

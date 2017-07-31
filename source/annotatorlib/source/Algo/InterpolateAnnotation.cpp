@@ -83,7 +83,8 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
     }
 
   } else if (object->getLastAnnotation() &&
-             *frame > *object->getLastAnnotation()->getFrame()) {
+             *frame > *object->getLastAnnotation()->getFrame() &&
+             object->isActive()) {
     // copy the previous annotation to the requested frame
     return Annotation::make_shared(object->getLastAnnotation(), frame, true);
   }

@@ -69,6 +69,11 @@ void MongoDBLoader::loadAnnotations(Poco::MongoDB::Connection &connection,
         a->setPosition(x, y, width, height);
         session->addAnnotation(a);
         loadAnnotationAttributes(connection, a);
+        try {
+          if ((*it)->get<int>("next") == (*it)->get<int>("id"))
+            o->setActive(false);
+        } catch (...) {
+        }
       }
     }
     if (response.cursorID() == 0) {

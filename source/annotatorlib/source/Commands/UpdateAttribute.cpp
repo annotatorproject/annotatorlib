@@ -37,5 +37,5 @@ bool AnnotatorLib::Commands::UpdateAttribute::execute(
 bool AnnotatorLib::Commands::UpdateAttribute::undo(
     AnnotatorLib::Session *informSession) {
   // TODO
-	return true;
+  return true;
 }

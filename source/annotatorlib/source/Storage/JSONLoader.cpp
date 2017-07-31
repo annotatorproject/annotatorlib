@@ -134,6 +134,9 @@ void JSONLoader::loadAnnotations(Poco::JSON::Object::Ptr json,
         }
       }
       session->addAnnotation(a);
+      if (value->has("next") && value->get("next") == value->get("id")) {
+        o->setActive(false);
+      }
     }
   }
 }

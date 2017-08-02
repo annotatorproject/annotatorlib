@@ -129,6 +129,16 @@ class ANNOTATORLIB_API Session {
   }
 
   /**
+   * @brief getFrames
+   * returns frames within range if exists
+   * @param first the first frame
+   * @param last the last frame
+   * @return
+   */
+  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> getFrames(
+      unsigned long first, unsigned long last);
+
+  /**
    * @brief Will add the given frame and all annotations, objects
    * within this frame to this session. Checks for duplicates.
    * @param frame

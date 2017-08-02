@@ -128,6 +128,17 @@ shared_ptr<Class> Session::getClass(unsigned long id) const {
   return shared_ptr<Class>(nullptr);
 }
 
+std::unordered_map<unsigned long, std::shared_ptr<Frame>> Session::getFrames(
+    unsigned long first, unsigned long last) {
+  std::unordered_map<unsigned long, std::shared_ptr<Frame>> ret_frames;
+  for (auto& pair : frames) {
+    if (pair.first >= first && pair.first <= last) {
+      ret_frames.insert(pair);
+    }
+  }
+  return ret_frames;
+}
+
 bool Session::addFrame(shared_ptr<Frame> frame, bool add_associated_objects) {
   if (frame.get() == nullptr) return false;
   auto result = frames.insert(std::make_pair(frame->getId(), frame));

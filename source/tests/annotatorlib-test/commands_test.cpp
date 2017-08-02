@@ -1,6 +1,7 @@
 // Copyright 2016-2017 Annotator Team
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Commands/CompressObject.h>
+#include <AnnotatorLib/Commands/MergeObjects.h>
 #include <AnnotatorLib/Commands/NewAnnotation.h>
 #include <AnnotatorLib/Commands/NewAttribute.h>
 #include <AnnotatorLib/Commands/RemoveAnnotation.h>
@@ -201,6 +202,40 @@ TEST_F(commands_test, compressObject) {
   session->redo();
 
   ASSERT_EQ(obj->getAnnotations().size(), 2ul);
+}
+
+TEST_F(commands_test, mergeObjects) {
+  std::shared_ptr<Session> session = std::make_shared<Session>();
+  shared_ptr<Object> first = std::make_shared<Object>();
+
+  for (unsigned long i = 0; i < 5; ++i) {
+    shared_ptr<Frame> frame_i = std::make_shared<Frame>(i);
+    session->addAnnotation(Annotation::make_shared(frame_i, first));
+    session->getAnnotation(frame_i, first)->setPosition(i * 10, 40, 20, 20);
+    ASSERT_EQ(session->getAnnotations().size(), i + 1);
+    ASSERT_EQ(session->getFrames().size(), i + 1);
+  }
+  ASSERT_EQ(session->getFrames().size(), 5ul);
+  ASSERT_EQ(first->getAnnotations().size(), 5ul);
+
+  shared_ptr<Object> second = std::make_shared<Object>();
+
+  for (unsigned long i = 5; i < 10; ++i) {
+    shared_ptr<Frame> frame_i = std::make_shared<Frame>(i);
+    session->addAnnotation(Annotation::make_shared(frame_i, second));
+    session->getAnnotation(frame_i, second)->setPosition(i * 10, 40, 20, 20);
+    ASSERT_EQ(session->getAnnotations().size(), i + 1);
+    ASSERT_EQ(session->getFrames().size(), i + 1);
+  }
+  ASSERT_EQ(session->getFrames().size(), 10ul);
+  ASSERT_EQ(second->getAnnotations().size(), 5ul);
+
+  Commands::MergeObjects *cmd =
+      new Commands::MergeObjects(session, first, second);
+  session->execute(shared_ptr<Commands::Command>(cmd));
+
+  ASSERT_EQ(first->getAnnotations().size(), 10ul);
+  ASSERT_EQ(second->getAnnotations().size(), 0ul);
 }
 
 TEST_F(commands_test, newAttribute) {

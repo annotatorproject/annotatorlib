@@ -34,9 +34,20 @@ Annotation::Annotation(shared_ptr<Frame> frame, shared_ptr<Object> obj,
     : Annotation(genId(frame, obj), frame, obj, type) {}
 
 Annotation::Annotation(shared_ptr<Annotation> a, shared_ptr<Frame> frame,
-                       bool isInterpolated)
+                       bool isTemporary)
     : Annotation(genId(frame, a->getObject()), frame, a->getObject(),
-                 a->getType(), isInterpolated) {
+                 a->getType(), isTemporary) {
+  this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
+  for (std::shared_ptr<Attribute> attribute :
+       a->getAttributesWithoutDefaults()) {
+    this->addAttribute(std::make_shared<Attribute>(attribute));
+  }
+}
+
+Annotation::Annotation(shared_ptr<Annotation> a, shared_ptr<Object> o,
+                       bool isTemporary)
+    : Annotation(genId(a->getFrame(), o), a->getFrame(), o, a->getType(),
+                 isTemporary) {
   this->setPosition(a->getX(), a->getY(), a->getWidth(), a->getHeight());
   for (std::shared_ptr<Attribute> attribute :
        a->getAttributesWithoutDefaults()) {

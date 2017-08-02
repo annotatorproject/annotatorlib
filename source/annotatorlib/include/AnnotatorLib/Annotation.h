@@ -205,6 +205,8 @@ class ANNOTATORLIB_API Annotation {
 
   Annotation(shared_ptr<Annotation> a, shared_ptr<AnnotatorLib::Frame> f,
              bool isTemporary = false);
+  Annotation(shared_ptr<Annotation> a, shared_ptr<AnnotatorLib::Object> o,
+             bool isTemporary = false);
 
   Annotation(unsigned long id, const shared_ptr<AnnotatorLib::Frame> &frame,
              const shared_ptr<Object> &obj,

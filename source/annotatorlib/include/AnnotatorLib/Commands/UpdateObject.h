@@ -36,4 +36,4 @@ class ANNOTATORLIB_API UpdateObject : public Command {
 };
 }
 }
-#endif  // UPDATEANNOTATION_H
+#endif  // UPDATEOBJECT_H

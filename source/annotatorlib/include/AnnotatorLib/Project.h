@@ -6,7 +6,7 @@
  Project class header
  ************************************************************/
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/ImageSet/ImageSet.h>
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 #include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
@@ -27,19 +27,6 @@ class AbstractStorage;
  */
 class ANNOTATORLIB_API Project {
  public:
-  /**
-   * @brief create
-   * @param name
-   * @param imageSetType
-   * @param imageSetPath
-   * @param storageType
-   * @param storagePath
-   * @return
-   */
-  static std::shared_ptr<AnnotatorLib::Project> create(
-      std::string name, ImageSetType imageSetType, std::string imageSetPath,
-      std::string storageType, std::string storagePath);
-
   /**
    * @brief create
    * @param name
@@ -78,7 +65,7 @@ class ANNOTATORLIB_API Project {
    */
   unsigned long getDuration();
 
-  ImageSet *getImageSet() const;
+  std::shared_ptr<ImageSet::AbstractImageSet> getImageSet() const;
 
   /**
    * @brief load
@@ -149,7 +136,7 @@ class ANNOTATORLIB_API Project {
  protected:
   Project();
 
-  Project(std::string name, ImageSetType imageSetType, std::string imageSetPath,
+  Project(std::string name, std::string imageSetType, std::string imageSetPath,
           std::string storageType, std::string storagePath);
 
   /**
@@ -180,9 +167,9 @@ class ANNOTATORLIB_API Project {
 
   unsigned long total_duration_sec = 0;
 
-  ImageSetType imageSetType = ImageSetType::UNKNOWN;
+  std::string imageSetType = "unknown";
 
-  ImageSet *imageSet = nullptr;
+  std::shared_ptr<ImageSet::AbstractImageSet> imageSet = nullptr;
 
   std::string storageType = "unknown";
 

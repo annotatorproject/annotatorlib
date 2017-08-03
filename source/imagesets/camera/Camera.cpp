@@ -10,11 +10,12 @@
 #include <opencv2/opencv.hpp>
 #include <set>
 
-#include "AnnotatorLib/Camera.h"
+#include "Camera.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
+namespace ImageSet {
 
 Camera::Camera(std::string path) {
   this->path = path;
@@ -47,8 +48,8 @@ unsigned int Camera::getFPS() { return capture.get(CV_CAP_PROP_FPS); }
 
 std::string Camera::getPath() { return path; }
 
-bool Camera::equals(ImageSet *other) {
-  if (this == other) return true;
+bool Camera::equals(std::shared_ptr<AbstractImageSet> other) {
+  if (this == other.get()) return true;
   if (other->getType() != ImageSetType::IMAGEFOLDER) return false;
   if (this->getPath() != other->getPath()) return false;
   return true;
@@ -57,7 +58,7 @@ bool Camera::equals(ImageSet *other) {
 void Camera::initCamera() { capture.open(0); }
 
 // static attributes (if any)
-
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

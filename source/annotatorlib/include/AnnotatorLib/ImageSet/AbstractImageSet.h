@@ -1,10 +1,12 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_IMAGESET_H
 #define ANNOTATOR_ANNOTATORLIB_IMAGESET_H
 
 /************************************************************
  ImageSet class header
  ************************************************************/
+
+#include <memory>
 #include <string>
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
@@ -12,10 +14,10 @@
 #include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
-
+namespace ImageSet {
 /************************************************************/
 
-class ANNOTATORLIB_API ImageSet {
+class ANNOTATORLIB_API AbstractImageSet {
  public:
   /**
    *
@@ -78,9 +80,9 @@ class ANNOTATORLIB_API ImageSet {
 
   virtual std::string getPath() = 0;
 
-  virtual bool equals(ImageSet *other) = 0;
+  virtual bool equals(std::shared_ptr<AbstractImageSet> other) = 0;
 
-  virtual ~ImageSet() {}
+  virtual ~AbstractImageSet() {}
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -88,6 +90,7 @@ class ANNOTATORLIB_API ImageSet {
 
 /* Inline functions                                         */
 
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

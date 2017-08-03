@@ -1,8 +1,7 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 #include <AnnotatorLib/ImageSet/ImageFolder.h>
-#include <AnnotatorLib/ImageSet/ImageSet.h>
 #include <AnnotatorLib/ImageSet/ImageSetFactory.h>
-#include <AnnotatorLib/ImageSet/Video.h>
 #include <gmock/gmock.h>
 #include <string>
 
@@ -11,19 +10,19 @@ class imageset_test : public testing::Test {
 };
 
 TEST_F(imageset_test, equals) {
-  AnnotatorLib::Video *video =
-      (AnnotatorLib::Video *)AnnotatorLib::ImageSetFactory::createImageSet(
-          AnnotatorLib::ImageSetType::VIDEO, "video.mpg");
-  AnnotatorLib::ImageSet *video2 =
-      AnnotatorLib::ImageSetFactory::createImageSet(
-          AnnotatorLib::ImageSetType::VIDEO, "video2.mpg");
+  std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> video =
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          "video", "video.mpg");
+  std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> video2 =
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          "video", "video2.mpg");
 
-  AnnotatorLib::ImageFolder *images = (AnnotatorLib::ImageFolder *)
-      AnnotatorLib::ImageSetFactory::createImageSet(
-          AnnotatorLib::ImageSetType::IMAGEFOLDER, "images/");
-  AnnotatorLib::ImageSet *images2 =
-      AnnotatorLib::ImageSetFactory::createImageSet(
-          AnnotatorLib::ImageSetType::IMAGEFOLDER, "images2/");
+  std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> images =
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          "images", "images/");
+  std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> images2 =
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          "images", "images2/");
 
   ASSERT_TRUE(video->equals(video));
   ASSERT_TRUE(!video->equals(video2));
@@ -32,9 +31,4 @@ TEST_F(imageset_test, equals) {
   ASSERT_TRUE(!images->equals(images2));
 
   ASSERT_TRUE(!video->equals(images));
-
-  delete video;
-  delete video2;
-  delete images;
-  delete images2;
 }

@@ -10,11 +10,12 @@
 //#include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "AnnotatorLib/ImageSet/Video.h"
+#include "Video.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
+namespace ImageSet {
 
 Video::Video(std::string path) {
   this->path = path;
@@ -61,8 +62,8 @@ unsigned int Video::getFPS() { return capture->get(CV_CAP_PROP_FPS); }
 
 std::string Video::getPath() { return this->path; }
 
-bool Video::equals(ImageSet *other) {
-  if (this == other) return true;
+bool Video::equals(std::shared_ptr<AbstractImageSet> other) {
+  if (this == other.get()) return true;
   // if(other == nullptr)
   //    return false;
   if (other->getType() != ImageSetType::VIDEO) return false;
@@ -73,7 +74,7 @@ bool Video::equals(ImageSet *other) {
 void Video::initCapture() { capture = new cv::VideoCapture(path); }
 
 // static attributes (if any)
-
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

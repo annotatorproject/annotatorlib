@@ -1,36 +1,32 @@
 // Copyright 2016-2017 Annotator Team
-#ifndef ANNOTATOR_ANNOTATORLIB_VIDEO_H
-#define ANNOTATOR_ANNOTATORLIB_VIDEO_H
+#ifndef ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
+#define ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
 
 /************************************************************
- Video class header
+ ImageFolder class header
  ************************************************************/
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/ImageSet/ImageSet.h>
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <string>
+#include <vector>
 
-namespace cv {
-class VideoCapture;
-}
+#include <Poco/Net/FTPClientSession.h>
+#include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
-
+namespace ImageSet {
 /************************************************************/
 /**
- * @brief The Video class
- * represents an image set from a video file
+ *
  */
-class ANNOTATORLIB_API Video : public ImageSet {
- protected:
-  std::string path;
-
+class ANNOTATORLIB_API ImageFTP : public AbstractImageSet {
  public:
-  Video(std::string path);
+  ImageFTP(std::string path);
 
-  ~Video();
+  ~ImageFTP();
 
   /**
    *
@@ -40,26 +36,26 @@ class ANNOTATORLIB_API Video : public ImageSet {
 
   /**
    * @brief getImage
-   * @param position the position to get, 0 based index
-   * @return image at given position
+   * @param position
+   * @return
    */
   virtual Image getImage(unsigned long position) override;
 
-  virtual std::string getImagePath(unsigned long /*in*/ frame) override;
+  virtual std::string getImagePath(unsigned long position) override;
 
-  bool gotoPosition(unsigned long position) override;
+  virtual bool gotoPosition(unsigned long position) override;
 
-  long getPosition() override;
+  virtual long getPosition() override;
 
   /**
-   * @brief hasNext
-   * @return true if index greater than size
+   *
+   * @return next
    */
   virtual bool hasNext() override;
 
   /**
    *
-   * @return image at next index
+   * @return image
    */
   virtual Image next() override;
 
@@ -73,12 +69,24 @@ class ANNOTATORLIB_API Video : public ImageSet {
 
   virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other) override;
+  virtual bool equals(std::shared_ptr<AbstractImageSet> other) override;
 
  protected:
-  void initCapture();
+  void loadFolder();
+  Image downloadImage(std::string file);
 
-  cv::VideoCapture *capture = nullptr;
+  std::string path;
+
+  long position = 0;
+  std::vector<boost::filesystem::path> images;
+  std::vector<boost::filesystem::path>::const_iterator imgIter;
+
+  std::shared_ptr<Poco::Net::FTPClientSession> ftpSession;
+  std::string username;
+  std::string password;
+  int port = 21;
+  std::string host;
+  std::string workingDir;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -86,10 +94,11 @@ class ANNOTATORLIB_API Video : public ImageSet {
 
 /* Inline functions                                         */
 
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of Video class header
+ End of ImageFTP class header
  ************************************************************/
 
 #endif

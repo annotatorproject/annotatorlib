@@ -30,7 +30,7 @@ namespace AnnotatorLib {
 
 Project::Project() {}
 
-Project::Project(std::string name, ImageSetType imageSetType,
+Project::Project(std::string name, std::string imageSetType,
                  std::string imageSetPath, std::string storageType,
                  std::string storagePath) {
   this->name = name;
@@ -38,7 +38,8 @@ Project::Project(std::string name, ImageSetType imageSetType,
   this->storageType = storageType;
   this->storagePath = storagePath;
   this->imageSet =
-      AnnotatorLib::ImageSetFactory::createImageSet(imageSetType, imageSetPath);
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          imageSetType, imageSetPath);
 }
 
 Project::~Project() {}
@@ -68,7 +69,9 @@ unsigned long Project::updateDuration() {
 
 unsigned long Project::getDuration() { return updateDuration(); }
 
-ImageSet *Project::getImageSet() const { return imageSet; }
+std::shared_ptr<ImageSet::AbstractImageSet> Project::getImageSet() const {
+  return imageSet;
+}
 
 std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
   std::shared_ptr<AnnotatorLib::Project> project =
@@ -98,8 +101,7 @@ void Project::load() {
 
   this->name = config->getString("Name");
 
-  this->imageSetType = AnnotatorLib::ImageSetTypeFromString(
-      config->getString("ImageSet[@type]"));
+  this->imageSetType = config->getString("ImageSet[@type]");
   std::string imageSetPath = config->getString("ImageSet[@path]");
 
   this->storageType = config->getString("Storage[@type]");
@@ -108,8 +110,9 @@ void Project::load() {
   this->total_duration_sec = config->getUInt64("Statistics[@duration]");
   this->active = config->getBool("Settings[@active]");
 
-  this->imageSet = AnnotatorLib::ImageSetFactory::createImageSet(
-      this->imageSetType, imageSetPath);
+  this->imageSet =
+      AnnotatorLib::ImageSet::ImageSetFactory::instance()->createImageSet(
+          this->imageSetType, imageSetPath);
 
   istr.close();
   loadSession();
@@ -140,8 +143,7 @@ void Project::saveConfig() {
       new Poco::Util::XMLConfiguration();
 
   config->setString("Name", this->name);
-  config->setString("ImageSet[@type]",
-                    AnnotatorLib::ImageSetTypeToString(this->imageSetType));
+  config->setString("ImageSet[@type]", this->imageSetType);
   config->setString("ImageSet[@path]", imageSet->getPath());
   config->setString("Storage[@type]", this->storageType);
   config->setString("Storage[@path]", this->storagePath);
@@ -170,23 +172,15 @@ void Project::saveSession() {
 }
 
 std::shared_ptr<AnnotatorLib::Project> Project::create(
-    std::string name, ImageSetType imageSetType, std::string imageSetPath,
+    std::string name, std::string imageSetType, std::string imageSetPath,
     std::string storageType, std::string storagePath) {
   if (name == "") throw std::runtime_error("Project name is empty");
-  if (imageSetType == ImageSetType::UNKNOWN)
+  if (imageSetType == "unknown")
     throw std::runtime_error("ImageSetType is unknown");
   if (storageType == "unknown")
     throw std::runtime_error("StorageType is unknown");
   return std::shared_ptr<AnnotatorLib::Project>(
       new Project(name, imageSetType, imageSetPath, storageType, storagePath));
-}
-
-std::shared_ptr<AnnotatorLib::Project> Project::create(
-    std::string name, std::string imageSetType, std::string imageSetPath,
-    std::string storageType, std::string storagePath) {
-  AnnotatorLib::ImageSetType iType =
-      AnnotatorLib::ImageSetTypeFromString(imageSetType);
-  return create(name, iType, imageSetPath, storageType, storagePath);
 }
 
 bool Project::equals(Project *other) const {

@@ -16,11 +16,12 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/URI.h>
 
-#include "AnnotatorLib/ImageSet/ImageFTP.h"
+#include "ImageFTP.h"
 
 // Derived includes directives
 
 namespace AnnotatorLib {
+namespace ImageSet {
 
 const std::set<std::string> imagetypes = {(".bmp"), (".pbm"),  (".pgm"),
                                           (".ppm"), (".jpg"),  (".jpeg"),
@@ -70,8 +71,8 @@ unsigned int ImageFTP::getFPS() { return 24; }
 
 std::string ImageFTP::getPath() { return path; }
 
-bool ImageFTP::equals(ImageSet* other) {
-  if (this == other) return true;
+bool ImageFTP::equals(std::shared_ptr<AbstractImageSet> other) {
+  if (this == other.get()) return true;
   if (other->getType() != ImageSetType::IMAGEFTP) return false;
   if (this->getPath() != other->getPath()) return false;
   return true;
@@ -137,6 +138,7 @@ Image ImageFTP::downloadImage(std::string file) {
 
 // static attributes (if any)
 
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

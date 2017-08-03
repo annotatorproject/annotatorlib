@@ -15,15 +15,15 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include "AnnotatorLib/ImageSet/ImageSet.h"
+#include "AnnotatorLib/ImageSet/AbstractImageSet.h"
 
 namespace AnnotatorLib {
-
+namespace ImageSet {
 /************************************************************/
 /**
  *
  */
-class ANNOTATORLIB_API Camera : public ImageSet {
+class ANNOTATORLIB_API Camera : public AbstractImageSet {
  public:
   Camera(std::string path);
 
@@ -68,7 +68,7 @@ class ANNOTATORLIB_API Camera : public ImageSet {
 
   virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other) override;
+  virtual bool equals(std::shared_ptr<AbstractImageSet> other) override;
 
  protected:
   void initCamera();
@@ -82,7 +82,7 @@ class ANNOTATORLIB_API Camera : public ImageSet {
 /************************************************************/
 
 /* Inline functions                                         */
-
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

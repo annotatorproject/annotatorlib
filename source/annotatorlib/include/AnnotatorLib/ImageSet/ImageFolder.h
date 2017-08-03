@@ -7,7 +7,7 @@
  ************************************************************/
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/ImageSet/ImageSet.h>
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <string>
@@ -16,12 +16,12 @@
 #include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
-
+namespace ImageSet {
 /************************************************************/
 /**
  *
  */
-class ANNOTATORLIB_API ImageFolder : public ImageSet {
+class ANNOTATORLIB_API ImageFolder : public AbstractImageSet {
  public:
   ImageFolder(std::string path);
 
@@ -66,7 +66,7 @@ class ANNOTATORLIB_API ImageFolder : public ImageSet {
 
   virtual std::string getPath() override;
 
-  virtual bool equals(ImageSet *other) override;
+  virtual bool equals(std::shared_ptr<AbstractImageSet> other) override;
 
  protected:
   void loadFolder();
@@ -82,7 +82,7 @@ class ANNOTATORLIB_API ImageFolder : public ImageSet {
 /************************************************************/
 
 /* Inline functions                                         */
-
+}  // of namespace ImageSet
 }  // of namespace AnnotatorLib
 
 /************************************************************

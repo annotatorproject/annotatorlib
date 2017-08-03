@@ -10,9 +10,12 @@ class VideoPlugin : public AnnotatorLib::ImageSet::ImageSetPlugin {
   VideoPlugin();
 
   virtual const std::string name() override { return "camera"; }
-  virtual const std::string description() override { return "Camera Image Set"; }
+  virtual const std::string description() override {
+    return "Camera Image Set";
+  }
 
-  virtual std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> create(std::string path) override;
+  virtual std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> create(
+      std::string path) override;
 };
 
 #endif  // VIDEOPLUGIN_H

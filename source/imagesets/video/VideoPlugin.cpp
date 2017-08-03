@@ -7,8 +7,8 @@
 
 VideoPlugin::VideoPlugin() {}
 
-std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet>
-VideoPlugin::create(std::string path) {
+std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> VideoPlugin::create(
+    std::string path) {
   return std::make_shared<AnnotatorLib::ImageSet::Video>(path);
 }
 

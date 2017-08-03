@@ -9,10 +9,13 @@ class ImageFTPPlugin : public AnnotatorLib::ImageSet::ImageSetPlugin {
  public:
   ImageFTPPlugin();
 
-  virtual const std::string name() override{ return "imageftp"; }
-  virtual const std::string description() override{ return "Image FTP Image Set"; }
+  virtual const std::string name() override { return "imageftp"; }
+  virtual const std::string description() override {
+    return "Image FTP Image Set";
+  }
 
-  virtual std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> create(std::string path) override;
+  virtual std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> create(
+      std::string path) override;
 };
 
 #endif  // IMAGEFTPPLUGIN_H

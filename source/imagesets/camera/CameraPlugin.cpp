@@ -7,8 +7,8 @@
 
 CameraPlugin::CameraPlugin() {}
 
-std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet>
-CameraPlugin::create(std::string path) {
+std::shared_ptr<AnnotatorLib::ImageSet::AbstractImageSet> CameraPlugin::create(
+    std::string path) {
   return std::make_shared<AnnotatorLib::ImageSet::Camera>(path);
 }
 

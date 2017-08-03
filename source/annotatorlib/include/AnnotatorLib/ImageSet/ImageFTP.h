@@ -1,21 +1,20 @@
-// Copyright 2016 Annotator Team
-
-#ifndef ANNOTATOR_ANNOTATORLIB_CAMERA_H
-#define ANNOTATOR_ANNOTATORLIB_CAMERA_H
+// Copyright 2016-2017 Annotator Team
+#ifndef ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
+#define ANNOTATOR_ANNOTATORLIB_IMAGEFTP_H
 
 /************************************************************
  ImageFolder class header
  ************************************************************/
 
+#include <AnnotatorLib/AnnotatorLibDatastructs.h>
+#include <AnnotatorLib/ImageSet/ImageSet.h>
+#include <AnnotatorLib/annotatorlib_api.h>
+
 #include <string>
 #include <vector>
 
-#include <opencv2/opencv.hpp>
-
-#include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/annotatorlib_api.h>
-
-#include "AnnotatorLib/ImageSet.h"
+#include <Poco/Net/FTPClientSession.h>
+#include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
 
@@ -23,9 +22,11 @@ namespace AnnotatorLib {
 /**
  *
  */
-class ANNOTATORLIB_API Camera : public ImageSet {
+class ANNOTATORLIB_API ImageFTP : public ImageSet {
  public:
-  Camera(std::string path);
+  ImageFTP(std::string path);
+
+  ~ImageFTP();
 
   /**
    *
@@ -34,15 +35,15 @@ class ANNOTATORLIB_API Camera : public ImageSet {
   virtual ImageSetType getType() override;
 
   /**
-   *
-   * @param frame
-   * @return image
+   * @brief getImage
+   * @param position
+   * @return
    */
-  virtual Image getImage(unsigned long /* frame */) override;
+  virtual Image getImage(unsigned long position) override;
 
-  virtual std::string getImagePath(unsigned long /* frame */) override;
+  virtual std::string getImagePath(unsigned long position) override;
 
-  virtual bool gotoPosition(unsigned long /* position */) override;
+  virtual bool gotoPosition(unsigned long position) override;
 
   virtual long getPosition() override;
 
@@ -71,11 +72,21 @@ class ANNOTATORLIB_API Camera : public ImageSet {
   virtual bool equals(ImageSet *other) override;
 
  protected:
-  void initCamera();
+  void loadFolder();
+  Image downloadImage(std::string file);
 
   std::string path;
 
-  cv::VideoCapture capture;
+  long position = 0;
+  std::vector<boost::filesystem::path> images;
+  std::vector<boost::filesystem::path>::const_iterator imgIter;
+
+  std::shared_ptr<Poco::Net::FTPClientSession> ftpSession;
+  std::string username;
+  std::string password;
+  int port = 21;
+  std::string host;
+  std::string workingDir;
 };
 /************************************************************/
 /* External declarations (package visibility)               */
@@ -86,7 +97,7 @@ class ANNOTATORLIB_API Camera : public ImageSet {
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of Camera class header
+ End of ImageFTP class header
  ************************************************************/
 
 #endif

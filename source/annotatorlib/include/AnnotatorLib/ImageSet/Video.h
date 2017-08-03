@@ -7,7 +7,7 @@
  ************************************************************/
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/ImageSet.h>
+#include <AnnotatorLib/ImageSet/ImageSet.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <string>

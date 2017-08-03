@@ -10,7 +10,7 @@
 //#include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "AnnotatorLib/Video.h"
+#include "AnnotatorLib/ImageSet/Video.h"
 
 // Derived includes directives
 

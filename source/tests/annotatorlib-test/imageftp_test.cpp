@@ -1,6 +1,5 @@
 // Copyright 2016 Annotator Team
-#include <AnnotatorLib/ImageFTP.h>
-#include <AnnotatorLib/Video.h>
+#include <AnnotatorLib/ImageSet/ImageFTP.h>
 #include <gmock/gmock.h>
 #include <string>
 

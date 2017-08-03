@@ -6,7 +6,7 @@
  Project class header
  ************************************************************/
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
-#include <AnnotatorLib/ImageSet.h>
+#include <AnnotatorLib/ImageSet/ImageSet.h>
 #include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 

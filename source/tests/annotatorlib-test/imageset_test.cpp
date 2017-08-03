@@ -1,8 +1,8 @@
 // Copyright 2016 Annotator Team
-#include <AnnotatorLib/ImageFolder.h>
-#include <AnnotatorLib/ImageSet.h>
-#include <AnnotatorLib/ImageSetFactory.h>
-#include <AnnotatorLib/Video.h>
+#include <AnnotatorLib/ImageSet/ImageFolder.h>
+#include <AnnotatorLib/ImageSet/ImageSet.h>
+#include <AnnotatorLib/ImageSet/ImageSetFactory.h>
+#include <AnnotatorLib/ImageSet/Video.h>
 #include <gmock/gmock.h>
 #include <string>
 

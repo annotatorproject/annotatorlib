@@ -8,11 +8,11 @@
 #include <stdexcept>
 #include <string>
 // include associated header file
-#include "AnnotatorLib/Camera.h"
-#include "AnnotatorLib/ImageFTP.h"
-#include "AnnotatorLib/ImageFolder.h"
-#include "AnnotatorLib/ImageSetFactory.h"
-#include "AnnotatorLib/Video.h"
+#include "AnnotatorLib/ImageSet/Camera.h"
+#include "AnnotatorLib/ImageSet/ImageFTP.h"
+#include "AnnotatorLib/ImageSet/ImageFolder.h"
+#include "AnnotatorLib/ImageSet/ImageSetFactory.h"
+#include "AnnotatorLib/ImageSet/Video.h"
 
 // Derived includes directives
 

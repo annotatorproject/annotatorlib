@@ -16,7 +16,7 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/URI.h>
 
-#include "AnnotatorLib/ImageFTP.h"
+#include "AnnotatorLib/ImageSet/ImageFTP.h"
 
 // Derived includes directives
 

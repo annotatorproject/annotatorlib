@@ -9,7 +9,7 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
-#include <AnnotatorLib/ImageSet.h>
+#include <AnnotatorLib/ImageSet/ImageSet.h>
 
 namespace AnnotatorLib {
 

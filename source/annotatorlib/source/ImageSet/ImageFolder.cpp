@@ -8,7 +8,7 @@
 
 // include associated header file
 
-#include "AnnotatorLib/ImageFolder.h"
+#include "AnnotatorLib/ImageSet/ImageFolder.h"
 
 #include <set>
 #include <stdexcept>

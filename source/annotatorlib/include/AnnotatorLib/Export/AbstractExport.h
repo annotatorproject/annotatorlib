@@ -29,6 +29,8 @@ class ANNOTATORLIB_API AbstractExport {
 
   virtual bool equals(std::shared_ptr<AbstractExport> other) = 0;
 
+  virtual void doExport() = 0;
+
   virtual ~AbstractExport() {}
 };
 /************************************************************/

@@ -33,16 +33,16 @@ static ExportFactory *_instance = nullptr;
  * @return imageSet
  */
 std::shared_ptr<AbstractExport> ExportFactory::createExport(
-    std::string type, std::string path) {
+    std::string type, std::shared_ptr<Project> project, std::string path) {
   if ("annotationimages" == type)
-    return std::make_shared<ExportAnnotationImages>(path);
+    return std::make_shared<ExportAnnotationImages>(project, path);
 
   std::shared_ptr<ExportPlugin> plugin = this->plugins[type];
-  if (plugin) return plugin->create(path);
+  if (plugin) return plugin->create(project, path);
   throw std::invalid_argument("ExportType unknown!");
 }
 
-std::list<std::string> ExportFactory::availableImageSets() {
+std::list<std::string> ExportFactory::availableExports() {
   return _availableExports;
 }
 
@@ -90,9 +90,8 @@ ExportFactory::~ExportFactory() { _instance = nullptr; }
 
 void ExportFactory::addAvailableExport(ExportPlugin *plugin) {
   if (plugin) {
-    bool found =
-        (std::find(_availableExports.begin(), _availableExports.end(),
-                   plugin->name()) != _availableExports.end());
+    bool found = (std::find(_availableExports.begin(), _availableExports.end(),
+                            plugin->name()) != _availableExports.end());
     if (!found)
       _availableExports.insert(_availableExports.end(), plugin->name());
   }

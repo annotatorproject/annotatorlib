@@ -8,6 +8,7 @@
 
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/Export/AbstractExport.h>
+#include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 #include <string>
@@ -16,6 +17,10 @@
 #include <boost/filesystem.hpp>
 
 namespace AnnotatorLib {
+
+class Class;
+class Object;
+
 namespace Export {
 /************************************************************/
 /**
@@ -23,7 +28,7 @@ namespace Export {
  */
 class ANNOTATORLIB_API ExportAnnotationImages : public AbstractExport {
  public:
-  ExportAnnotationImages(std::string path);
+  ExportAnnotationImages(std::shared_ptr<Project> project, std::string path);
 
   /**
    *
@@ -33,15 +38,16 @@ class ANNOTATORLIB_API ExportAnnotationImages : public AbstractExport {
 
   virtual std::string getPath() override;
 
+  virtual void doExport() override;
+
   virtual bool equals(std::shared_ptr<AbstractExport> other) override;
 
  protected:
+  void exportClass(std::shared_ptr<Class> theClass);
+  void exportObject(std::shared_ptr<Object> object);
 
+  std::shared_ptr<Project> project;
   std::string path;
-
-  long position = 0;
-  std::vector<boost::filesystem::path> images;
-  std::vector<boost::filesystem::path>::const_iterator imgIter;
 };
 /************************************************************/
 /* External declarations (package visibility)               */

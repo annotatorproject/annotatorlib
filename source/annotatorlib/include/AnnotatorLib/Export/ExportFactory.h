@@ -13,6 +13,7 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/Export/AbstractExport.h>
 #include <AnnotatorLib/Export/ExportPlugin.h>
+#include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
@@ -30,9 +31,10 @@ class ANNOTATORLIB_API ExportFactory {
    * @return imageSet
    */
   std::shared_ptr<AbstractExport> createExport(std::string type,
-                                                   std::string path);
+                                               std::shared_ptr<Project> project,
+                                               std::string path);
 
-  std::list<std::string> availableImageSets();
+  std::list<std::string> availableExports();
 
   /**
    * @brief loadPlugins

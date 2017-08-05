@@ -5,6 +5,7 @@
 #include <string>
 
 #include <AnnotatorLib/Export/AbstractExport.h>
+#include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
 namespace AnnotatorLib {
@@ -36,7 +37,7 @@ class ANNOTATORLIB_API ExportPlugin {
    * @return new instance of loader
    */
   virtual std::shared_ptr<AnnotatorLib::Export::AbstractExport> create(
-      std::string path) = 0;
+      std::shared_ptr<Project> project, std::string path) = 0;
 };
 }
 }

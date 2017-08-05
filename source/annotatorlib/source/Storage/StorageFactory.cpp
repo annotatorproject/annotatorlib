@@ -29,7 +29,7 @@ namespace Storage {
 typedef Poco::ClassLoader<StoragePlugin> PLoader;
 typedef Poco::Manifest<StoragePlugin> PManifest;
 
-static StorageFactory *_instance;
+static StorageFactory *_instance = nullptr;
 
 shared_ptr<AbstractStorage> StorageFactory::createStorage(std::string type) {
   if ("xml" == type) return std::make_shared<XMLStorage>();

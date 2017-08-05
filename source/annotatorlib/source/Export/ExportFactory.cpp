@@ -1,13 +1,13 @@
-// Copyright 2016-2017 Annotator Team
+// Copyright 2017 Annotator Team
 
-#define Annotator_AnnotatorLib_ImageSetFactory_BODY
+#define Annotator_AnnotatorLib_ExportFactory_BODY
 
 /************************************************************
- ImageSetFactory class body
+ ExportFactory class body
  ************************************************************/
 
-#include "AnnotatorLib/ImageSet/ImageSetFactory.h"
-#include "AnnotatorLib/ImageSet/ImageFolder.h"
+#include "AnnotatorLib/Export/ExportFactory.h"
+#include "AnnotatorLib/Export/ExportAnnotationImages.h"
 
 #include <stdexcept>
 #include <string>
@@ -18,35 +18,35 @@
 #include <boost/foreach.hpp>
 
 namespace AnnotatorLib {
-namespace ImageSet {
+namespace Export {
 
 // static attributes (if any)
 
-typedef Poco::ClassLoader<ImageSetPlugin> PLoader;
-typedef Poco::Manifest<ImageSetPlugin> PManifest;
+typedef Poco::ClassLoader<ExportPlugin> PLoader;
+typedef Poco::Manifest<ExportPlugin> PManifest;
 
-static ImageSetFactory *_instance = nullptr;
+static ExportFactory *_instance = nullptr;
 
 /**
  *
  * @param type
  * @return imageSet
  */
-std::shared_ptr<AbstractImageSet> ImageSetFactory::createImageSet(
+std::shared_ptr<AbstractExport> ExportFactory::createExport(
     std::string type, std::string path) {
-  if ("images" == type || "imagefolder" == type)
-    return std::make_shared<ImageFolder>(path);
+  if ("annotationimages" == type)
+    return std::make_shared<ExportAnnotationImages>(path);
 
-  std::shared_ptr<ImageSetPlugin> plugin = this->plugins[type];
+  std::shared_ptr<ExportPlugin> plugin = this->plugins[type];
   if (plugin) return plugin->create(path);
-  throw std::invalid_argument("ImageSetType unknown!");
+  throw std::invalid_argument("ExportType unknown!");
 }
 
-std::list<std::string> ImageSetFactory::availableImageSets() {
-  return _availableImageSets;
+std::list<std::string> ExportFactory::availableImageSets() {
+  return _availableExports;
 }
 
-void ImageSetFactory::loadPlugins(std::string dir) {
+void ExportFactory::loadPlugins(std::string dir) {
   boost::filesystem::path pluginsDir(dir);
   if (!boost::filesystem::exists(pluginsDir)) return;
   PLoader loader;
@@ -71,36 +71,36 @@ void ImageSetFactory::loadPlugins(std::string dir) {
     PManifest::Iterator itMan(it->second->begin());
     PManifest::Iterator endMan(it->second->end());
     for (; itMan != endMan; ++itMan) {
-      ImageSetPlugin *plugin = itMan->create();
-      std::shared_ptr<ImageSetPlugin> sharedPlugin(plugin);
+      ExportPlugin *plugin = itMan->create();
+      std::shared_ptr<ExportPlugin> sharedPlugin(plugin);
       plugins.insert(plugins.begin(),
-                     std::pair<std::string, std::shared_ptr<ImageSetPlugin>>(
+                     std::pair<std::string, std::shared_ptr<ExportPlugin>>(
                          plugin->name(), sharedPlugin));
-      addAvailableImageSet(plugin);
+      addAvailableExport(plugin);
     }
   }
 }
 
-ImageSetFactory *ImageSetFactory::instance() {
-  if (!_instance) _instance = new ImageSetFactory();
+ExportFactory *ExportFactory::instance() {
+  if (!_instance) _instance = new ExportFactory();
   return _instance;
 }
 
-ImageSetFactory::~ImageSetFactory() { _instance = nullptr; }
+ExportFactory::~ExportFactory() { _instance = nullptr; }
 
-void ImageSetFactory::addAvailableImageSet(ImageSetPlugin *plugin) {
+void ExportFactory::addAvailableExport(ExportPlugin *plugin) {
   if (plugin) {
     bool found =
-        (std::find(_availableImageSets.begin(), _availableImageSets.end(),
-                   plugin->name()) != _availableImageSets.end());
+        (std::find(_availableExports.begin(), _availableExports.end(),
+                   plugin->name()) != _availableExports.end());
     if (!found)
-      _availableImageSets.insert(_availableImageSets.end(), plugin->name());
+      _availableExports.insert(_availableExports.end(), plugin->name());
   }
 }
 
-}  // of namespace ImageSet
+}  // of namespace Export
 }  // of namespace AnnotatorLib
 
 /************************************************************
- End of ImageSetFactory class body
+ End of ExportFactory class body
  ************************************************************/

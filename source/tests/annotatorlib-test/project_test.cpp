@@ -41,7 +41,7 @@ TEST_F(project_test, saveProject) {
 
     session->addAnnotation(shared_ptr<Annotation>(annotation));
 
-    Project::save(project, path);
+    Project::savePath(project, path);
   } catch (std::exception &e) {
     e.what();
   }
@@ -49,7 +49,7 @@ TEST_F(project_test, saveProject) {
 
 TEST_F(project_test, loadProject) {
   try {
-    Project::load("test.xml");
+    Project::loadPath("test.xml");
   } catch (std::exception &e) {
     e.what();
   }
@@ -65,10 +65,10 @@ TEST_F(project_test, saveLoadProject) {
     std::shared_ptr<AnnotatorLib::Session> session = project->getSession();
     session->addObject(shared_ptr<Object>(std::make_shared<Object>()));
 
-    Project::save(project, path);
+    Project::savePath(project, path);
 
     std::shared_ptr<AnnotatorLib::Project> projectLoaded =
-        Project::load("testsaveload.xml");
+        Project::loadPath("testsaveload.xml");
 
     ASSERT_EQ(projectLoaded->getName(), "testname");
     ASSERT_TRUE(project->equals(projectLoaded));

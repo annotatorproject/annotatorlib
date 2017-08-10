@@ -73,7 +73,7 @@ std::shared_ptr<ImageSet::AbstractImageSet> Project::getImageSet() const {
   return imageSet;
 }
 
-std::shared_ptr<AnnotatorLib::Project> Project::load(std::string path) {
+std::shared_ptr<AnnotatorLib::Project> Project::loadPath(std::string path) {
   std::shared_ptr<AnnotatorLib::Project> project =
       std::shared_ptr<AnnotatorLib::Project>(new Project());
   project->path = path;
@@ -154,8 +154,8 @@ void Project::saveConfig() {
   ostr.close();
 }
 
-void Project::save(std::shared_ptr<AnnotatorLib::Project> project,
-                   std::string path) {
+void Project::savePath(std::shared_ptr<AnnotatorLib::Project> project,
+                       std::string path) {
   project->path = path;
   project->save();
 }

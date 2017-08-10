@@ -47,7 +47,7 @@ class ANNOTATORLIB_API Project {
    * @param path
    * @return project
    */
-  static std::shared_ptr<AnnotatorLib::Project> load(std::string path);
+  static std::shared_ptr<AnnotatorLib::Project> loadPath(std::string path);
 
   ///////////////////////////////////////////////
 
@@ -82,8 +82,8 @@ class ANNOTATORLIB_API Project {
    * @param project
    * @param path
    */
-  static void save(std::shared_ptr<AnnotatorLib::Project> project,
-                   std::string path);
+  static void savePath(std::shared_ptr<AnnotatorLib::Project> project,
+                       std::string path);
 
   /**
    * @brief save

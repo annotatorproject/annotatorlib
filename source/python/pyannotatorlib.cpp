@@ -2,12 +2,17 @@
 
 #include <boost/python.hpp>
 #include <boost/python/make_constructor.hpp>
+#include <boost/python/overloads.hpp>
 #include <boost/python/raw_function.hpp>
 
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Frame.h>
+#include <AnnotatorLib/ImageSet/AbstractImageSet.h>
 #include <AnnotatorLib/Object.h>
+#include <AnnotatorLib/Project.h>
+#include <AnnotatorLib/Session.h>
+#include <AnnotatorLib/Storage/AbstractStorage.h>
 
 using namespace boost::python;
 using namespace AnnotatorLib;
@@ -58,4 +63,36 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
       .def("get_class", &Object::getClass)
       .def("is_active", &Object::isActive)
       .def("set_active", &Object::setActive);
+
+  /* PROJECT */
+  class_<Project, std::shared_ptr<Project>, boost::noncopyable>("Project",
+                                                                no_init)
+      .def("load_path", &Project::loadPath)
+      .staticmethod("load_path")
+      .def("save_path", &Project::savePath)
+      .staticmethod("save_path")
+      .def("get_name", &Project::getName)
+      .def("get_session", &Project::getSession)
+      .def("get_storage", &Project::getStorage)
+      .def("get_path", &Project::getPath)
+      .def("get_imageset_path", &Project::getImageSetPath)
+      .def("get_duration", &Project::getDuration)
+      .def("save", &Project::save);
+
+  /* SESSION */
+  class_<Session, std::shared_ptr<Session>, boost::noncopyable>("Session",
+                                                                no_init)
+      //      .def("get_frames", &Session::getFrames)
+      .def("get_frame", &Session::getFrame);
+
+  /* ABSTRACTIMAGESET */
+  class_<ImageSet::AbstractImageSet,
+         std::shared_ptr<ImageSet::AbstractImageSet>, boost::noncopyable>(
+      "AbstractImageSet", no_init)
+      .def("get_path", &ImageSet::AbstractImageSet::getPath);
+
+  /* ABSTRACTSTORAGE */
+  class_<Storage::AbstractStorage, std::shared_ptr<Storage::AbstractStorage>,
+         boost::noncopyable>("AbstractStorage", no_init)
+      .def("is_open", &Storage::AbstractStorage::isOpen);
 };

@@ -1,4 +1,5 @@
 // Copyright 2017 Annotator Team
+#define PY_ARRAY_UNIQUE_SYMBOL pbcvt_ARRAY_API
 #include <memory>
 
 #include <boost/python.hpp>
@@ -11,10 +12,14 @@
 #include <AnnotatorLib/Class.h>
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/ImageSet/AbstractImageSet.h>
+#include <AnnotatorLib/ImageSet/ImageSetFactory.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/Project.h>
 #include <AnnotatorLib/Session.h>
 #include <AnnotatorLib/Storage/AbstractStorage.h>
+#include <AnnotatorLib/Storage/StorageFactory.h>
+
+#include "pyboostcvconverter.hpp"
 
 using namespace boost::python;
 using namespace AnnotatorLib;
@@ -24,7 +29,31 @@ std::shared_ptr<Annotation> createAnnotation(std::shared_ptr<Frame> frame,
   return Annotation::make_shared(frame, obj);
 }
 
+void loadImageSets(std::string dir) {
+  ImageSet::ImageSetFactory::instance()->loadPlugins(dir);
+}
+
+void loadStorages(std::string dir) {
+  Storage::StorageFactory::instance()->loadPlugins(dir);
+}
+
+#if (PY_VERSION_HEX >= 0x03000000)
+
+static void *init_ar() {
+#else
+static void init_ar() {
+#endif
+  Py_Initialize();
+
+  import_array();
+  return NUMPY_IMPORT_ARRAY_RETVAL;
+}
+
 BOOST_PYTHON_MODULE(pyannotatorlib) {
+  init_ar();
+  to_python_converter<cv::Mat, pbcvt::matToNDArrayBoostConverter>();
+  pbcvt::matFromNDArrayBoostConverter();
+
   /* ANNOTATION */
   class_<Annotation, std::shared_ptr<Annotation>, boost::noncopyable>(
       "Annotation", no_init)
@@ -83,6 +112,7 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
       .staticmethod("save_path")
       .def("get_name", &Project::getName)
       .def("get_session", &Project::getSession)
+      .def("get_imageset", &Project::getImageSet)
       .def("get_storage", &Project::getStorage)
       .def("get_path", &Project::getPath)
       .def("get_imageset_path", &Project::getImageSetPath)
@@ -108,10 +138,15 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
   class_<ImageSet::AbstractImageSet,
          std::shared_ptr<ImageSet::AbstractImageSet>, boost::noncopyable>(
       "AbstractImageSet", no_init)
-      .def("get_path", &ImageSet::AbstractImageSet::getPath);
+      .def("get_path", &ImageSet::AbstractImageSet::getPath)
+      .def("get_image", &ImageSet::AbstractImageSet::getImage);
 
   /* ABSTRACTSTORAGE */
   class_<Storage::AbstractStorage, std::shared_ptr<Storage::AbstractStorage>,
          boost::noncopyable>("AbstractStorage", no_init)
       .def("is_open", &Storage::AbstractStorage::isOpen);
+
+  /* --- */
+  def("load_imagesets", &loadImageSets);
+  def("load_storages", &loadStorages);
 };

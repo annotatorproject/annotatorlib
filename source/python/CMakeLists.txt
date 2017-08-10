@@ -32,6 +32,7 @@ set(source_path  "${CMAKE_CURRENT_SOURCE_DIR}")
 
 file(GLOB_RECURSE headers
     ${include_path}/*.h
+    ${include_path}/*.hpp
 )
 
 file(GLOB_RECURSE sources

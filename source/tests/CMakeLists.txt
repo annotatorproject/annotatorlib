@@ -37,3 +37,4 @@ set_target_properties(test PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD 1)
 # 
 
 add_test_without_ctest(annotatorlib-test)
+add_subdirectory(pyannotatorlib-test)

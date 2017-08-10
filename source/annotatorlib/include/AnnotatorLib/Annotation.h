@@ -261,7 +261,7 @@ class ANNOTATORLIB_API Annotation {
 /* External declarations (package visibility)               */
 /************************************************************/
 
-/* Inline functions                                         */
+typedef std::map<unsigned long, std::shared_ptr<Annotation>> AnnotationMap;
 
 }  // of namespace AnnotatorLib
 

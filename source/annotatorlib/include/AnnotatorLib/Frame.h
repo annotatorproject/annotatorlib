@@ -8,6 +8,7 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -77,8 +78,7 @@ class ANNOTATORLIB_API Frame {
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/
-
-/* Inline functions                                         */
+typedef std::map<unsigned long, std::shared_ptr<Frame>> FrameMap;
 
 }  // of namespace AnnotatorLib
 

@@ -32,8 +32,8 @@ void Session::clearAll() {
 }
 
 template <typename K, typename T>
-std::shared_ptr<T> find_smart_pointer(
-    std::unordered_map<K, std::shared_ptr<T>> map, K key) {
+std::shared_ptr<T> find_smart_pointer(std::map<K, std::shared_ptr<T>> map,
+                                      K key) {
   auto got = map.find(key);
   if (got != map.end()) {
     return got->second;
@@ -128,9 +128,8 @@ shared_ptr<Class> Session::getClass(unsigned long id) const {
   return shared_ptr<Class>(nullptr);
 }
 
-std::unordered_map<unsigned long, std::shared_ptr<Frame>> Session::getFrames(
-    unsigned long first, unsigned long last) {
-  std::unordered_map<unsigned long, std::shared_ptr<Frame>> ret_frames;
+FrameMap Session::getFramesRange(unsigned long first, unsigned long last) {
+  FrameMap ret_frames;
   for (auto& pair : frames) {
     if (pair.first >= first && pair.first <= last) {
       ret_frames.insert(pair);

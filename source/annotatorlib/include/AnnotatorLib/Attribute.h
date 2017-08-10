@@ -8,6 +8,7 @@
 #include <AnnotatorLib/AnnotatorLibDatastructs.h>
 #include <AnnotatorLib/annotatorlib_api.h>
 
+#include <map>
 #include <memory>
 
 namespace AnnotatorLib {
@@ -103,8 +104,7 @@ class ANNOTATORLIB_API Attribute {
 /************************************************************/
 /* External declarations (package visibility)               */
 /************************************************************/
-
-/* Inline functions                                         */
+typedef std::map<unsigned long, std::shared_ptr<Attribute>> AttributeMap;
 
 }  // of namespace AnnotatorLib
 

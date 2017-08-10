@@ -95,8 +95,7 @@ shared_ptr<Annotation> InterpolateAnnotation::getInterpolation(
 std::vector<shared_ptr<Annotation>> InterpolateAnnotation::getInterpolations(
     const std::shared_ptr<Session> session, const shared_ptr<Frame> frame,
     bool interpolationsOnly) {
-  const std::unordered_map<unsigned long, std::shared_ptr<Object>>
-      &objects_map = session->getObjects();
+  const ObjectMap &objects_map = session->getObjects();
   std::vector<shared_ptr<Annotation>> return_annotations;
 
   for (auto &o : objects_map) {

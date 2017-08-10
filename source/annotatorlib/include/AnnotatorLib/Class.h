@@ -3,6 +3,7 @@
 #define ANNOTATOR_ANNOTATORLIB_CLASS_H
 
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 
@@ -71,6 +72,8 @@ class ANNOTATORLIB_API Class {
  private:
   static std::string genName();
 };
+
+typedef std::map<std::string, std::shared_ptr<Class>> ClassMap;
 
 }  // of namespace AnnotatorLib
 

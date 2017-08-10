@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_SESSION_H
 #define ANNOTATOR_ANNOTATORLIB_SESSION_H
 
@@ -14,6 +14,7 @@
 #include <AnnotatorLib/Frame.h>
 #include <AnnotatorLib/Object.h>
 #include <AnnotatorLib/annotatorlib_api.h>
+
 #include <memory>  //smart pointer
 #include <mutex>
 #include <unordered_map>
@@ -38,10 +39,7 @@ class ANNOTATORLIB_API Session {
   virtual void clearAll();
 
   // Attributes
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Attribute>> const&
-  getAttributes() const {
-    return attributes;
-  }
+  virtual AttributeMap const& getAttributes() const { return attributes; }
   /**
    * @brief Add an attribute to the session.
    * @param c
@@ -60,10 +58,7 @@ class ANNOTATORLIB_API Session {
 
   // Annotations
 
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Annotation>> const&
-  getAnnotations() const {
-    return annotations;
-  }
+  virtual AnnotationMap getAnnotations() const { return annotations; }
 
   /**
    * @brief Will add the given annotation, the associated object
@@ -86,10 +81,7 @@ class ANNOTATORLIB_API Session {
   virtual void updateAnnotation(shared_ptr<Annotation> /* annotation */) {}
 
   // Classes
-  virtual std::unordered_map<std::string, std::shared_ptr<Class>> const&
-  getClasses() const {
-    return classes;
-  }
+  virtual ClassMap const& getClasses() const { return classes; }
 
   /**
    * @brief Add a class to the session.
@@ -123,10 +115,7 @@ class ANNOTATORLIB_API Session {
   virtual void updateClass(shared_ptr<Class> /* theClass */) {}
 
   // Frames
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> const&
-  getFrames() const {
-    return frames;
-  }
+  virtual FrameMap getFrames() const { return frames; }
 
   /**
    * @brief getFrames
@@ -135,8 +124,7 @@ class ANNOTATORLIB_API Session {
    * @param last the last frame
    * @return
    */
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Frame>> getFrames(
-      unsigned long first, unsigned long last);
+  virtual FrameMap getFramesRange(unsigned long first, unsigned long last);
 
   /**
    * @brief Will add the given frame and all annotations, objects
@@ -183,10 +171,7 @@ class ANNOTATORLIB_API Session {
    */
   virtual void updateObject(shared_ptr<Object> /* object */) {}
 
-  virtual std::unordered_map<unsigned long, std::shared_ptr<Object>> const&
-  getObjects() const {
-    return objects;
-  }
+  virtual ObjectMap const& getObjects() const { return objects; }
 
   /**
    * Executes the command and manages all involved memory.
@@ -200,11 +185,11 @@ class ANNOTATORLIB_API Session {
   virtual shared_ptr<Commands::Command> undo();
 
  private:
-  std::unordered_map<unsigned long, std::shared_ptr<Frame>> frames;
-  std::unordered_map<unsigned long, std::shared_ptr<Object>> objects;
-  std::unordered_map<unsigned long, std::shared_ptr<Attribute>> attributes;
-  std::unordered_map<unsigned long, std::shared_ptr<Annotation>> annotations;
-  std::unordered_map<std::string, std::shared_ptr<Class>> classes;
+  FrameMap frames;
+  ObjectMap objects;
+  AttributeMap attributes;
+  AnnotationMap annotations;
+  ClassMap classes;
 
   unsigned int commandIndex = 0;
   std::mutex mtx;

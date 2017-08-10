@@ -37,6 +37,6 @@ TEST_F(session_test, getFrames) {
     ASSERT_EQ(session->getAnnotations().size(), i + 1);
     ASSERT_EQ(session->getFrames().size(), i + 1);
   }
-  ASSERT_EQ(session->getFrames(1, 3).size(), 3);
-  ASSERT_EQ(session->getFrames(4, 10).size(), 1);
+  ASSERT_EQ(session->getFramesRange(1, 3).size(), 3);
+  ASSERT_EQ(session->getFramesRange(4, 10).size(), 1);
 }

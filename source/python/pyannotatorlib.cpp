@@ -1,9 +1,11 @@
+// Copyright 2017 Annotator Team
 #include <memory>
 
 #include <boost/python.hpp>
 #include <boost/python/make_constructor.hpp>
 #include <boost/python/overloads.hpp>
 #include <boost/python/raw_function.hpp>
+#include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 #include <AnnotatorLib/Annotation.h>
 #include <AnnotatorLib/Class.h>
@@ -28,6 +30,10 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
       "Annotation", no_init)
       .def("construct", &createAnnotation)
       .staticmethod("construct")
+      .add_property("x", &Annotation::getX, &Annotation::setX)
+      .add_property("y", &Annotation::getY, &Annotation::setY)
+      .add_property("width", &Annotation::getWidth, &Annotation::setWidth)
+      .add_property("height", &Annotation::getHeight, &Annotation::setHeight)
       .def("get_id", &Annotation::getId)
       .def("get_frame", &Annotation::getFrame)
       .def("get_object", &Annotation::getObject)
@@ -46,12 +52,16 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
       .def("get_name", &Class::getName)
       .def("get_id", &Class::getId);
 
+  class_<ClassMap>("ClassMap").def(map_indexing_suite<ClassMap>());
+
   /* FRAME */
   class_<Frame, std::shared_ptr<Frame>>("Frame", no_init)
       .def(init<unsigned long>())
       .def("get_number", &Frame::getFrameNumber)
       .def("get_id", &Frame::getFrameNumber)
       .def("has_annotations", &Frame::hasAnnotations);
+
+  class_<FrameMap>("FrameMap").def(map_indexing_suite<FrameMap>());
 
   /* OBJECT */
   class_<Object, std::shared_ptr<Object>>("Object")
@@ -80,10 +90,19 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
       .def("save", &Project::save);
 
   /* SESSION */
+  std::shared_ptr<Annotation> (Session::*ga)(const shared_ptr<Frame>,
+                                             const shared_ptr<Object>) const =
+      &Session::getAnnotation;
+  std::shared_ptr<Class> (Session::*gc)(std::string) const = &Session::getClass;
+
   class_<Session, std::shared_ptr<Session>, boost::noncopyable>("Session",
                                                                 no_init)
-      //      .def("get_frames", &Session::getFrames)
-      .def("get_frame", &Session::getFrame);
+      .def("get_annotations", &Session::getAnnotations)
+      .def("get_annotation", ga)
+      .def("get_frames", &Session::getFrames)
+      .def("get_frame", &Session::getFrame)
+      .def("get_object", &Session::getObject)
+      .def("get_class", gc);
 
   /* ABSTRACTIMAGESET */
   class_<ImageSet::AbstractImageSet,

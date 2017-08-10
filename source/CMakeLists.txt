@@ -15,6 +15,7 @@ configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/AnnotatorLib/${M
 # Libraries
 set(IDE_FOLDER "")
 add_subdirectory(annotatorlib)
+add_subdirectory(python)
 
 add_subdirectory(imagesets)
 add_subdirectory(storages)

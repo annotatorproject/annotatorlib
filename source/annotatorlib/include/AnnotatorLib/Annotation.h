@@ -1,4 +1,4 @@
-// Copyright 2016 Annotator Team
+// Copyright 2016-2017 Annotator Team
 #ifndef ANNOTATOR_ANNOTATORLIB_ANNOTATION_H
 #define ANNOTATOR_ANNOTATORLIB_ANNOTATION_H
 
@@ -147,7 +147,7 @@ class ANNOTATORLIB_API Annotation {
 
   void setPosition(float x, float y, float width, float height);
   /**
-   * @brief setPosition
+   * @brief setCenterPosition
    * @param x
    * @param y
    * @param hradius the radius horizontally
@@ -213,6 +213,7 @@ class ANNOTATORLIB_API Annotation {
              const AnnotationType type = AnnotationType::RECTANGLE,
              bool isTemporary = false);
   Annotation(const Annotation &obj) = delete;
+  // Constructor
 
   ////////////////////////////////////////
 

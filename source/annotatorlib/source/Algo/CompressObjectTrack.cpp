@@ -7,10 +7,11 @@
 
 // include associated header file
 #include "AnnotatorLib/Algo/CompressObjectTrack.h"
-#include <math.h>
 #include "AnnotatorLib/Algo/InterpolateAnnotation.h"
 #include "AnnotatorLib/Commands/RemoveAnnotation.h"
 #include "AnnotatorLib/Session.h"
+
+#include <math.h>
 
 namespace AnnotatorLib {
 namespace Algo {

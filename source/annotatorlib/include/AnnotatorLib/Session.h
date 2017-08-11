@@ -39,7 +39,7 @@ class ANNOTATORLIB_API Session {
   virtual void clearAll();
 
   // Attributes
-  virtual AttributeMap const& getAttributes() const { return attributes; }
+  virtual AttributeMap getAttributes() const { return attributes; }
   /**
    * @brief Add an attribute to the session.
    * @param c
@@ -81,7 +81,7 @@ class ANNOTATORLIB_API Session {
   virtual void updateAnnotation(shared_ptr<Annotation> /* annotation */) {}
 
   // Classes
-  virtual ClassMap const& getClasses() const { return classes; }
+  virtual ClassMap getClasses() const { return classes; }
 
   /**
    * @brief Add a class to the session.
@@ -171,7 +171,7 @@ class ANNOTATORLIB_API Session {
    */
   virtual void updateObject(shared_ptr<Object> /* object */) {}
 
-  virtual ObjectMap const& getObjects() const { return objects; }
+  virtual ObjectMap getObjects() const { return objects; }
 
   /**
    * Executes the command and manages all involved memory.

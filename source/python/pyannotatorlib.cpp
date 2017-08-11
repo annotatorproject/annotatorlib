@@ -129,9 +129,13 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
                                                                 no_init)
       .def("get_annotations", &Session::getAnnotations)
       .def("get_annotation", ga)
+      .def("get_attribute", &Session::getAttribute)
+      .def("get_attributes", &Session::getAttributes)
       .def("get_frames", &Session::getFrames)
       .def("get_frame", &Session::getFrame)
+      .def("get_objects", &Session::getObjects)
       .def("get_object", &Session::getObject)
+      .def("get_classes", &Session::getClasses)
       .def("get_class", gc);
 
   /* ABSTRACTIMAGESET */
@@ -139,7 +143,14 @@ BOOST_PYTHON_MODULE(pyannotatorlib) {
          std::shared_ptr<ImageSet::AbstractImageSet>, boost::noncopyable>(
       "AbstractImageSet", no_init)
       .def("get_path", &ImageSet::AbstractImageSet::getPath)
-      .def("get_image", &ImageSet::AbstractImageSet::getImage);
+      .def("get_image_path", &ImageSet::AbstractImageSet::getImagePath)
+      .def("goto_position", &ImageSet::AbstractImageSet::gotoPosition)
+      .def("get_position", &ImageSet::AbstractImageSet::getPosition)
+      .def("get_image", &ImageSet::AbstractImageSet::getImage)
+      .def("has_next", &ImageSet::AbstractImageSet::hasNext)
+      .def("next", &ImageSet::AbstractImageSet::next)
+      .def("size", &ImageSet::AbstractImageSet::size)
+      .def("get_fps", &ImageSet::AbstractImageSet::getFPS);
 
   /* ABSTRACTSTORAGE */
   class_<Storage::AbstractStorage, std::shared_ptr<Storage::AbstractStorage>,

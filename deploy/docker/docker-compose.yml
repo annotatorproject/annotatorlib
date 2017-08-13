@@ -1,0 +1,14 @@
+version: '2'
+services:
+  annotatorlib:
+  # image:chriamue/annotatorlib:cpu
+    build: cpu
+    volumes:
+     - '~/:/home/user/'
+  annotatorlibgpu:
+  # image:chriamue/annotatorlib:gpu
+    build: gpu
+    volumes:
+     - '~/:/home/user/'
+    devices:
+     - /dev/nvidia0

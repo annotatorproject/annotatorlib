@@ -3,7 +3,7 @@ MAINTAINER chriamue@gmail.com
 
 RUN apt-get update && apt-get install -y build-essential git cmake \
 	qt5-default qttools5-dev qttools5-dev-tools libboost-system-dev libboost-filesystem-dev \
-	libboost-python-dev libpython-dev python-numpy \
+	libboost-python-dev libpython-dev libpython3-dev python-numpy \
 	libopencv-dev libpoco-dev libpocomysql* libpocosqlite* libpoconet* libpocoxml* \
 	libmysqlclient-dev libsqlite3-dev openssl libssl-dev
 

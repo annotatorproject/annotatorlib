@@ -22,7 +22,8 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 
 RUN cp /annotatorlib/deploy/docker/ipynb/flickr.pro.xml /home/$USERNAME/ && \
-    cp /annotatorlib/deploy/docker/ipynb/flickr.json /home/$USERNAME/
+    cp /annotatorlib/deploy/docker/ipynb/flickr.json /home/$USERNAME/ && \
+    cp /annotatorlib/deploy/docker/ipynb/pyannotatorlib.ipynb /home/$USERNAME/
 
 # Add a notebook profile.
 # Password: annotator

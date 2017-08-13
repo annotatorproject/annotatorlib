@@ -4,11 +4,18 @@ services:
   # image:chriamue/annotatorlib:cpu
     build: cpu
     volumes:
-     - '~/:/home/user/'
+     - '${HOME}/:/home/user/'
   annotatorlibgpu:
   # image:chriamue/annotatorlib:gpu
     build: gpu
     volumes:
-     - '~/:/home/user/'
+     - '${HOME}/:/home/user/'
     devices:
      - /dev/nvidia0
+  annotatorlibipynb:
+  # image:chriamue/annotatorlib:ipynb
+    build: ipynb
+    volumes:
+     - '${HOME}/:/home/user/'
+    ports:
+     - 8888:8888

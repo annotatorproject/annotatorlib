@@ -1,5 +1,7 @@
 # Annotator Library
 
+Library for labeling and annotating images.
+
 =================
 
 [![Stories in Ready][waffle-image]][waffle]

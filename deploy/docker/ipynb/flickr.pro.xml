@@ -1,0 +1,7 @@
+<config>
+	<Name>flickr</Name>
+	<ImageSet path="https://api.flickr.com/services/rest/?method=flickr.photos.search&amp;api_key=3f2473a4aa48d3a7376136d347fab3db&amp;per_page=100&amp;format=json&amp;nojsoncallback=1&amp;text=cats" type="flickr"/>
+	<Storage path="/home/annotator/flickr.json" type="json"/>
+	<Statistics duration="1"/>
+	<Settings active="true"/>
+</config>

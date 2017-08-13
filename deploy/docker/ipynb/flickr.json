@@ -1,0 +1,28 @@
+{
+ "annotations" : [
+
+ ],
+ "attributes" : [
+
+ ],
+ "classes" : [
+  {
+   "id" : "110021",
+   "name" : "person"
+  },
+  {
+   "id" : "110007",
+   "name" : "car"
+  },
+  {
+   "id" : "110014",
+   "name" : "cat"
+  }
+ ],
+ "frames" : [
+
+ ],
+ "objects" : [
+
+ ]
+}

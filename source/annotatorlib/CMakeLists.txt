@@ -212,8 +212,3 @@ install(EXPORT ${target}-export
     DESTINATION ${INSTALL_CMAKE}/${target}
     COMPONENT   dev
 )
-# PYTHON
-if(OPTION_BUILD_PYTHON)
-    #PYTHON_ADD_MODULE(py${target} ${sources} ${headers})
-    #FILE(COPY ${target}.py DESTINATION ${CMAKE_BINARY_DIR})
-endif(OPTION_BUILD_PYTHON)

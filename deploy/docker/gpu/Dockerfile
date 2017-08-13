@@ -1,8 +1,9 @@
 FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 MAINTAINER chriamue@gmail.com
 
-RUN apt-get update && apt-get install -y build-essential clang git cmake \
+RUN apt-get update && apt-get install -y build-essential git cmake \
 	qt5-default qttools5-dev qttools5-dev-tools libboost-system-dev libboost-filesystem-dev \
+	libboost-python-dev libpython-dev python-numpy \
 	libopencv-dev libpoco-dev libpocomysql* libpocosqlite* libpoconet* libpocoxml* \
 	libmysqlclient-dev libsqlite3-dev openssl libssl-dev
 

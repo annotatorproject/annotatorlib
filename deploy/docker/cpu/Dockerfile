@@ -1,25 +1,8 @@
-FROM ubuntu:16.04
-MAINTAINER chriamue@gmail.com
-
-RUN apt-get update && apt-get install -y build-essential git cmake \
-	qt5-default qttools5-dev qttools5-dev-tools libboost-system-dev libboost-filesystem-dev \
-	libboost-python-dev libpython-dev python-numpy \
-	libopencv-dev libpoco-dev libpocomysql* libpocosqlite* libpoconet* libpocoxml* \
-	libmysqlclient-dev libsqlite3-dev openssl libssl-dev
-
-RUN cd /tmp && git clone https://github.com/opencv/opencv \
-    && cd /tmp/opencv && mkdir -p build && cd build \
-	&& cmake -DCMAKE_BUILD_TYPE=RELEASE -DWITH_FFMPEG=OFF -DWITH_IPP=OFF .. \
-	&& make -j3 && make install && ldconfig && rm -rf /tmp/opencv
-
-RUN cd /tmp && git clone https://github.com/davisking/dlib.git \
-	&& cd /tmp/dlib && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. \
-	&& make -j3 && make install && ldconfig && rm -rf /tmp/dlib
-
-RUN cd /tmp && git clone  https://github.com/pocoproject/poco \
-	&& sed -i 's#mysqlclient_r#mysqlclient mysqlclient_r#g' poco/cmake/FindMySQL.cmake \
-	&& cd /tmp/poco && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. \
-	&& make -j3 && make install && ldconfig && rm -rf /tmp/poco
+FROM ubuntu:18.04
+LABEL maintainer="chriamue@gmail.com"
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential clang git cmake \
+	qt5-default qttools5-dev qttools5-dev-tools libboost-system-dev libboost-filesystem-dev libboost-python-dev python-numpy \
+	libopencv-dev libpoco-dev libdlib-dev
 
 RUN cd / && git clone https://github.com/annotatorproject/annotatorlib
 RUN cd /annotatorlib && mkdir build && cd build \
